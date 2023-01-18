@@ -52,6 +52,7 @@ public class UserService {
     public User createUser(User user) {
 
         verifyUserId(user.getUserId());
+        verifyNickname(user.getNickname());
 
         String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         List<String> roles = customAuthorityUtils.createRoles(user.getUserId());
