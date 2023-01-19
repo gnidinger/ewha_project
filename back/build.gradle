@@ -109,3 +109,9 @@ bootJar { // Spring Rest Docs
 test {
 	exclude '**/*'
 }
+
+asciidoctor { // 빌드시 asciidoctor 제외
+	sources {
+		exclude 'extensions/**'
+	}
+}

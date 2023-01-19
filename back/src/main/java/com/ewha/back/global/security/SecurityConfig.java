@@ -6,6 +6,10 @@ import com.ewha.back.global.security.filter.JwtAuthenticationFilter;
 import com.ewha.back.global.security.filter.JwtVerificationFilter;
 import com.ewha.back.global.security.handler.*;
 import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
+import com.ewha.back.global.security.oAuth.handler.OAuth2AuthenticationFailureHandler;
+import com.ewha.back.global.security.oAuth.handler.OAuth2AuthenticationSuccessHandler;
+import com.ewha.back.global.security.oAuth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.ewha.back.global.security.oAuth.service.OAuth2PrincipalUserService;
 import com.ewha.back.global.security.util.CustomAuthorityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +32,10 @@ public class SecurityConfig {
     private final CustomAuthorityUtils authorityUtils;
     private final UserMapper userMapper;
     private final CookieManager cookieManager;
-//    private final OAuth2UserServiceImpl oAuth2UserService;
-//    private final UserRepository userRepository;
+    private final OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository;
+    private final OAuth2PrincipalUserService oAuth2PrincipalUserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -56,11 +62,20 @@ public class SecurityConfig {
                 .deleteCookies("visit_cookie")
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll());
-//                .oauth2Login(authorize -> { // OAuth2 반영 안함
-//                    authorize.userInfoEndpoint().userService(oAuth2UserService);
-//                    authorize.successHandler(new UserOAuth2SuccessHandler(jwtTokenizer, userRepository, cookieManager, userMapper));
-//                });
+                        .anyRequest().permitAll())
+                .oauth2Login() // OAuth2 로그인 설정 시작점
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/*/oauth2/*")
+                .and()
+                .userInfoEndpoint() // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때 설정 담당
+                .userService(oAuth2PrincipalUserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
         return http.build();
     }
 
