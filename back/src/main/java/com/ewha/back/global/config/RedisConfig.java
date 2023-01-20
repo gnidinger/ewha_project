@@ -13,19 +13,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.serializer.*;
 
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ewha.back.global.config.CacheConstant.FEED_LIST;
+import static com.ewha.back.global.config.CacheConstant.*;
 
-@Configuration
 @EnableCaching
+@Configuration
 public class RedisConfig {
 
     @Value("${spring.redis.host}")
@@ -43,8 +40,8 @@ public class RedisConfig {
     }
 
     /*
-    * Redis Channel(Topic)으로부터 메시지를 받고 주입된 Listener에게 비동기적으로 발송하는 역할 수행
-    */
+     * Redis Channel(Topic)으로부터 메시지를 받고 주입된 Listener에게 비동기적으로 발송하는 역할 수행
+     */
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
                                                                        MessageListenerAdapter listenerAdapter,
@@ -90,11 +87,12 @@ public class RedisConfig {
                         .fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext
                         .SerializationPair
-                        .fromSerializer(new JdkSerializationRedisSerializer()));
+                        .fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> cacheConfiguration = new HashMap<>();
 
-        cacheConfiguration.put(FEED_LIST, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
+        cacheConfiguration.put(NEWEST_FEEDS, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
+        cacheConfiguration.put(FEED_COMMENTS, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory())

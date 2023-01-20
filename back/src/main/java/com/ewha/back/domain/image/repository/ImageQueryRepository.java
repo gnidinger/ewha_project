@@ -30,4 +30,20 @@ public class ImageQueryRepository {
                 .where(image.user.id.eq(userId))
                 .fetchFirst();
     }
+
+    public void deleteByFeedId(Long feedId) {
+
+        jpaQueryFactory
+                .delete(image)
+                .where(image.feed.id.eq(feedId))
+                .execute();
+    }
+
+    public void deleteByImagePath(String imagePath) {
+
+        jpaQueryFactory
+                .delete(image)
+                .where(image.storedPath.eq(imagePath))
+                .execute();
+    }
 }
