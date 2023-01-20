@@ -1,6 +1,7 @@
 package com.ewha.back.domain.feed.entity;
 
 import com.ewha.back.domain.comment.entity.Comment;
+import com.ewha.back.domain.image.entity.Image;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.global.BaseTimeEntity;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -53,6 +55,11 @@ public class Feed extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Nullable
+    @JsonManagedReference
+    @OneToOne(mappedBy = "feed", cascade = CascadeType.REMOVE)
+    private Image image;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST)

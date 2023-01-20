@@ -1,5 +1,8 @@
 package com.ewha.back.domain.image.entity;
 
+import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,4 +27,14 @@ public class Image {
 
     @Column(nullable = false)
     private String storedPath;
+
+    @JsonBackReference
+    @OneToOne
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

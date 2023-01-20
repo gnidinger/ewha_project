@@ -3,6 +3,7 @@ package com.ewha.back.domain.user.entity;
 
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.image.entity.Image;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.notification.entity.Notification;
 import com.ewha.back.domain.question.entity.Answer;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
@@ -31,10 +33,10 @@ public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "user_id", updatable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column(name = "string_id", nullable = false, unique = true)
     private String userId;
 
     @Column(nullable = false)
@@ -68,14 +70,19 @@ public class User extends BaseTimeEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<String> role = new ArrayList<>();
 
+    @Nullable
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Image> images = new ArrayList<>();
+
     @Column
     private String provider;    // oauth2를 이용할 경우 어떤 플랫폼을 이용하는지
 
     @Column
     private String providerId;  // oauth2를 이용할 경우 아이디 값
 
-//    @Column
-//    private String email; // OAuth의 경우 이메일이 존재할 가능성 있음
+    @Column
+    private String email; // OAuth의 경우 이메일이 존재할 가능성 있음
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     private List<UserCategory> userCategories = new ArrayList<>();
@@ -101,9 +108,10 @@ public class User extends BaseTimeEntity {
 
 
     @Builder(builderClassName = "OAuth2Register", builderMethodName = "oauth2Register")
-    public User(String nickname, String password, String email, List<String> role, String provider, String providerId) {
+    public User(String nickname, String password, String email, Double ariFactor, List<String> role, String provider, String providerId) {
         this.nickname = nickname;
         this.password = password;
+        this.ariFactor = ariFactor;
 //        this.email = email;
         this.role = role;
         this.provider = provider;

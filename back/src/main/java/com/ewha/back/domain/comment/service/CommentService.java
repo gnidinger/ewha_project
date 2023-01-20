@@ -10,12 +10,15 @@ import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.ewha.back.global.config.CacheConstant.FEED_COMMENTS;
 
 @Service
 @Transactional
@@ -59,6 +62,7 @@ public class CommentService {
         else throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
     }
 
+    @Cacheable(key = "#feedId", value = FEED_COMMENTS)
     public Page<Comment> getFeedComments(Long feedId, int page) {
 
         PageRequest pageRequest = PageRequest.of(page - 1, 10);
