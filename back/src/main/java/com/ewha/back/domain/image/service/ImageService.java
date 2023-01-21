@@ -9,11 +9,20 @@ import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import marvin.image.MarvinImage;
+import org.marvinproject.image.transform.scale.Scale;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
@@ -106,9 +115,64 @@ public class ImageService {
         imageQueryRepository.deleteByImagePath(profileImage);
     }
 
+    public void validateFileExists(MultipartFile multipartFile) {
+        if (multipartFile.isEmpty()) {
+            throw new BusinessLogicException(ExceptionCode.IMAGE_NOT_FOUND);
+        }
+    }
+
     public Image findVerifiedImage(Long imageId) {
 
         return imageRepository.findById(imageId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.IMAGE_NOT_FOUND));
+    }
+
+    public MultipartFile resizeImage(MultipartFile multipartFile, String extension,
+                                     String storedImageName, String requestURI) throws Exception {
+
+        BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
+
+        int width = bufferedImage.getWidth();
+        int height = bufferedImage.getHeight();
+        int limit = 0;
+
+        if (requestURI.equals("/feeds/add")) limit = 768;
+        else if (requestURI.equals("/mypage/userinfo")) limit = 320;
+
+        MarvinImage marvinImage = new MarvinImage(bufferedImage);
+
+        Scale scale = new Scale();
+
+        if (width <= limit && height <= limit) {
+            return multipartFile;
+        } else if (width <= limit && height > limit) {
+            scale.load();
+            scale.setAttribute("newHeight", limit);
+            scale.setAttribute("newWidth", limit * width / height);
+        } else if (width > limit && height <= limit) {
+            scale.load();
+            scale.setAttribute("newHeight", limit * height / width);
+            scale.setAttribute("newWidth", limit);
+        } else if (width > limit && height > limit) {
+            if (width <= height) {
+                scale.load();
+                scale.setAttribute("newHeight", limit);
+                scale.setAttribute("newWidth", limit * width / height);
+            } else if (width >= height) {
+                scale.load();
+                scale.setAttribute("newHeight", limit * height / width);
+                scale.setAttribute("newWidth", limit);
+            }
+        }
+
+        scale.process(marvinImage.clone(), marvinImage, null, null, false);
+
+        BufferedImage imageNolpha = marvinImage.getBufferedImageNoAlpha();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(imageNolpha, extension, byteArrayOutputStream);
+
+        byteArrayOutputStream.flush();
+
+        return new MockMultipartFile(storedImageName, byteArrayOutputStream.toByteArray());
     }
 }

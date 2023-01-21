@@ -12,6 +12,7 @@ import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,25 +48,31 @@ public interface FeedMapper {
                         .profileImage(findUser.getProfileImage())
                         .build();
 
-        List<CommentDto.Response> commentsList =
-                feed.getComments().stream()
-                        .map(comment -> {
-                            return CommentDto.Response.builder()
-                                    .commentId(comment.getId())
-                                    .feedId(comment.getFeed().getId())
-                                    .userInfo(
-                                            UserDto.PostResponse.builder()
-                                                    .userId(comment.getUser().getUserId())
-                                                    .nickname(comment.getUser().getNickname())
-                                                    .profileImage(comment.getUser().getProfileImage())
-                                                    .build()
-                                    )
-                                    .body(comment.getBody())
-                                    .likeCount(comment.getLikeCount())
-                                    .createdAt(comment.getCreatedAt())
-                                    .modifiedAt(comment.getModifiedAt())
-                                    .build();
-                        }).collect(Collectors.toList());
+        List<CommentDto.Response> commentsList = new ArrayList<>();
+
+        if (feed.getComments() == null) commentsList = null;
+
+        else {
+            commentsList =
+                    feed.getComments().stream()
+                            .map(comment -> {
+                                return CommentDto.Response.builder()
+                                        .commentId(comment.getId())
+                                        .feedId(comment.getFeed().getId())
+                                        .userInfo(
+                                                UserDto.PostResponse.builder()
+                                                        .userId(comment.getUser().getUserId())
+                                                        .nickname(comment.getUser().getNickname())
+                                                        .profileImage(comment.getUser().getProfileImage())
+                                                        .build()
+                                        )
+                                        .body(comment.getBody())
+                                        .likeCount(comment.getLikeCount())
+                                        .createdAt(comment.getCreatedAt())
+                                        .modifiedAt(comment.getModifiedAt())
+                                        .build();
+                            }).collect(Collectors.toList());
+        }
 
         return FeedDto.Response.builder()
                 .feedId(feed.getId())

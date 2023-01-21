@@ -112,7 +112,7 @@ public class FeedControllerRestDocs {
                         .build();
 
         given(feedMapper.feedPostToFeed(Mockito.any(FeedDto.Post.class))).willReturn(Feed.builder().build());
-        given(feedService.createFeed(Mockito.any(Feed.class))).willReturn(Feed.builder().build());
+        given(feedService.createFeed(Mockito.any(Feed.class), anyString())).willReturn(Feed.builder().build());
         given(feedMapper.feedToFeedResponse(Mockito.any(Feed.class))).willReturn(response);
 
         ResultActions actions =

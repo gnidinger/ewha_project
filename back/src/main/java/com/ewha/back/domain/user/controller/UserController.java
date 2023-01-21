@@ -6,6 +6,7 @@ import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
+import com.ewha.back.domain.image.service.AwsS3Service;
 import com.ewha.back.domain.question.dto.QuestionDto;
 import com.ewha.back.domain.question.entity.Question;
 import com.ewha.back.domain.question.mapper.QuestionMapper;
@@ -20,10 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -38,6 +41,7 @@ public class UserController {
     private final FeedMapper feedMapper;
     private final CommentMapper commentMapper;
     private final QuestionMapper questionMapper;
+    private final AwsS3Service awsS3Service;
 
     @GetMapping("/oauth/signin")
     @ResponseBody
@@ -75,7 +79,12 @@ public class UserController {
     }
 
     @PatchMapping("/mypage/userinfo")
-    public ResponseEntity patchUser(@Valid @RequestBody UserDto.UserInfo userInfo) {
+    public ResponseEntity patchUser(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
+                                    @Valid @RequestBody UserDto.UserInfo userInfo) throws Exception {
+
+        String imagePath = null;
+
+        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile);
 
         User updatedUser = userService.updateUser(userInfo);
         UserDto.Response response = userMapper.userToUserResponse(updatedUser);

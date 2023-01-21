@@ -20,7 +20,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,7 +43,7 @@ public class FeedService {
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-    public Feed createFeed(Feed feed) {
+    public Feed createFeed(Feed feed, String imagePath) {
 
         User findUser = userService.getLoginUser();
 
@@ -48,7 +51,7 @@ public class FeedService {
                 .user(findUser)
                 .title(feed.getTitle())
                 .body(feed.getBody())
-                .imagePath(feed.getImagePath())
+                .imagePath(imagePath)
                 .viewCount(0L)
                 .likeCount(0L)
                 .build();

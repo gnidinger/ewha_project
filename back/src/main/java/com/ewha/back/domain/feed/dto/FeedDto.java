@@ -34,6 +34,7 @@ public class FeedDto {
     }
 
     @Getter
+    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
