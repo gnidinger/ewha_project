@@ -1,6 +1,7 @@
 package com.ewha.back.domain.feed.entity;
 
 import com.ewha.back.domain.category.entity.Category;
+import com.ewha.back.domain.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -19,12 +20,27 @@ public class FeedCategory {
     @Column(name = "feed_category_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "feed_id")
     @NotFound(action = NotFoundAction.IGNORE)
     private Feed feed;
+
+    public void addFeed(Feed feed) {
+        this.feed = feed;
+        if (!this.feed.getFeedCategories().contains(this)) {
+            this.feed.getFeedCategories().add(this);
+        }
+    }
+
+    public void addCategory(Category category) {
+        this.category = category;
+        if (!this.category.getFeedCategories().contains(this)) {
+            this.category.addFeedCategory(this);
+        }
+    }
+
 }

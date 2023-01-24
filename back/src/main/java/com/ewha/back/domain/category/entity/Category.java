@@ -41,4 +41,11 @@ public class Category {
         }
     }
 
+    public void addFeedCategory(FeedCategory feedCategory) {
+        this.feedCategories.add(feedCategory);
+        if(feedCategory.getCategory() != this) {
+            feedCategory.addCategory(this);
+        }
+    }
+
 }
