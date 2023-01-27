@@ -29,6 +29,7 @@ public interface CommentMapper {
                 .userInfo(UserDto.PostResponse.builder()
                         .userId(user.getUserId())
                         .nickname(user.getNickname())
+                        .ariFactor(user.getAriFactor())
                         .role(user.getRole())
                         .profileImage(user.getProfileImage())
                         .build())

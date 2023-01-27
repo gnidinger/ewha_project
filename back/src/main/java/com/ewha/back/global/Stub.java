@@ -68,55 +68,56 @@ public class Stub {
                     .isFirstLogin(false)
                     .genderType(GenderType.MALE)
                     .ageType(AgeType.THIRTIES)
+                    .profileImage("profile image")
                     .build();
 
             userCategory.addUser(user);
 
             log.info("USER STUB " + userRepository.save(user));
         }
-//         ------------------------------------------------------------------------------------------
-//         ------------------------------------------------------------------------------------------
-//         FEED STUB
-//         ------------------------------------------------------------------------------------------
-        for (int i = 1; i <= 40; i++) {
-
-            Long rand = (long) ((Math.random() * 12) + 1);
-
-            Category category = new Category();
-            category.setId(rand);
-
-            FeedCategory feedCategory = new FeedCategory();
-            feedCategory.addCategory(category);
-
-            Feed feed = Feed.builder()
-                    .feedCategories(List.of(feedCategory))
-                    .user(userService.findVerifiedUser((long) ((Math.random() * 20) + 1)))
-                    .title("title" + i)
-                    .body("body" + i)
-                    .likeCount((long) (Math.random() * 50))
-                    .viewCount((long) (Math.random() * 100))
-                    .build();
-
-            feedCategory.addFeed(feed);
-
-            log.info("FEED STUB " + feedRepository.save(feed));
-        }
-//         ------------------------------------------------------------------------------------------
-//         ------------------------------------------------------------------------------------------
-//         COMMENT STUB
-//         ------------------------------------------------------------------------------------------
-        for (int i = 1; i <= 80; i++) {
-
-            Comment comment = Comment.builder()
-                    .body("comment body" + i)
-                    .user(userService.findVerifiedUser((long) (Math.random() * 20) + 1))
-                    .feed(feedService.findVerifiedFeed((long) (Math.random() * 40) + 1))
-                    .likeCount((long) (Math.random() * 10) + 1)
-                    .build();
-
-            log.info("COMMENT STUB " + commentRepository.save(comment));
-        }
-
+////         ------------------------------------------------------------------------------------------
+////         ------------------------------------------------------------------------------------------
+////         FEED STUB
+////         ------------------------------------------------------------------------------------------
+//        for (int i = 1; i <= 40; i++) {
+//
+//            Long rand = (long) ((Math.random() * 12) + 1);
+//
+//            Category category = new Category();
+//            category.setId(rand);
+//
+//            FeedCategory feedCategory = new FeedCategory();
+//            feedCategory.addCategory(category);
+//
+//            Feed feed = Feed.builder()
+//                    .feedCategories(List.of(feedCategory))
+//                    .user(userService.findVerifiedUser((long) ((Math.random() * 20) + 1)))
+//                    .title("title" + i)
+//                    .body("body" + i)
+//                    .likeCount((long) (Math.random() * 50))
+//                    .viewCount((long) (Math.random() * 100))
+//                    .build();
+//
+//            feedCategory.addFeed(feed);
+//
+//            log.info("FEED STUB " + feedRepository.save(feed));
+//        }
+////         ------------------------------------------------------------------------------------------
+////         ------------------------------------------------------------------------------------------
+////         COMMENT STUB
+////         ------------------------------------------------------------------------------------------
+//        for (int i = 1; i <= 80; i++) {
+//
+//            Comment comment = Comment.builder()
+//                    .body("comment body" + i)
+//                    .user(userService.findVerifiedUser((long) (Math.random() * 20) + 1))
+//                    .feed(feedService.findVerifiedFeed((long) (Math.random() * 40) + 1))
+//                    .likeCount((long) (Math.random() * 10) + 1)
+//                    .build();
+//
+//            log.info("COMMENT STUB " + commentRepository.save(comment));
+//        }
+//
         return null;
     }
 }

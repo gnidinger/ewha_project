@@ -78,7 +78,7 @@ public class FeedDto {
         private Long likeCount;
         private Long viewCount;
         private String imagePath;
-        private List<CommentDto.Response> comments;
+        private List<CommentDto.FeedCommentResponse> comments;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
     }

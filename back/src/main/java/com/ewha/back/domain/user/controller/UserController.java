@@ -84,9 +84,10 @@ public class UserController {
 
         String imagePath = null;
 
-        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile);
-
         User updatedUser = userService.updateUser(userInfo);
+
+        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedUser.getId());
+
         UserDto.Response response = userMapper.userToUserResponse(updatedUser);
 
         return new ResponseEntity<>(

@@ -32,16 +32,17 @@ public class FeedController {
     private final JwtTokenizer jwtTokenizer;
 
     @PostMapping("/add")
-    public ResponseEntity postFeed(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
+    public ResponseEntity postFeed(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
                                    @Valid @RequestPart FeedDto.Post postFeed) throws Exception {
 
         String imagePath = null;
 
-        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile);
-
         Feed feed = feedMapper.feedPostToFeed(postFeed);
         Feed createdFeed = feedService.createFeed(feed, imagePath);
         createdFeed.addFeedCategories(feed.getFeedCategories());
+
+        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
+
         FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
 
         return new ResponseEntity<>(
@@ -51,7 +52,7 @@ public class FeedController {
 
     @PatchMapping("/{feed_id}/edit")
     public ResponseEntity patchFeed(@PathVariable("feed_id") @Positive Long feedId,
-                                    @RequestParam(value = "image") @Nullable MultipartFile multipartFile,
+                                    @Nullable @RequestParam(value = "image") MultipartFile multipartFile,
                                     @Valid @RequestPart FeedDto.Patch patchFeed) throws Exception {
 
         String imagePath = null;

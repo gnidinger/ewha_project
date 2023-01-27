@@ -48,7 +48,7 @@ public interface FeedMapper {
                         .profileImage(findUser.getProfileImage())
                         .build();
 
-        List<CommentDto.Response> commentsList = new ArrayList<>();
+        List<CommentDto.FeedCommentResponse> commentsList = new ArrayList<>();
 
         if (feed.getComments() == null) commentsList = null;
 
@@ -56,11 +56,11 @@ public interface FeedMapper {
             commentsList =
                     feed.getComments().stream()
                             .map(comment -> {
-                                return CommentDto.Response.builder()
+                                return CommentDto.FeedCommentResponse.builder()
                                         .commentId(comment.getId())
                                         .feedId(comment.getFeed().getId())
                                         .userInfo(
-                                                UserDto.PostResponse.builder()
+                                                UserDto.FeedCommentResponse.builder()
                                                         .userId(comment.getUser().getUserId())
                                                         .nickname(comment.getUser().getNickname())
                                                         .profileImage(comment.getUser().getProfileImage())
