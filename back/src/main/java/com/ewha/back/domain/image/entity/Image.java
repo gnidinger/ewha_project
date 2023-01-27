@@ -11,13 +11,17 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
     private Long id;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ImageType imageType;
 
     @Column(nullable = false)
     private String originalImageName;
@@ -27,6 +31,9 @@ public class Image {
 
     @Column(nullable = false)
     private String storedPath;
+
+    @Column(nullable = false)
+    private String thumbnailPath;
 
     @JsonBackReference
     @OneToOne

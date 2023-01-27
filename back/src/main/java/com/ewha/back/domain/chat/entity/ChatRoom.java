@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class ChatRoom implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -4,6 +4,7 @@ import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.feed.service.FeedService;
+import com.ewha.back.domain.image.service.AwsS3Service;
 import com.ewha.back.global.dto.SingleResponseDto;
 import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,14 +28,21 @@ import javax.validation.constraints.Positive;
 public class FeedController {
     private final FeedMapper feedMapper;
     private final FeedService feedService;
+    private final AwsS3Service awsS3Service;
     private final JwtTokenizer jwtTokenizer;
 
     @PostMapping("/add")
-    public ResponseEntity postFeed(@Valid @RequestBody FeedDto.Post postFeed) {
+    public ResponseEntity postFeed(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
+                                   @Valid @RequestPart FeedDto.Post postFeed) throws Exception {
+
+        String imagePath = null;
 
         Feed feed = feedMapper.feedPostToFeed(postFeed);
-        Feed createdFeed = feedService.createFeed(feed);
+        Feed createdFeed = feedService.createFeed(feed, imagePath);
         createdFeed.addFeedCategories(feed.getFeedCategories());
+
+        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
+
         FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
 
         return new ResponseEntity<>(
@@ -42,10 +51,17 @@ public class FeedController {
     }
 
     @PatchMapping("/{feed_id}/edit")
-    public ResponseEntity patchFeed(
-            @PathVariable("feed_id") @Positive Long feedId,
-            @Valid @RequestBody FeedDto.Patch patchFeed) {
+    public ResponseEntity patchFeed(@PathVariable("feed_id") @Positive Long feedId,
+                                    @Nullable @RequestParam(value = "image") MultipartFile multipartFile,
+                                    @Valid @RequestPart FeedDto.Patch patchFeed) throws Exception {
 
+        String imagePath = null;
+
+        if (multipartFile != null) {
+            imagePath = awsS3Service.updateORDeleteFeedImageFromS3(feedId, multipartFile);
+        }
+
+        patchFeed.setImagePath(imagePath);
         Feed feed = feedMapper.feedPatchToFeed(patchFeed);
         Feed updatedFeed = feedService.updateFeed(feed, feedId);
         updatedFeed.addFeedCategories(feed.getFeedCategories());
@@ -64,7 +80,7 @@ public class FeedController {
 
         FeedDto.Response response;
 
-        if(jwtTokenizer.checkUserWithToken(request, token)) { // 로그인 사용자
+        if (jwtTokenizer.checkUserWithToken(request, token)) { // 로그인 사용자
             // 로그인 사용자이면서 Auth가 있는 경우
             Feed feed = feedService.updateView(feedId);
             Feed isLikedComments = feedService.isLikedComments(feedId);

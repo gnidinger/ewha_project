@@ -54,6 +54,22 @@ public class CommentDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class FeedCommentResponse {
+
+        private Long commentId;
+        private Long feedId;
+        private UserDto.FeedCommentResponse userInfo;
+        private String body;
+        private Long likeCount;
+        private LocalDateTime createdAt;
+        private LocalDateTime modifiedAt;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ListResponse {
 
         private Long commentId;

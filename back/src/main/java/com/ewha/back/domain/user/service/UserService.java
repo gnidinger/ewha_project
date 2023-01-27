@@ -13,6 +13,7 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.entity.UserCategory;
 import com.ewha.back.domain.user.repository.UserCategoryQueryRepository;
 import com.ewha.back.domain.user.repository.UserCategoryRepository;
+import com.ewha.back.domain.user.repository.UserQueryRepository;
 import com.ewha.back.domain.user.repository.UserRepository;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserQueryRepository userQueryRepository;
     private final UserCategoryRepository userCategoryRepository;
     private final UserCategoryQueryRepository userCategoryQueryRepository;
     private final FeedQueryRepository feedQueryRepository;

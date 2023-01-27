@@ -1,6 +1,7 @@
 package com.ewha.back.global.config;
 
 import com.ewha.back.global.exception.EmbeddedRedisServerException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 import static com.ewha.back.global.exception.ExceptionCode.*;
 
+@Slf4j
 @Profile("local")
 @Configuration
 public class EmbeddedRedisConfig {
@@ -39,7 +41,11 @@ public class EmbeddedRedisConfig {
             redisServer = new RedisServer(redisPort);
         }
 
-        redisServer.start();
+        try {
+            redisServer.start();
+        } catch (Exception e) {
+            log.error("", e);
+        }
     }
 
     private File getRedisFileForArmMac() {

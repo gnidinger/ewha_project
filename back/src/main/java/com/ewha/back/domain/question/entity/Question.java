@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Question extends BaseTimeEntity {
 
     @Id

@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @Table(name = "likes")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Like {
 
     @Id

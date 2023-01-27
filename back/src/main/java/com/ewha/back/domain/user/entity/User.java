@@ -57,6 +57,9 @@ public class User extends BaseTimeEntity {
     @Column
     private String profileImage; // 프로필 이미지 경로
 
+    @Column
+    private String thumbnailPath;
+
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
 

@@ -22,7 +22,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Feed extends BaseTimeEntity {
 
     @Id
@@ -30,11 +30,14 @@ public class Feed extends BaseTimeEntity {
     @Column(name = "feed_id")
     private Long id;
 
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<FeedCategory> feedCategories = new ArrayList<>();
 
     @Column
     private String imagePath;
+
+    @Column
+    private String thumbnailPath;
 
     @Column(nullable = false)
     private String title;
@@ -80,6 +83,11 @@ public class Feed extends BaseTimeEntity {
         this.title = feed.getTitle();
         this.body = feed.getBody();
         this.imagePath = feed.getImagePath();
+    }
+
+    public void addImagePaths(String fullPath, String thumbnailPath) {
+        this.imagePath = fullPath;
+        this.thumbnailPath = thumbnailPath;
     }
 
     public void addView() {
