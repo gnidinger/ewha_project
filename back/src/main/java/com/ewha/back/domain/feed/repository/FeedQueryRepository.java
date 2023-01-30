@@ -1,6 +1,7 @@
 package com.ewha.back.domain.feed.repository;
 
 import com.ewha.back.domain.feed.entity.Feed;
+import static com.ewha.back.domain.user.entity.QUser.user;
 import com.ewha.back.domain.user.entity.User;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class FeedQueryRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     public Page<Feed> findFeedListByUser(User user , Pageable pageable) {
+
         List<Feed> feedList = jpaQueryFactory
                 .select(feed)
                 .from(feed)
@@ -39,6 +41,7 @@ public class FeedQueryRepository {
     }
 
     public Page<Feed> findNewestFeedList(Pageable pageable) {
+
         List<Feed> feedList = jpaQueryFactory
                 .selectFrom(feed)
                 .orderBy(feed.createdAt.desc())
@@ -55,6 +58,7 @@ public class FeedQueryRepository {
     }
 
     public Page<Feed> findCategoryFeedList(String categoryName, Pageable pageable) {
+
         List<Feed> feedList = jpaQueryFactory
                 .selectFrom(feed)
                 .join(feed.feedCategories, feedCategory)
@@ -72,4 +76,44 @@ public class FeedQueryRepository {
 
         return new PageImpl<>(feedList, pageable, total);
     }
+
+    public Page<Feed> findAllSearchResultPage(String queryParam, Pageable pageable) {
+
+        List<Feed> feedList = jpaQueryFactory
+                .selectFrom(feed)
+                .where(feed.title.contains(queryParam).or(feed.body.contains(queryParam)))
+                .orderBy(feed.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = jpaQueryFactory
+                .select(feed.count())
+                .from(feed)
+                .fetchOne();
+
+        return new PageImpl<>(feedList, pageable, total);
+    }
+
+    public Page<Feed> findCategorySearchResultPage(String categoryParam, String queryParam, Pageable pageable) {
+
+        List<Feed> feedList = jpaQueryFactory
+                .selectFrom(feed)
+                .join(feed.feedCategories, feedCategory)
+                .join(feedCategory.category, category)
+                .where(category.categoryType.stringValue().eq(categoryParam))
+                .where(feed.title.contains(queryParam).or(feed.body.contains(queryParam)))
+                .orderBy(feed.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long total = jpaQueryFactory
+                .select(feed.count())
+                .from(feed)
+                .fetchOne();
+
+        return new PageImpl<>(feedList, pageable, total);
+    }
+
 }

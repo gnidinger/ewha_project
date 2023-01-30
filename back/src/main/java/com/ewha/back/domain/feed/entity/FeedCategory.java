@@ -20,11 +20,11 @@ public class FeedCategory {
     @Column(name = "feed_category_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "feed_id")
     @NotFound(action = NotFoundAction.IGNORE)
     private Feed feed;

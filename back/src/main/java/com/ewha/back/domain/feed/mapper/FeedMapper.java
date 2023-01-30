@@ -76,7 +76,9 @@ public interface FeedMapper {
 
         return FeedDto.Response.builder()
                 .feedId(feed.getId())
-                .categories(feed.getFeedCategories().stream().map(a -> a.getCategory().getCategoryType()).collect(Collectors.toList()))
+                .categories(feed.getFeedCategories().stream()
+                        .map(a -> a.getCategory().getCategoryType())
+                        .collect(Collectors.toList()))
                 .userInfo(postResponse)
                 .title(feed.getTitle())
                 .body(feed.getBody())
@@ -84,6 +86,7 @@ public interface FeedMapper {
                 .likeCount(feed.getLikeCount())
                 .viewCount(feed.getViewCount())
                 .imagePath(feed.getImagePath())
+                .thumbnailPath(feed.getThumbnailPath())
                 .comments(commentsList)
                 .createdAt(feed.getCreatedAt())
                 .modifiedAt(feed.getModifiedAt())

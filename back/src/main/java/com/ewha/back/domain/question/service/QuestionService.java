@@ -5,10 +5,13 @@ import com.ewha.back.domain.question.repository.AnswerQueryRepository;
 import com.ewha.back.domain.question.repository.AnswerRepository;
 import com.ewha.back.domain.question.repository.QuestionRepository;
 import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.domain.user.entity.enums.Role;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,44 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final AnswerQueryRepository answerQueryRepository;
+
+
+    @Transactional
+    public Question createQuestion(Question question) {
+
+        User findUser = userService.getLoginUser();
+
+        if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+
+            Question savedQuestion = Question.builder()
+                    .title(question.getTitle())
+                    .body(question.getBody())
+                    .imagePath(question.getImagePath())
+                    .answerBody(question.getAnswerBody())
+                    .dummy1(question.getDummy1())
+                    .dummy2(question.getDummy2())
+                    .dummy3(question.getDummy3())
+                    .dummy4(question.getDummy4())
+                    .build();
+
+            return questionRepository.save(savedQuestion);
+        } else throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+
+    @Transactional
+    public Question updateQuestion(Question question, Long questionId) {
+
+        User findUser = userService.getLoginUser();
+
+        Question findQuestion = findVerifiedQuestion(questionId);
+
+        if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+
+            findQuestion.updateQuestion(question);
+
+            return questionRepository.save(findQuestion);
+        } else throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
 
     @Transactional(readOnly = true)
     public Question getQuestion(Long questionId) {

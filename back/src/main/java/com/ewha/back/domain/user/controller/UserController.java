@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping
@@ -82,11 +83,14 @@ public class UserController {
     public ResponseEntity patchUser(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
                                     @Valid @RequestBody UserDto.UserInfo userInfo) throws Exception {
 
-        String imagePath = null;
+        List<String> imagePath = null;
 
         User updatedUser = userService.updateUser(userInfo);
 
-        if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedUser.getId());
+        if (multipartFile != null) imagePath = awsS3Service.updateORDeleteUserImageFromS3(updatedUser.getId(), multipartFile);
+
+        updatedUser.setProfileImage(imagePath.get(0));
+        updatedUser.setThumbnailPath(imagePath.get(1));
 
         UserDto.Response response = userMapper.userToUserResponse(updatedUser);
 

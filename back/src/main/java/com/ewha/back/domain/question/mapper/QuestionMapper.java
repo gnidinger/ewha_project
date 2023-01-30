@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
 
+    Question questionPostToQuestion(QuestionDto.Post postQuestion);
+    Question questionPatchToQuestion(QuestionDto.Patch patchQuestion);
     QuestionDto.Response questionToQuestionResponse(Question question);
     default QuestionDto.AnsweredResponse questionToAnsweredQuestionResponse(Question question) {
 
@@ -23,6 +25,7 @@ public interface QuestionMapper {
                 .title(question.getTitle())
                 .body(question.getBody())
                 .imagePath(question.getImagePath())
+                .thumbnailPath(question.getThumbnailPath())
                 .answerBody(question.getAnswerBody())
                 .userAnswer(question.getAnswers().stream()
                         .map(Answer::getBody).toString())

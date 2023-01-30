@@ -3,6 +3,7 @@ package com.ewha.back.global;
 import com.ewha.back.domain.category.entity.Category;
 import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.category.repository.CategoryRepository;
+import com.ewha.back.domain.category.service.CategoryService;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.repository.CommentRepository;
 import com.ewha.back.domain.feed.entity.Feed;
@@ -34,7 +35,7 @@ public class Stub {
     @Transactional
     CommandLineRunner stubInit(UserRepository userRepository, UserService userService,
                                CategoryRepository categoryRepository, FeedRepository feedRepository,
-                               FeedService feedService,
+                               FeedService feedService, CategoryService categoryService,
                                CommentRepository commentRepository, BCryptPasswordEncoder encoder) {
 
         for (int i = 0; i < 12; i++) {
@@ -75,49 +76,52 @@ public class Stub {
 
             log.info("USER STUB " + userRepository.save(user));
         }
-////         ------------------------------------------------------------------------------------------
-////         ------------------------------------------------------------------------------------------
-////         FEED STUB
-////         ------------------------------------------------------------------------------------------
-//        for (int i = 1; i <= 40; i++) {
-//
-//            Long rand = (long) ((Math.random() * 12) + 1);
-//
-//            Category category = new Category();
-//            category.setId(rand);
-//
-//            FeedCategory feedCategory = new FeedCategory();
-//            feedCategory.addCategory(category);
-//
-//            Feed feed = Feed.builder()
-//                    .feedCategories(List.of(feedCategory))
-//                    .user(userService.findVerifiedUser((long) ((Math.random() * 20) + 1)))
-//                    .title("title" + i)
-//                    .body("body" + i)
-//                    .likeCount((long) (Math.random() * 50))
-//                    .viewCount((long) (Math.random() * 100))
-//                    .build();
-//
-//            feedCategory.addFeed(feed);
-//
-//            log.info("FEED STUB " + feedRepository.save(feed));
-//        }
-////         ------------------------------------------------------------------------------------------
-////         ------------------------------------------------------------------------------------------
-////         COMMENT STUB
-////         ------------------------------------------------------------------------------------------
-//        for (int i = 1; i <= 80; i++) {
-//
-//            Comment comment = Comment.builder()
-//                    .body("comment body" + i)
-//                    .user(userService.findVerifiedUser((long) (Math.random() * 20) + 1))
-//                    .feed(feedService.findVerifiedFeed((long) (Math.random() * 40) + 1))
-//                    .likeCount((long) (Math.random() * 10) + 1)
-//                    .build();
-//
-//            log.info("COMMENT STUB " + commentRepository.save(comment));
-//        }
-//
+//         ------------------------------------------------------------------------------------------
+//         ------------------------------------------------------------------------------------------
+//         FEED STUB
+//         ------------------------------------------------------------------------------------------
+        for (int i = 1; i <= 40; i++) {
+
+            Long rand = (long) ((Math.random() * 11) + 1);
+
+            Category category = Category.builder()
+                    .id(rand)
+                    .categoryType(CategoryType.CULTURE)
+                    .build();
+
+            FeedCategory feedCategory = FeedCategory.builder()
+                    .category(category)
+                    .build();
+
+            Feed feed = Feed.builder()
+                    .feedCategories(List.of(feedCategory))
+                    .user(userService.findVerifiedUser((long) ((Math.random() * 20) + 1)))
+                    .title("title" + i)
+                    .body("body" + i)
+                    .likeCount((long) (Math.random() * 50))
+                    .viewCount((long) (Math.random() * 100))
+                    .build();
+
+            feedCategory.addFeed(feed);
+
+            log.info("FEED STUB " + feedRepository.save(feed));
+        }
+//         ------------------------------------------------------------------------------------------
+//         ------------------------------------------------------------------------------------------
+//         COMMENT STUB
+//         ------------------------------------------------------------------------------------------
+        for (int i = 1; i <= 80; i++) {
+
+            Comment comment = Comment.builder()
+                    .body("comment body" + i)
+                    .user(userService.findVerifiedUser((long) (Math.random() * 20) + 1))
+                    .feed(feedService.findVerifiedFeed((long) (Math.random() * 40) + 1))
+                    .likeCount((long) (Math.random() * 10) + 1)
+                    .build();
+
+            log.info("COMMENT STUB " + commentRepository.save(comment));
+        }
+
         return null;
     }
 }

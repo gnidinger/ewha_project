@@ -3,6 +3,7 @@ package com.ewha.back.domain.feed.controller;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
+import com.ewha.back.domain.feed.repository.FeedQueryRepository;
 import com.ewha.back.domain.feed.service.FeedService;
 import com.ewha.back.domain.image.service.AwsS3Service;
 import com.ewha.back.global.dto.SingleResponseDto;
@@ -14,12 +15,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @Validated
 @RestController
@@ -30,18 +41,21 @@ public class FeedController {
     private final FeedService feedService;
     private final AwsS3Service awsS3Service;
     private final JwtTokenizer jwtTokenizer;
+    private final FeedQueryRepository feedQueryRepository;
 
     @PostMapping("/add")
     public ResponseEntity postFeed(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
                                    @Valid @RequestPart FeedDto.Post postFeed) throws Exception {
 
-        String imagePath = null;
+        List<String> imagePath = null;
 
         Feed feed = feedMapper.feedPostToFeed(postFeed);
-        Feed createdFeed = feedService.createFeed(feed, imagePath);
+        Feed createdFeed = feedService.createFeed(feed);
         createdFeed.addFeedCategories(feed.getFeedCategories());
 
         if (multipartFile != null) imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
+
+        createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
 
         FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
 
@@ -55,13 +69,14 @@ public class FeedController {
                                     @Nullable @RequestParam(value = "image") MultipartFile multipartFile,
                                     @Valid @RequestPart FeedDto.Patch patchFeed) throws Exception {
 
-        String imagePath = null;
+        List<String> imagePath = null;
 
         if (multipartFile != null) {
             imagePath = awsS3Service.updateORDeleteFeedImageFromS3(feedId, multipartFile);
         }
 
-        patchFeed.setImagePath(imagePath);
+        patchFeed.setImagePath(imagePath.get(0));
+        patchFeed.setThumbnailPath(imagePath.get(1));
         Feed feed = feedMapper.feedPatchToFeed(patchFeed);
         Feed updatedFeed = feedService.updateFeed(feed, feedId);
         updatedFeed.addFeedCategories(feed.getFeedCategories());

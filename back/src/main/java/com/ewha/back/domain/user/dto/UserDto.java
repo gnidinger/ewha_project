@@ -105,6 +105,7 @@ public class UserDto {
         private Double ariFactor;
         private List<String> role;
         private String profileImage;
+        private String thumbnailPath;
         //private ProviderType providerType; // OAuth2 반영 안함
     }
 }

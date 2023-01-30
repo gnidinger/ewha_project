@@ -15,6 +15,7 @@ public enum ExceptionCode {
     UNLIKED(409, "Already Unliked"),
     FAIL_TO_LIKE(409, "Fail To Like"),
 
+    IMAGE_IS_EMPTY(404, "Image Is Empty"),
     CATEGORY_NOT_FOUND(404, "Category Not Found"),
     FEED_NOT_FOUND(404, "Feed Not Found"),
     QUESTION_NOT_FOUND(404, "Question Not Found"),

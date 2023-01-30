@@ -43,7 +43,7 @@ public class FeedService {
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
 
-    public Feed createFeed(Feed feed, String imagePath) {
+    public Feed createFeed(Feed feed) {
 
         User findUser = userService.getLoginUser();
 
@@ -51,7 +51,6 @@ public class FeedService {
                 .user(findUser)
                 .title(feed.getTitle())
                 .body(feed.getBody())
-                .imagePath(imagePath)
                 .viewCount(0L)
                 .likeCount(0L)
                 .build();

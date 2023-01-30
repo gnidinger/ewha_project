@@ -54,6 +54,8 @@ public class FeedDto {
 
         private String imagePath;
 
+        private String thumbnailPath;
+
     }
 
     @Getter
@@ -78,6 +80,7 @@ public class FeedDto {
         private Long likeCount;
         private Long viewCount;
         private String imagePath;
+        private String thumbnailPath;
         private List<CommentDto.FeedCommentResponse> comments;
         private LocalDateTime createdAt;
         private LocalDateTime modifiedAt;
