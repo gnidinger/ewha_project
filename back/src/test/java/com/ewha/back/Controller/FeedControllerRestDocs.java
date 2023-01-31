@@ -43,6 +43,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.web.bind.annotation.RequestPart;
 
 @Transactional
 @SpringBootTest
@@ -112,12 +113,13 @@ public class FeedControllerRestDocs {
                         .build();
 
         given(feedMapper.feedPostToFeed(Mockito.any(FeedDto.Post.class))).willReturn(Feed.builder().build());
-        given(feedService.createFeed(Mockito.any(Feed.class), anyString())).willReturn(Feed.builder().build());
+        given(feedService.createFeed(Mockito.any(Feed.class))).willReturn(Feed.builder().build());
         given(feedMapper.feedToFeedResponse(Mockito.any(Feed.class))).willReturn(response);
 
         ResultActions actions =
                 mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/feeds/add")
+                                .param("postFeed", post)
                                 .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(content)

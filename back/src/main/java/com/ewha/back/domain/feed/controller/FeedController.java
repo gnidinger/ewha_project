@@ -45,7 +45,7 @@ public class FeedController {
 
     @PostMapping("/add")
     public ResponseEntity postFeed(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
-                                   @Valid @RequestPart FeedDto.Post postFeed) throws Exception {
+                                   @Valid @RequestParam FeedDto.Post postFeed) throws Exception {
 
         List<String> imagePath = null;
 

@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
-@SpringBootTest
+//@SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 public class LikeControllerRestDocs {
