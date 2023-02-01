@@ -11,7 +11,7 @@ services:
     image: redis
     container_name: redis-server
     ports:
-      - 6380:6379
+      - 6379:6379
     environment:
       REDIS_HOST: redis-server
       REDIS_PORT: 6379
