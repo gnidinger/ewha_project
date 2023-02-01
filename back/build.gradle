@@ -119,6 +119,12 @@ test { // 빌드시 테스트 제외
 	exclude '**/*'
 }
 
+asciidoctor { // 빌드시 asciidoctor 제외
+    sources {
+        exclude 'extensions/**'
+    }
+}
+
 //    ---------------------------------------Query DSL--------------------------------------------
 // 경로 지정
 def querydslDir = "$buildDir/generated/'querydsl'"
