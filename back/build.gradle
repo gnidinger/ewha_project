@@ -92,11 +92,11 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
-    configurations "asciidoctorExtensions"
-    inputs.dir snippetsDir
-    dependsOn test
-}
+//tasks.named('asciidoctor') {
+//    configurations "asciidoctorExtensions"
+//    inputs.dir snippetsDir
+//    dependsOn test
+//}
 
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
@@ -117,12 +117,6 @@ bootJar {
 
 test { // 빌드시 테스트 제외
 	exclude '**/*'
-}
-
-asciidoctor { // 빌드시 asciidoctor 제외
-    sources {
-        exclude 'extensions/**'
-    }
 }
 
 //    ---------------------------------------Query DSL--------------------------------------------
