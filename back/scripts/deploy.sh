@@ -2,10 +2,10 @@
 sudo docker ps -a -q --filter "name=ewha_project" | grep -q . && docker stop ewhaproject && docker rm ewhaproject | true
 
 # 기존 이미지 삭제
-sudo docker rmi gnidigner/ewha_project:1.0
+sudo docker rmi gnidinger/ewha_project:1.0
 
 # 도커허브 이미지 pull
-sudo docker pull gnidigner/ewha_project:1.0
+sudo docker pull gnidingerer/ewha_project:1.0
 
 # 도커 run
 docker run -d -p 8080:8080 -v /home/ubuntu:/config --name ewhaproject gnidinger/ewha_project:1.0
