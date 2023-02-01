@@ -21,7 +21,7 @@ services:
       build: .
       restart: always
       environment:
-        REDIS_HOST: rediscache
+        REDIS_HOST: redis-server
         REDIS_PORT: 6379
       ports:
         - 8080:8080
