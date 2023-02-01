@@ -1,12 +1,7 @@
 package com.ewha.back.domain.search.controller;
 
-import com.ewha.back.domain.feed.dto.FeedDto;
-import com.ewha.back.domain.feed.dto.FeedDto.ListResponse;
-import com.ewha.back.domain.feed.entity.Feed;
-import com.ewha.back.domain.feed.mapper.FeedMapper;
-import com.ewha.back.domain.search.service.SearchService;
-import com.ewha.back.global.dto.SingleResponseDto;
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
@@ -18,8 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.ewha.back.domain.feed.dto.FeedDto.ListResponse;
+import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.feed.mapper.FeedMapper;
+import com.ewha.back.domain.search.service.SearchService;
+import com.ewha.back.global.dto.SingleResponseDto;
+
+import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
@@ -27,26 +27,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final SearchService searchService;
-    private final FeedMapper feedMapper;
+	private final SearchService searchService;
+	private final FeedMapper feedMapper;
 
-    @GetMapping
-    public ResponseEntity getSearchResult (
-            @RequestParam("category") @Nullable String category,
-            @RequestParam("query") String queryParam,
-            @RequestParam("page") Integer page) {
+	@GetMapping
+	public ResponseEntity getSearchResult(
+		@RequestParam("category") @Nullable String category,
+		@RequestParam("query") String queryParam,
+		@RequestParam("page") Integer page) {
 
-        Page<Feed> feedPage = new PageImpl<>(new ArrayList<>());
+		Page<Feed> feedPage = new PageImpl<>(new ArrayList<>());
 
-        if (category == null) {
-            feedPage = searchService.findAllFeedsPageByQueryParam(queryParam, page);
-        } else {
-            feedPage = searchService.findCategoryFeedsPageByQueryParam(category, queryParam, page);
-        }
+		if (category == null) {
+			feedPage = searchService.findAllFeedsPageByQueryParam(queryParam, page);
+		} else {
+			feedPage = searchService.findCategoryFeedsPageByQueryParam(category, queryParam, page);
+		}
 
-        PageImpl<ListResponse> responses = feedMapper.newFeedsToPageResponse(feedPage);
+		PageImpl<ListResponse> responses = feedMapper.newFeedsToPageResponse(feedPage);
 
-        return new ResponseEntity<>(
-                new SingleResponseDto<>(responses), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(
+			new SingleResponseDto<>(responses), HttpStatus.OK);
+	}
 }
