@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Configuration
+// @Configuration
 public class Stub {
 
     private static final Logger log = LoggerFactory.getLogger(Stub.class);
