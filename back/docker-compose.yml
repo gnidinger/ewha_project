@@ -22,7 +22,7 @@ services:
       restart: always
       environment:
         REDIS_HOST: rediscache
-        REDOS_PORT: 6379
+        REDIS_PORT: 6379
       ports:
         - 8080:8080
       depends_on:
