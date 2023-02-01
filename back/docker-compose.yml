@@ -9,7 +9,7 @@ services:
     networks:
       - redis-network
 
-    app:
+    ewhaproject:
       image: gnidinger/ewha_project:1.0
       container_name: ewhaproject
       build: .
