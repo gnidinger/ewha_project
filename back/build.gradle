@@ -78,7 +78,7 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final' // Mapstruct
     implementation "com.h2database:h2" // h2
     implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
-    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2' // 내장 Redis
+//    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2' // 내장 Redis
 //    runtimeOnly 'mysql:mysql-connector-java'
     //    ---------------------------------------QUERY DSL--------------------------------------------
     implementation 'org.springframework.boot:spring-boot-starter-test' // JUnit4 Test
