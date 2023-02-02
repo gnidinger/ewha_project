@@ -1,6 +1,10 @@
 package com.ewha.back.global.config;
 
-import com.ewha.back.domain.chat.service.RedisSubscriber;
+import static com.ewha.back.global.config.CacheConstant.*;
+
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
@@ -14,13 +18,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import org.springframework.data.redis.serializer.*;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.ewha.back.global.config.CacheConstant.*;
+import com.ewha.back.domain.chat.service.RedisSubscriber;
 
 @EnableCaching
 @Configuration

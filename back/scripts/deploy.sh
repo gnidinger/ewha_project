@@ -1,5 +1,11 @@
+# 가동중인 레디스 컨테이너 중단 및 삭제
+sudo docker ps -a -q --filter "name=redis-server" | grep -q . && docker stop redis-server && docker rm redis-server | true
+
 # 가동중인 도커 중단 및 삭제
-sudo docker ps -a -q --filter "name=ewha_project" | grep -q . && docker stop ewhaproject && docker rm ewhaproject | true
+sudo docker ps -a -q --filter "name=ewhaproject" | grep -q . && docker stop ewhaproject && docker rm ewhaproject | true
+
+# 레디스 컨테이너 run
+sudo docker-compose up -d
 
 # 기존 이미지 삭제
 sudo docker rmi gnidinger/ewha_project:1.0

@@ -44,7 +44,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Feed extends BaseTimeEntity {
+public class Feed {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

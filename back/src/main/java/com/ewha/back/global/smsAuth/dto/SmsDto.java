@@ -8,14 +8,14 @@ import lombok.Setter;
 
 public class SmsDto {
 
-    @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
-
-        private String phoneNumber;
-        private String CertificationNumber;
-    }
+	@Getter
+	@Setter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Request {
+		private String phoneNumber;
+		private String nickname;
+		private String certificationNumber;
+	}
 }

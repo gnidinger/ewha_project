@@ -145,13 +145,12 @@ public class UserService {
 	}
 
 	@Transactional
-	public boolean deleteUser() {
+	public void deleteUser() {
 
 		User findUser = getLoginUser();
 
 		userRepository.deleteById(findUser.getId());
 
-		return true;
 	}
 
 	@Transactional
