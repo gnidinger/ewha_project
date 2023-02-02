@@ -24,6 +24,7 @@ import com.ewha.back.domain.feed.repository.FeedRepository;
 import com.ewha.back.domain.like.repository.LikeRepository;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
+import com.ewha.back.global.config.CustomPage;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 
@@ -143,7 +144,7 @@ public class FeedService {
 		return comment;
 	}
 
-	@Cacheable(key = "#page", value = NEWEST_FEEDS)
+	// @Cacheable(key = "#page", value = NEWEST_FEEDS)
 	public Page<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
