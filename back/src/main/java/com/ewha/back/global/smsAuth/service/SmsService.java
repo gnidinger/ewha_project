@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
+import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.domain.user.repository.UserRepository;
+import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.smsAuth.dto.SmsDto;
 import com.ewha.back.global.smsAuth.repository.SmsRedisRepository;
 
@@ -22,9 +25,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SmsService {
 
+	private final UserService userService;
+	private final UserRepository userRepository;
 	private final SmsRedisRepository smsRedisRepository;
 
-	public void sendSms(String phoneNumber) throws CoolsmsException {
+	public void sendSms(String userId, String phoneNumber) throws CoolsmsException {
+
+		userService.verifyUserIdForSms(userId);
 
 		Message coolsms = new Message(API_KEY, API_SECRET);
 
@@ -52,6 +59,12 @@ public class SmsService {
 		if (isVerified(request)) {
 			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
 		} else {
+
+			User findUser = userService.findByUserId(request.getUserId());
+			findUser.setIsVerified(true);
+			findUser.setPhoneNumber(request.getPhoneNumber());
+			userRepository.save(findUser);
+
 			smsRedisRepository.removeCertification(request.getPhoneNumber());
 		}
 	}

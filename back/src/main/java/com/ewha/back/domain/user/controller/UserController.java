@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +42,8 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.mapper.UserMapper;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.dto.SingleResponseDto;
+import com.ewha.back.global.exception.BusinessLogicException;
+import com.ewha.back.global.exception.ExceptionCode;
 import com.ewha.back.global.security.dto.LoginDto;
 
 import lombok.RequiredArgsConstructor;
@@ -92,19 +95,19 @@ public class UserController {
 			new SingleResponseDto<>(response), HttpStatus.OK);
 	}
 
-	@PatchMapping("/mypage/userinfo")
+	@PatchMapping("/mypage/patch")
 	public ResponseEntity patchUser(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
-		@Valid @RequestBody UserDto.UserInfo userInfo) throws Exception {
+		@Valid @RequestPart(value = "patch") UserDto.UserInfo userInfo) throws Exception {
 
 		List<String> imagePath = null;
 
 		User updatedUser = userService.updateUser(userInfo);
 
-		if (multipartFile != null)
+		if (multipartFile != null) {
 			imagePath = awsS3Service.updateORDeleteUserImageFromS3(updatedUser.getId(), multipartFile);
-
-		updatedUser.setProfileImage(imagePath.get(0));
-		updatedUser.setThumbnailPath(imagePath.get(1));
+			updatedUser.setProfileImage(imagePath.get(0));
+			updatedUser.setThumbnailPath(imagePath.get(1));
+		}
 
 		UserDto.Response response = userMapper.userToUserResponse(updatedUser);
 
@@ -112,9 +115,9 @@ public class UserController {
 			new SingleResponseDto<>(response), HttpStatus.OK);
 	}
 
-	@PatchMapping("/mypage/userinfo/password")
+	@PatchMapping("/mypage/patch/password")
 	public void patchPassword(@Valid @RequestBody UserDto.Password password) {
-		userService.updatePassword(password.getPassword());
+		userService.updatePassword(password);
 	}
 
 	@GetMapping("/users/{user_id}")

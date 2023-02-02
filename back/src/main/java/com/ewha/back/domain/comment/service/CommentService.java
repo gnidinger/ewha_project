@@ -1,5 +1,12 @@
 package com.ewha.back.domain.comment.service;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.repository.CommentQueryRepository;
 import com.ewha.back.domain.comment.repository.CommentRepository;
@@ -9,108 +16,100 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
-
-import static com.ewha.back.global.config.CacheConstant.FEED_COMMENTS;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
-    private final UserService userService;
-    private final FeedService feedService;
-    private final CommentRepository commentRepository;
-    private final CommentQueryRepository commentQueryRepository;
+	private final UserService userService;
+	private final FeedService feedService;
+	private final CommentRepository commentRepository;
+	private final CommentQueryRepository commentQueryRepository;
 
-    public Comment createComment(Comment comment, Long feedId) {
+	public Comment createComment(Comment comment, Long feedId) {
 
-        User findUser = userService.getLoginUser();
+		User findUser = userService.getLoginUser();
 
-        Feed findFeed = feedService.findVerifiedFeed(feedId);
+		Feed findFeed = feedService.findVerifiedFeed(feedId);
 
-        Comment savedComment =
-                Comment.builder()
-                        .feed(findFeed)
-                        .user(findUser)
-                        .body(comment.getBody())
-                        .likeCount(0L)
-                        .build();
+		Comment savedComment =
+			Comment.builder()
+				.feed(findFeed)
+				.user(findUser)
+				.body(comment.getBody())
+				.likeCount(0L)
+				.build();
 
-        return commentRepository.save(savedComment);
-    }
+		return commentRepository.save(savedComment);
+	}
 
-    public Comment updateComment(Comment comment, Long commentId) {
+	public Comment updateComment(Comment comment, Long commentId) {
 
-        User findUser = userService.getLoginUser();
+		User findUser = userService.getLoginUser();
 
-        Comment findComment = findVerifiedComment(commentId);
+		Comment findComment = findVerifiedComment(commentId);
 
-        if (findUser.equals(findComment.getUser())) {
+		if (findUser.equals(findComment.getUser())) {
 
-            findComment.updateComment(comment);
+			findComment.updateComment(comment);
 
-            return commentRepository.save(findComment);
-        }
-        else throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-    }
+			return commentRepository.save(findComment);
+		} else
+			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+	}
 
-    @Cacheable(key = "#feedId", value = FEED_COMMENTS)
-    public Page<Comment> getFeedComments(Long feedId, int page) {
+	// @Cacheable(key = "#feedId", value = FEED_COMMENTS)
+	public Page<Comment> getFeedComments(Long feedId, int page) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, 10);
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 
-        return commentQueryRepository.findFeedComment(feedId, pageRequest);
+		return commentQueryRepository.findFeedComment(feedId, pageRequest);
 
-    }
+	}
 
-    public Comment addLike(Long commentId) {
-        return null;
-    }
+	public Comment addLike(Long commentId) {
+		return null;
+	}
 
-    public Comment removeLike(Long commentId) {
-        return null;
-    }
+	public Comment removeLike(Long commentId) {
+		return null;
+	}
 
-    public Comment isLikedComment(Long commentId) {
-        return null;
-    }
+	public Comment isLikedComment(Long commentId) {
+		return null;
+	}
 
-    public void deleteComment(Long commentId) {
+	public void deleteComment(Long commentId) {
 
-        User findUser = userService.getLoginUser();
+		User findUser = userService.getLoginUser();
 
-        Comment findComment = findVerifiedComment(commentId);
+		Comment findComment = findVerifiedComment(commentId);
 
-        if (findUser.equals(findComment.getUser())) {
-            commentRepository.delete(findComment);
-        }
-        else throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
-    }
+		if (findUser.equals(findComment.getUser())) {
+			commentRepository.delete(findComment);
+		} else
+			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+	}
 
-    public void deleteComments(Long commentId) {
+	public void deleteComments(Long commentId) {
 
-        User findUser = userService.getLoginUser();
+		User findUser = userService.getLoginUser();
 
-        Long id = findUser.getId();
+		Long id = findUser.getId();
 
-        commentRepository.deleteAllByUserId(id);
+		commentRepository.deleteAllByUserId(id);
 
-        Comment findComment = findVerifiedComment(commentId);
-    }
+		Comment findComment = findVerifiedComment(commentId);
+	}
 
-    public Comment findVerifiedComment(long commentId) {
+	public Comment findVerifiedComment(long commentId) {
 
-        Optional<Comment> optionalComment = commentRepository.findById(commentId);
-        return optionalComment.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-    }
+		Optional<Comment> optionalComment = commentRepository.findById(commentId);
+		return optionalComment.orElseThrow(() ->
+			new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+	}
 
 }

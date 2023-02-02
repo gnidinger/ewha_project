@@ -1,15 +1,10 @@
 package com.ewha.back.domain.feed.controller;
 
-import com.ewha.back.domain.feed.dto.FeedDto;
-import com.ewha.back.domain.feed.entity.Feed;
-import com.ewha.back.domain.feed.mapper.FeedMapper;
-import com.ewha.back.domain.feed.repository.FeedQueryRepository;
-import com.ewha.back.domain.feed.service.FeedService;
-import com.ewha.back.domain.image.service.AwsS3Service;
-import com.ewha.back.global.dto.SingleResponseDto;
-import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +25,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import com.ewha.back.domain.feed.dto.FeedDto;
+import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.feed.mapper.FeedMapper;
+import com.ewha.back.domain.feed.repository.FeedQueryRepository;
+import com.ewha.back.domain.feed.service.FeedService;
+import com.ewha.back.domain.image.service.AwsS3Service;
+import com.ewha.back.global.dto.SingleResponseDto;
+import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
@@ -48,7 +49,7 @@ public class FeedController {
 
 	@PostMapping("/add")
 	public ResponseEntity postFeed(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
-		@Valid @RequestParam FeedDto.Post postFeed) throws Exception {
+		@Valid @RequestPart(value = "post") FeedDto.Post postFeed) throws Exception {
 
 		List<String> imagePath = null;
 
@@ -58,9 +59,9 @@ public class FeedController {
 
 		if (multipartFile != null) {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
+			createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
 		}
 
-		createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
 
 		FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
 
@@ -72,7 +73,7 @@ public class FeedController {
 	@PatchMapping("/{feed_id}/edit")
 	public ResponseEntity patchFeed(@PathVariable("feed_id") @Positive Long feedId,
 		@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
-		@Valid @RequestPart FeedDto.Patch patchFeed) throws Exception {
+		@Valid @RequestPart(value = "patch") FeedDto.Patch patchFeed) throws Exception {
 
 		List<String> imagePath = null;
 

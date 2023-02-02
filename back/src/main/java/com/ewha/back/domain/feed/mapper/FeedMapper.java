@@ -1,5 +1,13 @@
 package com.ewha.back.domain.feed.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
 import com.ewha.back.domain.category.dto.CategoryDto;
 import com.ewha.back.domain.category.entity.Category;
 import com.ewha.back.domain.comment.dto.CommentDto;
@@ -8,14 +16,6 @@ import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.entity.FeedCategory;
 import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
-
-import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface FeedMapper {

@@ -87,6 +87,13 @@ public class UserService {
 			throw new BusinessLogicException(ExceptionCode.NICKNAME_EXISTS);
 	}
 
+	public Boolean verifyUserIdForSms(String userId) {
+		if (userRepository.existsByUserId(userId))
+			return true;
+		else
+			throw new BusinessLogicException(ExceptionCode.USER_ID_NOT_FOUND);
+	}
+
 	public Boolean verifyPassword(String password) {
 		User findUser = getLoginUser();
 		return findUser.verifyPassword(bCryptPasswordEncoder, password);
@@ -97,7 +104,7 @@ public class UserService {
 
 		User findUser = getLoginUser();
 
-		userCategoryQueryRepository.deleteByUserId(findUser.getId());
+		userCategoryQueryRepository.deleteByUser(findUser);
 
 		List<UserCategory> userCategories = userInfo.getCategories().stream()
 			.map(a -> {
@@ -116,16 +123,22 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updatePassword(String password) {
+	public void updatePassword(UserDto.Password password) {
 
 		User findUser = getLoginUser();
 
-		if (verifyPassword(password))
-			throw new BusinessLogicException(ExceptionCode.PASSWORD_CANNOT_CHANGE);
-		else {
-			findUser.setPassword(bCryptPasswordEncoder.encode(password));
-			userRepository.save(findUser);
+		if (!verifyPassword(password.getOldPassword())) {
+			throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
 		}
+
+		if (!password.getNewPassword().equals(password.getNewPasswordRepeat())) {
+			throw new BusinessLogicException(ExceptionCode.PASSWORDS_NOT_MATCH);
+		}
+
+			findUser.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
+
+			userRepository.save(findUser);
+
 	}
 
 	@Transactional(readOnly = true)

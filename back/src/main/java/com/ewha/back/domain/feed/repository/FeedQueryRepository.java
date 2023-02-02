@@ -1,24 +1,21 @@
 package com.ewha.back.domain.feed.repository;
 
-import com.ewha.back.domain.feed.entity.Feed;
+import static com.ewha.back.domain.category.entity.QCategory.*;
+import static com.ewha.back.domain.feed.entity.QFeed.*;
+import static com.ewha.back.domain.feed.entity.QFeedCategory.*;
 
-import static com.ewha.back.domain.user.entity.QUser.user;
-
-import com.ewha.back.domain.user.entity.User;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.user.entity.User;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import static com.ewha.back.domain.category.entity.QCategory.category;
-import static com.ewha.back.domain.feed.entity.QFeed.feed;
-import static com.ewha.back.domain.feed.entity.QFeedCategory.feedCategory;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
@@ -118,6 +115,12 @@ public class FeedQueryRepository {
 			.fetchOne();
 
 		return new PageImpl<>(feedList, pageable, total);
+	}
+
+	public void deleteAllByUser(User findUser) {
+		jpaQueryFactory.delete(feed)
+			.where(feed.user.eq(findUser))
+			.execute();
 	}
 
 }

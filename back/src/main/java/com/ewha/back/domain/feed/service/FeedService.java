@@ -1,5 +1,17 @@
 package com.ewha.back.domain.feed.service;
 
+import static com.ewha.back.global.config.CacheConstant.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ewha.back.domain.category.entity.Category;
 import com.ewha.back.domain.category.service.CategoryService;
 import com.ewha.back.domain.comment.entity.Comment;
@@ -16,22 +28,6 @@ import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.ewha.back.global.config.CacheConstant.NEWEST_FEEDS;
 
 @Service
 @Transactional
@@ -147,7 +143,7 @@ public class FeedService {
 		return comment;
 	}
 
-	// @Cacheable(key = "#page", value = NEWEST_FEEDS)
+	@Cacheable(key = "#page", value = NEWEST_FEEDS)
 	public Page<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);

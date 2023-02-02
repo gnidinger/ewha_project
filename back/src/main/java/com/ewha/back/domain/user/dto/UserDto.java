@@ -73,9 +73,8 @@ public class UserDto {
 		private GenderType genderType;
 		@NotNull
 		private AgeType ageType;
-		private String profileImage;
 		@NotEmpty
-		@Size(max = 3, message = "장르는 최대 3개까지 선택 가능합니다")
+		@Size(max = 3, message = "관심사는 최대 3개까지 선택 가능합니다")
 		private List<String> categories;
 	}
 
@@ -97,9 +96,14 @@ public class UserDto {
 	@Getter
 	@NoArgsConstructor
 	public static class Password {
+
+		@NotBlank(message = "패스워드를 입력해주세요.")
+		private String oldPassword;
 		@NotBlank(message = "패스워드를 입력해주세요.")
 		@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
-		private String password;
+		private String newPassword;
+		@NotBlank(message = "패스워드를 입력해주세요.")
+		private String newPasswordRepeat;
 	}
 
 	@Getter

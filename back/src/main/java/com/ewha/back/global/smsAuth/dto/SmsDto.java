@@ -15,7 +15,7 @@ public class SmsDto {
 	@AllArgsConstructor
 	public static class Request {
 		private String phoneNumber;
-		private String nickname;
+		private String userId;
 		private String certificationNumber;
 	}
 }

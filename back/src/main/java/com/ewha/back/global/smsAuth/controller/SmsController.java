@@ -26,7 +26,7 @@ public class SmsController {
 
 		System.out.println("인증 요청 번호: " + request.getPhoneNumber());
 
-		smsService.sendSms(request.getPhoneNumber());
+		smsService.sendSms(request.getUserId(), request.getPhoneNumber());
 
 		return new ResponseEntity(HttpStatus.OK);
 	}
