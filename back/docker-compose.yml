@@ -9,20 +9,20 @@ services:
     networks:
       - redis-network
 
-    ewhaproject:
-      image: gnidinger/ewha_project:1.0
-      container_name: ewhaproject
-      build: .
-      restart: always
-      environment:
-        REDIS_HOST: redis-server
-        REDIS_PORT: 6379
-      ports:
-        - 8080:8080
-      depends_on:
-        - redis
-      networks:
-        - redis-network
+  ewhaproject:
+    image: gnidinger/ewha_project:1.0
+    container_name: ewhaproject
+    build: .
+    restart: always
+    environment:
+      REDIS_HOST: redis-server
+      REDIS_PORT: 6379
+    ports:
+      - 8080:8080
+    depends_on:
+      - redis
+    networks:
+      - redis-network
 
 networks:
   redis-network:
