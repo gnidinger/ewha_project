@@ -3,6 +3,7 @@ package com.ewha.back.domain.feed.repository;
 import static com.ewha.back.domain.category.entity.QCategory.*;
 import static com.ewha.back.domain.feed.entity.QFeed.*;
 import static com.ewha.back.domain.feed.entity.QFeedCategory.*;
+import static com.ewha.back.domain.like.entity.QLike.*;
 
 import java.util.List;
 
@@ -28,6 +29,25 @@ public class FeedQueryRepository {
 			.select(feed)
 			.from(feed)
 			.where(feed.user.eq(user))
+			.orderBy(feed.createdAt.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.fetch();
+
+		Long total = jpaQueryFactory
+			.select(feed.count())
+			.from(feed)
+			.fetchOne();
+
+		return new PageImpl<>(feedList, pageable, total);
+	}
+
+	public Page<Feed> findFeedLikesListByUser(User user, Pageable pageable) {
+
+		List<Feed> feedList = jpaQueryFactory
+			.selectFrom(feed)
+			.join(feed.likes, like)
+			.where(like.user.eq(user))
 			.orderBy(feed.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())

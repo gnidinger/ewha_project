@@ -238,6 +238,15 @@ public class UserService {
 		return commentQueryRepository.findCommentListByUser(findUser, pageRequest);
 	}
 
+	public Page<Feed> findUserFeedLikes(int page) {
+
+		User findUser = getLoginUser();
+
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+
+		return feedQueryRepository.findFeedLikesListByUser(findUser, pageRequest);
+	}
+
 	public Page<Question> findUserQuestions(int page) {
 
 		User findUser = getLoginUser();

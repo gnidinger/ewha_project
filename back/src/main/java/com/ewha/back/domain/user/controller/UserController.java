@@ -172,13 +172,18 @@ public class UserController {
 			new SingleResponseDto<>(responses), HttpStatus.OK);
 	}
 
-	@GetMapping("/mypage/mybookmarks")
-	public ResponseEntity getUserBookmarks(@PathParam("page") int page) {
-		return null;
+	@GetMapping("/mypage/myfeedlikes")
+	public ResponseEntity getUserFeedLikes(@RequestParam(name = "page", defaultValue = "1") int page) {
+
+		Page<Feed> feedList = userService.findUserFeedLikes(page);
+		PageImpl<FeedDto.ListResponse> responses = feedMapper.myFeedsToPageResponse(feedList);
+
+		return new ResponseEntity<>(
+			new SingleResponseDto<>(responses), HttpStatus.OK);
 	}
 
 	@GetMapping("/mypage/myquestions")
-	public ResponseEntity getUserQuestions(@PathParam("page") int page) {
+	public ResponseEntity getUserQuestions(@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Question> questionList = userService.findUserQuestions(page);
 		PageImpl<QuestionDto.AnsweredResponse> responses = questionMapper.myQuestionsToPageResponse(questionList);

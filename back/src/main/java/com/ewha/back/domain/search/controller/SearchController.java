@@ -32,9 +32,9 @@ public class SearchController {
 
 	@GetMapping
 	public ResponseEntity getSearchResult(
-		@RequestParam("category") @Nullable String category,
+		@Nullable @RequestParam("category") String category,
 		@RequestParam("query") String queryParam,
-		@RequestParam("page") Integer page) {
+		@RequestParam(name = "page", defaultValue = "1") Integer page) {
 
 		Page<Feed> feedPage = new PageImpl<>(new ArrayList<>());
 
