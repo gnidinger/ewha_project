@@ -8,6 +8,9 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -127,12 +130,24 @@ public class FeedController {
 	@GetMapping("/newest")
 	public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
 
-		CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
-		CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
+		List<Feed> feedList = feedService.findNewestFeeds();
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+		List<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
+		PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok().body(responsePage);
+		// return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
 	}
+
+	// @GetMapping("/newest")
+	// public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
+	//
+	// 	CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
+	// 	CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
+	//
+	// 	return new ResponseEntity<>(
+	// 		new SingleResponseDto<>(responses), HttpStatus.OK);
+	// }
 
 	@GetMapping("/categories")
 	public ResponseEntity getCategoryFeeds(@RequestParam("category") String categoryName,

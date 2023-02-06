@@ -46,7 +46,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Feed {
+public class Feed extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -79,17 +79,18 @@ public class Feed {
 	@Column
 	private Long viewCount;
 
-	@Column
-	@CreatedDate
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	private LocalDateTime createdAt;
+	// @Column(updatable = false)
+	// @CreatedDate
 
-	@Column
-	@LastModifiedDate
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	private LocalDateTime modifiedAt;
+	// @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	// @JsonSerialize(using = LocalDateTimeSerializer.class)
+	// private LocalDateTime createdAt = LocalDateTime.now();
+
+	// @Column
+	// @LastModifiedDate
+	// @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	// @JsonSerialize(using = LocalDateTimeSerializer.class)
+	// private LocalDateTime modifiedAt = LocalDateTime.now();
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
