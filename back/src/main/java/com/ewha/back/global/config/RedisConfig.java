@@ -40,7 +40,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 	@Value("${spring.redis.port}")
 	private int redisPort;
 
-	@Bean
+	// @Bean
 	public ObjectMapper objectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // timestamp 형식 안따르도록 설정
