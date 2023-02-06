@@ -128,7 +128,7 @@ public class FeedController {
 	public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
-		PageImpl<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
+		CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
 
 		return new ResponseEntity<>(
 			new SingleResponseDto<>(responses), HttpStatus.OK);

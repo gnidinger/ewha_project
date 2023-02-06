@@ -154,7 +154,7 @@ public interface FeedMapper {
 		if (feedList == null)
 			return null;
 
-		return new CustomPage<>(new PageImpl<>(feedList.stream()
+		return new CustomPage<>(feedList.stream()
 			.map(feed -> {
 				return FeedDto.ListResponse.builder()
 					.feedId(feed.getId())
@@ -167,7 +167,7 @@ public interface FeedMapper {
 					.viewCount(feed.getViewCount())
 					.createdAt(feed.getCreatedAt())
 					.build();
-			}).collect(Collectors.toList())));
+			}).collect(Collectors.toList()));
 	}
 
 }

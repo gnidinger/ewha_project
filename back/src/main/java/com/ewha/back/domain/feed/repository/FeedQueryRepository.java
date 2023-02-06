@@ -76,7 +76,7 @@ public class FeedQueryRepository {
 			.from(feed)
 			.fetchOne();
 
-		return new CustomPage<>(new PageImpl<>(feedList, pageable, total));
+		return new CustomPage<>(feedList, pageable, total);
 	}
 
 	// public Page<Feed> findNewestFeedList(Pageable pageable) {
