@@ -21,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,51 +33,39 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id", updatable = false)
 	private Long id;
-
 	@Column(name = "string_id", nullable = false, unique = true)
 	private String userId;
-
 	@Column
 	private String phoneNumber;
-
 	@Column(nullable = false)
 	private Double ariFactor;
-
 	@Column(nullable = false)
 	private Boolean isFirstLogin;
-
 	@Column(name = "oauth_id", unique = true)
 	private String oauthId;
-
 	@Column(nullable = false)
 	private String password;
-
 	@Column(nullable = false)
 	private String nickname;
-
 	@Column
 	private String profileImage; // 프로필 이미지 경로
-
 	@Column
 	private String thumbnailPath;
-
 	@Column
 	@Builder.Default
 	private Boolean isVerified = false;
-
 	@Enumerated(EnumType.STRING)
 	private GenderType genderType;
-
 	@Enumerated(EnumType.STRING)
 	private AgeType ageType;
-
 	@Column
 	private String introduction;
+	@Column
+	private LocalDate birthday;
 
 	@ElementCollection
 	@LazyCollection(LazyCollectionOption.FALSE)

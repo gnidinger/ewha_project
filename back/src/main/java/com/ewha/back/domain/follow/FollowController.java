@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @Transactional
 @RequiredArgsConstructor
-@RequestMapping("/api/follow")
+@RequestMapping("/follow")
 public class FollowController {
 
 	private final FollowService followService;
@@ -34,7 +34,7 @@ public class FollowController {
 	private final UserService userService;
 	private final FollowRepository followRepository;
 
-	@PostMapping("/{userId}")
+	@PostMapping("/{userId}/add")
 	public ResponseEntity follow(@PathVariable("userId") @Positive long followedUserId) {
 
 		User findUser = userService.getLoginUser();
@@ -48,7 +48,7 @@ public class FollowController {
 		//        return new FollowDto.CMResponse<>(1, result);
 	}
 
-	@DeleteMapping("/{userId}")
+	@DeleteMapping("/{userId}/delete")
 	public FollowDto.CMResponse unFollow(@PathVariable("userId") @Positive long followedUserId) {
 
 		User findUser = userService.getLoginUser();
