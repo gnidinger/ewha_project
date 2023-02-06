@@ -2,6 +2,7 @@ package com.ewha.back.domain.comment.service;
 
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,6 @@ public class CommentService {
 			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
 	}
 
-	// @Cacheable(key = "#feedId", value = FEED_COMMENTS)
 	public Page<Comment> getFeedComments(Long feedId, int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
