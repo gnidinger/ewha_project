@@ -9,7 +9,9 @@ import com.ewha.back.domain.user.entity.enums.Role;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,75 +23,72 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class QuestionService {
-    private final UserService userService;
-    private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
-    private final AnswerQueryRepository answerQueryRepository;
+	private final UserService userService;
+	private final QuestionRepository questionRepository;
+	private final AnswerRepository answerRepository;
+	private final AnswerQueryRepository answerQueryRepository;
 
+	@Transactional
+	public Question createQuestion(Question question) {
 
-    @Transactional
-    public Question createQuestion(Question question) {
+		User findUser = userService.getLoginUser();
 
-        User findUser = userService.getLoginUser();
+		if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
 
-        if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+			Question savedQuestion = Question.builder()
+				.title(question.getTitle())
+				.body(question.getBody())
+				.imagePath(question.getImagePath())
+				.answerBody(question.getAnswerBody())
+				.build();
 
-            Question savedQuestion = Question.builder()
-                    .title(question.getTitle())
-                    .body(question.getBody())
-                    .imagePath(question.getImagePath())
-                    .answerBody(question.getAnswerBody())
-                    .dummy1(question.getDummy1())
-                    .dummy2(question.getDummy2())
-                    .dummy3(question.getDummy3())
-                    .dummy4(question.getDummy4())
-                    .build();
+			return questionRepository.save(savedQuestion);
+		} else
+			throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+	}
 
-            return questionRepository.save(savedQuestion);
-        } else throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
-    }
+	@Transactional
+	public Question updateQuestion(Question question, Long questionId) {
 
-    @Transactional
-    public Question updateQuestion(Question question, Long questionId) {
+		User findUser = userService.getLoginUser();
 
-        User findUser = userService.getLoginUser();
+		Question findQuestion = findVerifiedQuestion(questionId);
 
-        Question findQuestion = findVerifiedQuestion(questionId);
+		if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
 
-        if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+			findQuestion.updateQuestion(question);
 
-            findQuestion.updateQuestion(question);
+			return questionRepository.save(findQuestion);
+		} else
+			throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+	}
 
-            return questionRepository.save(findQuestion);
-        } else throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
-    }
+	@Transactional(readOnly = true)
+	public Question getQuestion(Long questionId) {
 
-    @Transactional(readOnly = true)
-    public Question getQuestion(Long questionId) {
+		Question findQuestion = findVerifiedQuestion(questionId);
+		return findVerifiedQuestion(questionId);
+	}
 
-        Question findQuestion = findVerifiedQuestion(questionId);
-        return findVerifiedQuestion(questionId);
-    }
+	@Transactional(readOnly = true)
+	public Question getAnsweredQuestion(Long questionId, Long userId) {
 
-    @Transactional(readOnly = true)
-    public Question getAnsweredQuestion(Long questionId, Long userId) {
+		Question findQuestion = findVerifiedQuestion(questionId);
 
-        Question findQuestion = findVerifiedQuestion(questionId);
+		Question question = Question.builder()
+			.title(findQuestion.getTitle())
+			.body(findQuestion.getBody())
+			.answerBody(findQuestion.getAnswerBody())
+			.answers(answerQueryRepository.findByUserId(userId))
+			.build();
 
-        Question question = Question.builder()
-                .title(findQuestion.getTitle())
-                .body(findQuestion.getBody())
-                .answerBody(findQuestion.getAnswerBody())
-                .answers(answerQueryRepository.findByUserId(userId))
-                .build();
+		return question;
+	}
 
-        return question;
-    }
+	public Question findVerifiedQuestion(Long questionId) {
 
-    public Question findVerifiedQuestion(Long questionId) {
-
-        Optional<Question> optionalPairing = questionRepository.findById(questionId);
-        return optionalPairing.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
-    }
+		Optional<Question> optionalPairing = questionRepository.findById(questionId);
+		return optionalPairing.orElseThrow(() ->
+			new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+	}
 }

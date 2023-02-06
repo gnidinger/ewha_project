@@ -35,32 +35,16 @@ public class Question extends BaseTimeEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "question_id")
 	private Long id;
-
 	@Column(nullable = false)
 	private String title;
-
 	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String body;
-
 	@Column
 	private String imagePath;
 	@Column
 	private String thumbnailPath;
-
 	@Column
 	private String answerBody;
-
-	@Column
-	private String dummy1;
-
-	@Column
-	private String dummy2;
-
-	@Column
-	private String dummy3;
-
-	@Column
-	private String dummy4;
 
 	@Nullable
 	@JsonManagedReference
@@ -78,10 +62,6 @@ public class Question extends BaseTimeEntity {
 		this.imagePath = question.getImagePath();
 		this.thumbnailPath = question.getThumbnailPath();
 		this.answerBody = question.getAnswerBody();
-		this.dummy1 = question.getDummy1();
-		this.dummy2 = question.getDummy2();
-		this.dummy3 = question.getDummy3();
-		this.dummy4 = question.getDummy4();
 	}
 
 	public void addImagePaths(String fullPath, String thumbnailPath) {
