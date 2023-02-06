@@ -152,6 +152,7 @@ public class FeedService {
 		return feedQueryRepository.findNewestFeedList(pageRequest);
 	}
 
+
 	public Page<Feed> findCategoryFeeds(String categoryName, int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);

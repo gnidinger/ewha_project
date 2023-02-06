@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.global.config.CustomPage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -61,7 +62,7 @@ public class FeedQueryRepository {
 		return new PageImpl<>(feedList, pageable, total);
 	}
 
-	public Page<Feed> findNewestFeedList(Pageable pageable) {
+	public CustomPage<Feed> findNewestFeedList(Pageable pageable) {
 
 		List<Feed> feedList = jpaQueryFactory
 			.selectFrom(feed)
@@ -75,8 +76,25 @@ public class FeedQueryRepository {
 			.from(feed)
 			.fetchOne();
 
-		return new PageImpl<>(feedList, pageable, total);
+		return new CustomPage<>(new PageImpl<>(feedList, pageable, total));
 	}
+
+	// public Page<Feed> findNewestFeedList(Pageable pageable) {
+	//
+	// 	List<Feed> feedList = jpaQueryFactory
+	// 		.selectFrom(feed)
+	// 		.orderBy(feed.createdAt.desc())
+	// 		.offset(pageable.getOffset())
+	// 		.limit(pageable.getPageSize())
+	// 		.fetch();
+	//
+	// 	Long total = jpaQueryFactory
+	// 		.select(feed.count())
+	// 		.from(feed)
+	// 		.fetchOne();
+	//
+	// 	return new PageImpl<>(feedList, pageable, total);
+	// }
 
 	public Page<Feed> findCategoryFeedList(String categoryName, Pageable pageable) {
 
