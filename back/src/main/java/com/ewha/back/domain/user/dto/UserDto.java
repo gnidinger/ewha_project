@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -35,10 +37,9 @@ public class UserDto {
 		@NotBlank(message = "패스워드를 입력해주세요.")
 		@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
 		private String password;
-		@Nullable
 		private LocalDate birthday;
-		@Nullable
-		@Size(max = 6, min = 6)
+		@Min(100000)
+		@Max(999999)
 		private Long centerCode;
 		private String profileImage; // 프로필 이미지
 
@@ -55,6 +56,7 @@ public class UserDto {
 		private Double ariFactor;
 		private List<String> role;
 		private LocalDate birthday;
+		private Long centerCode;
 		private String profileImage;
 	}
 

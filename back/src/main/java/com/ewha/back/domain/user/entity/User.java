@@ -65,6 +65,8 @@ public class User extends BaseTimeEntity {
 	@Column
 	private String introduction;
 	@Column
+	private Long centerCode;
+	@Column
 	private LocalDate birthday;
 
 	@ElementCollection

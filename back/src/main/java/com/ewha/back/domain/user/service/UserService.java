@@ -67,6 +67,8 @@ public class UserService {
 			.nickname(user.getNickname())
 			.role(roles)
 			.ariFactor(36.5)
+			.centerCode(user.getCenterCode())
+			.birthday(user.getBirthday())
 			.isFirstLogin(true)
 			.build();
 
