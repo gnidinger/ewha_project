@@ -20,6 +20,8 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Nullable;
 
 import com.ewha.back.domain.comment.entity.Comment;
@@ -44,7 +46,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Feed extends BaseTimeEntity {
+public class Feed {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,6 +78,18 @@ public class Feed extends BaseTimeEntity {
 
 	@Column
 	private Long viewCount;
+
+	@Column
+	@CreatedDate
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	private LocalDateTime createdAt;
+
+	@Column
+	@LastModifiedDate
+	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	private LocalDateTime modifiedAt;
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
