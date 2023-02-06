@@ -133,10 +133,10 @@ public class FeedController {
 		List<Feed> feedList = feedService.findNewestFeeds();
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 		List<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
-		// PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
+		PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
 
-		return ResponseEntity.ok().body(responses);
-		// return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
+		// return ResponseEntity.ok().body(responses);
+		return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
 	}
 
 	// @GetMapping("/newest")
