@@ -9,6 +9,41 @@ services:
     networks:
       - redis-network
 
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-tier
+    ports:
+      - 6379:6379
+  redis-slave-1:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6479:6379
+    depends_on:
+      - redis
+    networks:
+      - app-tier
+  redis-slave-2:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - 6579:6379
+    depends_on:
+      - redis
+    networks:
+      - app-tier
+
   ewhaproject:
     image: gnidinger/ewha_project:1.0
     container_name: ewhaproject

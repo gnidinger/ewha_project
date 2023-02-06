@@ -7,10 +7,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.ewha.back.domain.feed.entity.Feed;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true, value = {"pageable"})
 public class CustomPage<T> extends PageImpl<T> {
@@ -22,6 +23,7 @@ public class CustomPage<T> extends PageImpl<T> {
 		@JsonProperty("totalElements") long total) {
 		super(content, PageRequest.of(page, size), total);
 	}
+
 
 	public CustomPage(Page<T> page) {
 		super(page.getContent(), page.getPageable(), page.getTotalElements());
