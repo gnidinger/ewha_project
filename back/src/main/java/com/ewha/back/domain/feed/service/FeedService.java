@@ -145,7 +145,7 @@ public class FeedService {
 		return comment;
 	}
 
-	public Page<Feed> findNewestFeeds(int page) {
+	public CustomPage<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 

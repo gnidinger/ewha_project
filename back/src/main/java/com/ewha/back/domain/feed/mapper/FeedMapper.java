@@ -16,6 +16,7 @@ import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.entity.FeedCategory;
 import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.global.config.CustomPage;
 
 @Mapper(componentModel = "spring")
 public interface FeedMapper {
@@ -147,4 +148,26 @@ public interface FeedMapper {
 					.build();
 			}).collect(Collectors.toList()));
 	}
+
+	default CustomPage<FeedDto.ListResponse> TESTnewFeedsToPageResponse(CustomPage<Feed> feedList) {
+
+		if (feedList == null)
+			return null;
+
+		return new CustomPage<>(new PageImpl<>(feedList.stream()
+			.map(feed -> {
+				return FeedDto.ListResponse.builder()
+					.feedId(feed.getId())
+					.title(feed.getTitle())
+					.commentCount(feed.getComments().size())
+					.categories(feed.getFeedCategories().stream()
+						.map(feedCategory -> feedCategory.getCategory().getCategoryType())
+						.collect(Collectors.toList()))
+					.likeCount(feed.getLikeCount())
+					.viewCount(feed.getViewCount())
+					.createdAt(feed.getCreatedAt())
+					.build();
+			}).collect(Collectors.toList())));
+	}
+
 }

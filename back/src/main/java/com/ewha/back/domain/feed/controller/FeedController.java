@@ -31,6 +31,7 @@ import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.feed.repository.FeedQueryRepository;
 import com.ewha.back.domain.feed.service.FeedService;
 import com.ewha.back.domain.image.service.AwsS3Service;
+import com.ewha.back.global.config.CustomPage;
 import com.ewha.back.global.dto.SingleResponseDto;
 import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
 
@@ -126,8 +127,8 @@ public class FeedController {
 	@GetMapping("/newest")
 	public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
 
-		Page<Feed> feedList = feedService.findNewestFeeds(page);
-		PageImpl<FeedDto.ListResponse> responses = feedMapper.newFeedsToPageResponse(feedList);
+		CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
+		PageImpl<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
 
 		return new ResponseEntity<>(
 			new SingleResponseDto<>(responses), HttpStatus.OK);
