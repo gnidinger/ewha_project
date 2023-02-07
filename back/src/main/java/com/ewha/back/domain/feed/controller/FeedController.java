@@ -130,14 +130,24 @@ public class FeedController {
 	@GetMapping("/newest")
 	public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
 
-		List<Feed> feedList = feedService.findNewestFeeds();
-		PageRequest pageRequest = PageRequest.of(page - 1, 10);
-		List<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
-		PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
+		CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
+		CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
 
-		// return ResponseEntity.ok().body(responses);
-		return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
+		return new ResponseEntity<>(
+			new SingleResponseDto<>(responses), HttpStatus.OK);
 	}
+
+	// @GetMapping("/newest")
+	// public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
+	//
+	// 	List<Feed> feedList = feedService.findNewestFeeds();
+	// 	PageRequest pageRequest = PageRequest.of(page - 1, 10);
+	// 	List<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
+	// 	PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
+	//
+	// 	// return ResponseEntity.ok().body(responses);
+	// 	return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
+	// }
 
 	// @GetMapping("/newest")
 	// public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {

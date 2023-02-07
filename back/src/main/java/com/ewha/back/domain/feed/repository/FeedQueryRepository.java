@@ -62,14 +62,31 @@ public class FeedQueryRepository {
 		return new PageImpl<>(feedList, pageable, total);
 	}
 
-	public List<Feed> findNewestFeedList() {
+	public CustomPage<Feed> findNewestFeedList(Pageable pageable) {
 
-		return jpaQueryFactory
+		List<Feed> feedList = jpaQueryFactory
 			.selectFrom(feed)
 			.orderBy(feed.createdAt.desc())
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
 			.fetch();
 
+		Long total = jpaQueryFactory
+			.select(feed.count())
+			.from(feed)
+			.fetchOne();
+
+		return new CustomPage<>(feedList, pageable, total);
 	}
+
+	// public List<Feed> findNewestFeedList() {
+	//
+	// 	return jpaQueryFactory
+	// 		.selectFrom(feed)
+	// 		.orderBy(feed.createdAt.desc())
+	// 		.fetch();
+	//
+	// }
 
 	// public Page<Feed> findNewestFeedList(Pageable pageable) {
 	//

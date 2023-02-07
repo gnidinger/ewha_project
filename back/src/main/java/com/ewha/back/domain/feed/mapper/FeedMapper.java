@@ -149,12 +149,12 @@ public interface FeedMapper {
 			}).collect(Collectors.toList()));
 	}
 
-	default List<FeedDto.ListResponse> TESTnewFeedsToPageResponse(List<Feed> feedList) {
+	default CustomPage<FeedDto.ListResponse> TESTnewFeedsToPageResponse(CustomPage<Feed> feedList) {
 
 		if (feedList == null)
 			return null;
 
-		return feedList.stream()
+		return new CustomPage<>(feedList.stream()
 			.map(feed -> {
 				return FeedDto.ListResponse.builder()
 					.feedId(feed.getId())
@@ -167,7 +167,7 @@ public interface FeedMapper {
 					.viewCount(feed.getViewCount())
 					.createdAt(feed.getCreatedAt())
 					.build();
-			}).collect(Collectors.toList());
+			}).collect(Collectors.toList()));
 	}
 
 }

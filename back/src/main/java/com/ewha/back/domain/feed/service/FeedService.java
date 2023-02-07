@@ -145,9 +145,16 @@ public class FeedService {
 		return comment;
 	}
 
-	public List<Feed> findNewestFeeds() {
-		return feedQueryRepository.findNewestFeedList();
+	public CustomPage<Feed> findNewestFeeds(int page) {
+
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+
+		return feedQueryRepository.findNewestFeedList(pageRequest);
 	}
+
+	// public List<Feed> findNewestFeeds() {
+	// 	return feedQueryRepository.findNewestFeedList();
+	// }
 
 	// public Page<Feed> findNewestFeeds(int page) {
 	//
