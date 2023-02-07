@@ -145,6 +145,7 @@ public class FeedService {
 		return comment;
 	}
 
+	@Cacheable(key = "#page", value = NEWEST_FEEDS)
 	public CustomPage<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
