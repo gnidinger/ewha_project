@@ -99,6 +99,7 @@ public class FeedDto {
 
 		private Long feedId;
 		private List<CategoryType> categories;
+		private String body;
 		private String userId;
 		private String title;
 		private Integer commentCount;

@@ -97,9 +97,13 @@ public class AwsS3Service {
 
 		String[] extensions = {"png", "jpg", "jpeg"}; // 지원할 포맷
 
-		if (!Arrays.asList(extensions).contains(extension)) {
+		if (!Arrays.asList(extensions).contains(extension.toLowerCase())) {
 			throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
 		}
+
+		// if (!Arrays.asList(extensions).contains(extension)) {
+		// 	throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
+		// }
 
 		String storedImageName = uuid + '.' + extension; // 파일 이름 + 확장자
 
@@ -155,6 +159,71 @@ public class AwsS3Service {
 
 		return List.of(fullPath, thumbnailPath);
 		//        return amazonS3Client.getUrl(bucketName, storedPath + storedImageName).toString();
+	}
+
+	public List<String> uploadVideoToS3(MultipartFile multipartFile, Long id) throws Exception {
+
+		HttpServletRequest httpServletRequest =
+			((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+
+		String requestURI = httpServletRequest.getRequestURI(); // 요청 URI. 피드 사진인지 프로필 사진인지 분기용
+
+		String storedPath = null;
+
+		if (requestURI.equals("/mypage/userinfo")) {
+			throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
+		}
+
+		storedPath = "feedVideos/";
+		imageType = ImageType.FEED;
+		Feed feed = feedService.findVerifiedFeed(id);
+
+		String originalImageName = multipartFile.getOriginalFilename(); // 원래 파일 이름
+
+		String uuid = UUID.randomUUID().toString(); // 파일 이름으로 사용할 UUID 생성
+
+		String extension = multipartFile.getContentType()
+			.substring(multipartFile.getContentType().lastIndexOf("/") + 1); // 확장자 추출
+
+		String[] extensions = {"mp4", "jpg", "jpeg"}; // 지원할 포맷
+
+		if (!Arrays.asList(extensions).contains(extension.toLowerCase())) {
+			throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
+		}
+
+		String storedImageName = uuid + '.' + extension; // 파일 이름 + 확장자
+
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setContentLength(multipartFile.getSize());
+		objectMetadata.setContentType(multipartFile.getContentType());
+
+		InputStream inputStream = multipartFile.getInputStream();
+
+		amazonS3Client.putObject(
+			new PutObjectRequest(bucketName, storedPath + storedImageName, inputStream, objectMetadata)
+				.withCannedAcl(CannedAccessControlList.PublicRead));
+
+		String fullPath = amazonS3Client.getUrl(bucketName, storedPath + storedImageName).toString();
+
+		Image.ImageBuilder image = Image.builder();
+
+		image.originalImageName(originalImageName)
+			.storedImageName(storedImageName)
+			.storedPath(fullPath)
+			.imageType(ImageType.FEED)
+			.feed(feed)
+			.user(feed.getUser());
+
+		String thumbnailPath = "";
+
+		feed.addImagePaths(fullPath, thumbnailPath);
+
+		feedRepository.save(feed);
+
+		Image storedImage = imageRepository.save(image.build());
+
+		return List.of(fullPath, thumbnailPath);
+
 	}
 
 	public List<String> uploadQuestionImageToS3(MultipartFile multipartFile, Long id) throws Exception {

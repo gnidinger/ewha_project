@@ -20,10 +20,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity implements Serializable {
+
+	private static final long serialVersionUID = -5469126284130520316L;
 
 	@CreatedDate
 	@JsonSerialize(using = LocalDateTimeSerializer.class)

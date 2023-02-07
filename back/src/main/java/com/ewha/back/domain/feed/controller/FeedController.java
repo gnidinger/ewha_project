@@ -9,6 +9,8 @@ import javax.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -65,7 +67,6 @@ public class FeedController {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
 			createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
 		}
-
 
 		FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
 
@@ -136,28 +137,6 @@ public class FeedController {
 		return new ResponseEntity<>(
 			new SingleResponseDto<>(responses), HttpStatus.OK);
 	}
-
-	// @GetMapping("/newest")
-	// public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
-	//
-	// 	List<Feed> feedList = feedService.findNewestFeeds();
-	// 	PageRequest pageRequest = PageRequest.of(page - 1, 10);
-	// 	List<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
-	// 	PageImpl<FeedDto.ListResponse> responsePage = new PageImpl<>(responses, pageRequest, (long)responses.size());
-	//
-	// 	// return ResponseEntity.ok().body(responses);
-	// 	return ResponseEntity.ok().body(PagedModel.of(EntityModel.of(responsePage)));
-	// }
-
-	// @GetMapping("/newest")
-	// public ResponseEntity getFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
-	//
-	// 	CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
-	// 	CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
-	//
-	// 	return new ResponseEntity<>(
-	// 		new SingleResponseDto<>(responses), HttpStatus.OK);
-	// }
 
 	@GetMapping("/categories")
 	public ResponseEntity getCategoryFeeds(@RequestParam("category") String categoryName,

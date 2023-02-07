@@ -1,5 +1,6 @@
 package com.ewha.back.domain.comment.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity implements Serializable {
+
+	private static final long serialVersionUID = -4038131162139964754L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
