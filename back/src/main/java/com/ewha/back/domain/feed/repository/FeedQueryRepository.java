@@ -125,6 +125,26 @@ public class FeedQueryRepository {
 		return new PageImpl<>(feedList, pageable, total);
 	}
 
+	// public Page<Feed> findCategoryFeedList(String categoryName, Pageable pageable) {
+	//
+	// 	List<Feed> feedList = jpaQueryFactory
+	// 		.selectFrom(feed)
+	// 		.join(feed.feedCategories, feedCategory)
+	// 		.join(feedCategory.category, category)
+	// 		.where(category.categoryType.stringValue().eq(categoryName))
+	// 		.orderBy(feed.createdAt.desc())
+	// 		.offset(pageable.getOffset())
+	// 		.limit(pageable.getPageSize())
+	// 		.fetch();
+	//
+	// 	Long total = jpaQueryFactory
+	// 		.select(feed.count())
+	// 		.from(feed)
+	// 		.fetchOne();
+	//
+	// 	return new PageImpl<>(feedList, pageable, total);
+	// }
+
 	public Page<Feed> findAllSearchResultPage(String queryParam, Pageable pageable) {
 
 		List<Feed> feedList = jpaQueryFactory
