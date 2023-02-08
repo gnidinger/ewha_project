@@ -64,7 +64,7 @@ public class Stub {
 			userCategory.addCategory(category);
 
 			User user = User.builder()
-				.userId("asdfasdfasdf" + i)
+				.userId("asdfasdf" + i)
 				.ariFactor(36.5)
 				.password(encoder.encode("1234"))
 				.nickname("qwer" + i)

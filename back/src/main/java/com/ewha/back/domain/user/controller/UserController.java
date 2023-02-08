@@ -74,6 +74,15 @@ public class UserController {
 		return attributes.toString();     //세션에 담긴 user 가져올 수 있음
 	}
 
+	@PostMapping("/users/verification")
+	public ResponseEntity verifyDto(@Valid @RequestBody UserDto.Verify verifyDto) {
+		userService.verifyUserId(verifyDto.getUserId());
+		userService.verifyNickname(verifyDto.getNickname());
+
+		return new ResponseEntity<>(
+			new SingleResponseDto<>(verifyDto), HttpStatus.OK);
+	}
+
 	@PostMapping("/users/signup")
 	public ResponseEntity postUser(@Valid @RequestBody UserDto.Post postDto) {
 

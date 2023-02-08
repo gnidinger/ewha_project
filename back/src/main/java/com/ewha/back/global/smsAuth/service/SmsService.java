@@ -54,14 +54,14 @@ public class SmsService {
 	}
 
 	public String verifyCertification(SmsDto.CertificationRequest request) {
-		if (isVerified(request)) {
+		if (!isVerified(request)) {
 			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
 		}
 		return "인증번호 일치";
 	}
 
 	public Boolean isVerified(SmsDto.CertificationRequest request) {
-		return !(smsRedisRepository.hasKey(request.getPhoneNumber()))
+		return (smsRedisRepository.hasKey(request.getPhoneNumber()))
 			&& smsRedisRepository.getCertification(request.getPhoneNumber()).equals(request.getCertificationNumber());
 	}
 }
