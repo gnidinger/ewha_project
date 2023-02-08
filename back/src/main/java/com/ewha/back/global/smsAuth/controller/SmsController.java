@@ -22,17 +22,17 @@ public class SmsController {
 	private final SmsService smsService;
 
 	@PostMapping("/sms/send")
-	public ResponseEntity<Void> smsCertification(@RequestBody SmsDto.Request request) throws CoolsmsException {
+	public ResponseEntity<Void> smsCertification(@RequestBody SmsDto.NumberRequest request) throws CoolsmsException {
 
 		System.out.println("인증 요청 번호: " + request.getPhoneNumber());
 
-		smsService.sendSms(request.getUserId(), request.getPhoneNumber());
+		smsService.sendSms(request.getPhoneNumber());
 
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
 	@PostMapping("/sms/verification")
-	public ResponseEntity smsVerification(@RequestBody SmsDto.Request request) {
+	public ResponseEntity smsVerification(@RequestBody SmsDto.CertificationRequest request) {
 
 		smsService.verifyCertification(request);
 

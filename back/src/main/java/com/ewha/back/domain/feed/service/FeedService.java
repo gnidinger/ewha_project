@@ -145,7 +145,7 @@ public class FeedService {
 		return comment;
 	}
 
-	@Cacheable(key = "#page", value = NEWEST_FEEDS)
+	// @Cacheable(key = "#page", value = NEWEST_FEEDS)
 	public CustomPage<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
@@ -164,7 +164,7 @@ public class FeedService {
 	// 	return feedQueryRepository.findNewestFeedList(pageRequest);
 	// }
 
-	@Cacheable(key = "#page", value = CATEGORY_FEEDS)
+	// @Cacheable(key = "#page", value = CATEGORY_FEEDS)
 	public Page<Feed> findCategoryFeeds(String categoryName, int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);

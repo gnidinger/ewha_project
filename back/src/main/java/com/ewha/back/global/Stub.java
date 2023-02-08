@@ -1,5 +1,6 @@
 package com.ewha.back.global;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ public class Stub {
 		//         ------------------------------------------------------------------------------------------
 		//         USER STUB
 		//         ------------------------------------------------------------------------------------------
+		List<User> userList = new ArrayList<>();
+
 		for (int i = 1; i <= 20; i++) {
 
 			Long rand = (long)((Math.random() * 12) + 1);
@@ -75,12 +78,17 @@ public class Stub {
 
 			userCategory.addUser(user);
 
-			log.info("USER STUB " + userRepository.save(user));
+			userList.add(user);
 		}
+
+		log.info("USER STUB: " + userRepository.saveAll(userList));
 		//         ------------------------------------------------------------------------------------------
 		//         ------------------------------------------------------------------------------------------
 		//         FEED STUB
 		//         ------------------------------------------------------------------------------------------
+
+		List<Feed> feedList = new ArrayList<>();
+
 		for (int i = 1; i <= 40; i++) {
 
 			Long rand = (long)((Math.random() * 11) + 1);
@@ -105,12 +113,17 @@ public class Stub {
 
 			feedCategory.addFeed(feed);
 
-			log.info("FEED STUB " + feedRepository.save(feed));
+			feedList.add(feed);
 		}
+
+		log.info("FEED STUB: " + feedRepository.saveAll(feedList));
 		//         ------------------------------------------------------------------------------------------
 		//         ------------------------------------------------------------------------------------------
 		//         COMMENT STUB
 		//         ------------------------------------------------------------------------------------------
+
+		List<Comment> commentList = new ArrayList<>();
+
 		for (int i = 1; i <= 80; i++) {
 
 			Comment comment = Comment.builder()
@@ -120,8 +133,10 @@ public class Stub {
 				.likeCount((long)(Math.random() * 10) + 1)
 				.build();
 
-			log.info("COMMENT STUB " + commentRepository.save(comment));
+			commentList.add(comment);
 		}
+
+		log.info("COMMENT STUB: " + commentRepository.saveAll(commentList));
 		//         ------------------------------------------------------------------------------------------
 		return null;
 	}

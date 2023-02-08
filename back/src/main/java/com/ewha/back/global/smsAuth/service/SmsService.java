@@ -29,9 +29,7 @@ public class SmsService {
 	private final UserRepository userRepository;
 	private final SmsRedisRepository smsRedisRepository;
 
-	public void sendSms(String userId, String phoneNumber) throws CoolsmsException {
-
-		userService.verifyUserIdForSms(userId);
+	public void sendSms(String phoneNumber) throws CoolsmsException {
 
 		Message coolsms = new Message(API_KEY, API_SECRET);
 
@@ -55,14 +53,14 @@ public class SmsService {
 		smsRedisRepository.createCertification(phoneNumber, certificationNumber.toString());
 	}
 
-	public String verifyCertification(SmsDto.Request request) {
+	public String verifyCertification(SmsDto.CertificationRequest request) {
 		if (isVerified(request)) {
 			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
 		}
 		return "인증번호 일치";
 	}
 
-	public Boolean isVerified(SmsDto.Request request) {
+	public Boolean isVerified(SmsDto.CertificationRequest request) {
 		return !(smsRedisRepository.hasKey(request.getPhoneNumber()))
 			&& smsRedisRepository.getCertification(request.getPhoneNumber()).equals(request.getCertificationNumber());
 	}

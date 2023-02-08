@@ -13,9 +13,18 @@ public class SmsDto {
 	@Builder
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Request {
+	public static class NumberRequest {
 		private String phoneNumber;
-		private String userId;
+		private String certificationNumber;
+	}
+
+	@Getter
+	@Setter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class CertificationRequest {
+		private String phoneNumber;
 		private String certificationNumber;
 	}
 }
