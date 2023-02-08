@@ -69,6 +69,7 @@ public class UserService {
 			.ariFactor(36.5)
 			.centerCode(user.getCenterCode())
 			.birthday(user.getBirthday())
+			.phoneNumber(user.getPhoneNumber())
 			.isFirstLogin(true)
 			.build();
 

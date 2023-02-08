@@ -41,6 +41,7 @@ public class UserDto {
 		@Min(100000)
 		@Max(999999)
 		private Long centerCode;
+		private String phoneNumber;
 		private String profileImage; // 프로필 이미지
 
 	}

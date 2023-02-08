@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class SmsController {
 	private final SmsService smsService;
 
-	@GetMapping("/sms/send")
+	@PostMapping("/sms/send")
 	public ResponseEntity<Void> smsCertification(@RequestBody SmsDto.Request request) throws CoolsmsException {
 
 		System.out.println("인증 요청 번호: " + request.getPhoneNumber());
@@ -31,7 +31,7 @@ public class SmsController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	@PostMapping("sms/verification")
+	@PostMapping("/sms/verification")
 	public ResponseEntity smsVerification(@RequestBody SmsDto.Request request) {
 
 		smsService.verifyCertification(request);

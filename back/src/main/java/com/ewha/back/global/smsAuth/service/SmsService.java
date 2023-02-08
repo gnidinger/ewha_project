@@ -55,18 +55,11 @@ public class SmsService {
 		smsRedisRepository.createCertification(phoneNumber, certificationNumber.toString());
 	}
 
-	public void verifyCertification(SmsDto.Request request) {
+	public String verifyCertification(SmsDto.Request request) {
 		if (isVerified(request)) {
 			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
-		} else {
-
-			User findUser = userService.findByUserId(request.getUserId());
-			findUser.setIsVerified(true);
-			findUser.setPhoneNumber(request.getPhoneNumber());
-			userRepository.save(findUser);
-
-			smsRedisRepository.removeCertification(request.getPhoneNumber());
 		}
+		return "인증번호 일치";
 	}
 
 	public Boolean isVerified(SmsDto.Request request) {

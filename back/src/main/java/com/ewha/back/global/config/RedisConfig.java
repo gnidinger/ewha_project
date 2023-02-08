@@ -110,6 +110,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 
 		cacheConfiguration.put(NEWEST_FEEDS, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
 		cacheConfiguration.put(FEED_COMMENTS, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
+		cacheConfiguration.put(CATEGORY_FEEDS, redisCacheConfig.entryTtl(Duration.ofMinutes(3)));
 
 		return RedisCacheManager.RedisCacheManagerBuilder
 			.fromConnectionFactory(redisConnectionFactory())

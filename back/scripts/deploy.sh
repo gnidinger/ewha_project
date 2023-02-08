@@ -10,6 +10,9 @@ sudo docker-compose up -d
 # 기존 이미지 삭제
 sudo docker rmi gnidinger/ewha_project:1.0
 
+# 기존 이미지 삭제
+sudo docker rmi gnidinger/ewha_project:1.0
+
 # 도커허브 이미지 pull
 sudo docker pull gnidingerer/ewha_project:1.0
 
