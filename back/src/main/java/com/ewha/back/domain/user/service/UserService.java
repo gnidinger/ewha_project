@@ -1,5 +1,6 @@
 package com.ewha.back.domain.user.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -76,18 +77,91 @@ public class UserService {
 		return userRepository.save(savedUser);
 	}
 
-	public Boolean verifyUserId(String userId) {
-		if (!userRepository.existsByUserId(userId))
-			return true;
-		else
-			throw new BusinessLogicException(ExceptionCode.USER_ID_EXISTS);
+	public List<List<String>> verifyVerifyDto(UserDto.Verify verifyDto) {
+
+		List<List<String>> fieldErrors = new ArrayList<>();
+
+		fieldErrors.add(verifyUserId(verifyDto.getUserId()));
+		fieldErrors.add(verifyNickname(verifyDto.getNickname()));
+		fieldErrors.add(verifyPassword(verifyDto.getPassword()));
+
+		return fieldErrors.stream()
+			.filter(list -> !list.isEmpty())
+			.collect(Collectors.toList());
 	}
 
-	public Boolean verifyNickname(String nickname) {
-		if (!userRepository.existsByNickname(nickname))
-			return true;
-		else
-			throw new BusinessLogicException(ExceptionCode.NICKNAME_EXISTS);
+	public List<String> verifyUserId(String userId) {
+
+		List<String> list = new ArrayList<>();
+
+		if (!userRepository.existsByUserId(userId) && userId.matches("[0-9a-z\\s]{6,12}")) {
+			return list;
+		} else if (!userId.matches("[0-9a-z\\s]{6,12}")) {
+			list.add(String.valueOf(ExceptionCode.USER_ID_NOT_VALID.getStatus()));
+			list.add(ExceptionCode.USER_ID_NOT_VALID.getMessage());
+			list.add("userId");
+			list.add(userId);
+			list.add("6~12자의 영문, 숫자만 사용 가능합니다.");
+		} else if (userRepository.existsByUserId(userId)) {
+			list.add(String.valueOf(ExceptionCode.USER_ID_EXISTS.getStatus()));
+			list.add(ExceptionCode.USER_ID_EXISTS.getMessage());
+			list.add("userId");
+			list.add(userId);
+			list.add("존재하는 아이디 입니다.");
+		}
+		return list;
+	}
+
+	// public Boolean verifyUserId(String userId) {
+	// 	if (!userRepository.existsByUserId(userId))
+	// 		return true;
+	// 	else
+	// 		throw new BusinessLogicException(ExceptionCode.USER_ID_EXISTS);
+	// }
+
+	public List<String> verifyNickname(String nickname) {
+
+		List<String> list = new ArrayList<>();
+
+		if (!userRepository.existsByNickname(nickname) && nickname.matches("[0-9a-zA-Zㄱ-ㅎ가-힣\\s]{3,20}")) {
+			return list;
+		} else if (!nickname.matches("[0-9a-zA-Zㄱ-ㅎ가-힣\\s]{3,20}")) {
+			list.add(String.valueOf(ExceptionCode.NICKNAME_NOT_VALID.getStatus()));
+			list.add(ExceptionCode.NICKNAME_NOT_VALID.getMessage());
+			list.add("nickname");
+			list.add(nickname);
+			list.add("3~20자의 한글, 영문, 숫자만 사용 가능합니다.");
+		} else if (userRepository.existsByNickname(nickname)) {
+			list.add(String.valueOf(ExceptionCode.NICKNAME_EXISTS.getStatus()));
+			list.add(ExceptionCode.NICKNAME_EXISTS.getMessage());
+			list.add("nickname");
+			list.add(nickname);
+			list.add("존재하는 닉네임 입니다.");
+		}
+		return list;
+	}
+
+	// public Boolean verifyNickname(String nickname) {
+	// 	if (!userRepository.existsByNickname(nickname))
+	// 		return true;
+	// 	else
+	// 		throw new BusinessLogicException(ExceptionCode.NICKNAME_EXISTS);
+	// }
+
+	public List<String> verifyPassword(String password) {
+
+		List<String> list = new ArrayList<>();
+
+		if (password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$")) {
+			return list;
+		} else {
+			list.add(String.valueOf(ExceptionCode.PASSWORD_NOT_VALID.getStatus()));
+			list.add(ExceptionCode.PASSWORD_NOT_VALID.getMessage());
+			list.add("password");
+			list.add(password);
+			list.add("8~16자의 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.");
+		}
+		return list;
 	}
 
 	public Boolean verifyUserIdForSms(String userId) {
@@ -97,7 +171,7 @@ public class UserService {
 			throw new BusinessLogicException(ExceptionCode.USER_ID_NOT_FOUND);
 	}
 
-	public Boolean verifyPassword(String password) {
+	public Boolean verifyLoginUserPassword(String password) {
 		User findUser = getLoginUser();
 		return findUser.verifyPassword(bCryptPasswordEncoder, password);
 	}
@@ -130,7 +204,7 @@ public class UserService {
 
 		User findUser = getLoginUser();
 
-		if (!verifyPassword(password.getOldPassword())) {
+		if (!verifyLoginUserPassword(password.getOldPassword())) {
 			throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
 		}
 
@@ -138,9 +212,9 @@ public class UserService {
 			throw new BusinessLogicException(ExceptionCode.PASSWORDS_NOT_MATCH);
 		}
 
-			findUser.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
+		findUser.setPassword(bCryptPasswordEncoder.encode(password.getNewPassword()));
 
-			userRepository.save(findUser);
+		userRepository.save(findUser);
 
 	}
 

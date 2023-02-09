@@ -28,15 +28,29 @@ public class UserDto {
 	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class Verify {
-		@NotBlank(message = "아이디를 입력해주세요.")
-		@Pattern(regexp = "[0-9a-z\\s]{6,12}", message = "6~12자의 영문, 숫자만 사용 가능합니다.")
+		// @NotBlank(message = "아이디를 입력해주세요.")
+		// @Pattern(regexp = "[0-9a-z\\s]{6,12}", message = "6~12자의 영문, 숫자만 사용 가능합니다.")
 		private String userId;
-		@NotBlank(message = "닉네임을 입력해주세요.")
-		@Pattern(regexp = "[0-9a-zA-Zㄱ-ㅎ가-힣\\s]{3,20}", message = "3~20자의 한글, 영문, 숫자만 사용 가능합니다.")
+		// @NotBlank(message = "닉네임을 입력해주세요.")
+		// @Pattern(regexp = "[0-9a-zA-Zㄱ-ㅎ가-힣\\s]{3,20}", message = "3~20자의 한글, 영문, 숫자만 사용 가능합니다.")
 		private String nickname;
-		@NotBlank(message = "패스워드를 입력해주세요.")
-		@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
+		// @NotBlank(message = "패스워드를 입력해주세요.")
+		// @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
 		private String password;
+	}
+
+	@Getter
+	@Builder
+	@AllArgsConstructor
+	@NoArgsConstructor
+	public static class VerifyResponse {
+		// @NotBlank(message = "아이디를 입력해주세요.")
+		// @Pattern(regexp = "[0-9a-z\\s]{6,12}", message = "6~12자의 영문, 숫자만 사용 가능합니다.")
+		private String status;
+		private String message;
+		private String field;
+		private String rejectedValue;
+		private String reason;
 	}
 
 	@Getter

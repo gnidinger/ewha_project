@@ -6,9 +6,12 @@ public enum ExceptionCode {
 
 	COMMENT_NOT_FOUND(404, "Comment Not Found"),
 	USER_NOT_FOUND(404, "User Not Found"),
+	USER_ID_NOT_VALID(400, "User ID Not Valid"),
 	USER_ID_NOT_FOUND(404, "User ID Not Found"),
 	USER_ID_EXISTS(409, "User ID Exists"),
+	NICKNAME_NOT_VALID(400, "Nickname Not Valid"),
 	NICKNAME_EXISTS(409, "Nickname Exists"),
+	PASSWORD_NOT_VALID(400, "Password Not Valid"),
 	PASSWORD_NOT_MATCH(403, "Password Not Match"),
 	PASSWORDS_NOT_MATCH(403, "Passwords Not Match"),
 	PASSWORD_CANNOT_CHANGE(403, "Cannot Use The Same Password"),

@@ -1,5 +1,7 @@
 package com.ewha.back.domain.user.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
@@ -17,6 +19,25 @@ public interface UserMapper {
 	UserDto.Response userToUserResponse(User user);
 
 	UserDto.PostResponse userToUserPostResponse(User user);
+
+	default List<UserDto.VerifyResponse> listToVerifyResponse(List<List<String>> list) {
+
+		List<UserDto.VerifyResponse> responses = new ArrayList<>();
+
+		list.forEach(stringList -> {
+			UserDto.VerifyResponse.VerifyResponseBuilder verifyResponse = UserDto.VerifyResponse.builder();
+
+			verifyResponse.status(stringList.get(0));
+			verifyResponse.message(stringList.get(1));
+			verifyResponse.field(stringList.get(2));
+			verifyResponse.rejectedValue(stringList.get(3));
+			verifyResponse.reason(stringList.get(4));
+
+			responses.add(verifyResponse.build());
+		});
+
+		return responses;
+	}
 
 	default UserDto.UserInfoResponse userToUserInfoResponse(User user) {
 

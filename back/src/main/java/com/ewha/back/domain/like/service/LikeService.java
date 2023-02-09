@@ -1,5 +1,8 @@
 package com.ewha.back.domain.like.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.service.CommentService;
 import com.ewha.back.domain.feed.entity.Feed;
@@ -11,106 +14,101 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class LikeService {
-    private final UserService userService;
-    private final FeedService feedService;
-    private final CommentService commentService;
-    private final LikeRepository likeRepository;
+	private final UserService userService;
+	private final FeedService feedService;
+	private final CommentService commentService;
+	private final LikeRepository likeRepository;
 
-    public Feed createFeedLike(Long feedId) {
+	public Feed createFeedLike(Long feedId) {
 
-        User findUser = userService.getLoginUser();
+		User findUser = userService.getLoginUser();
 
-        Feed findFeed = feedService.findVerifiedFeed(feedId);
+		Feed findFeed = feedService.findVerifiedFeed(feedId);
 
-        Like findFeedLike = likeRepository.findByFeedAndUser(findFeed, findUser);
+		Like findFeedLike = likeRepository.findByFeedAndUser(findFeed, findUser);
 
-        if (findFeedLike == null) {
-            findFeedLike = Like.builder()
-                    .likeType(LikeType.FEED)
-                    .user(findUser)
-                    .feed(findFeed)
-                    .build();
+		if (findFeedLike == null) {
+			findFeedLike = Like.builder()
+				.likeType(LikeType.FEED)
+				.user(findUser)
+				.feed(findFeed)
+				.build();
 
-            likeRepository.save(findFeedLike);
+			likeRepository.save(findFeedLike);
 
-            findFeed.addLike();
+			findFeed.addLike();
 
-            return findFeed;
-        }
+			return findFeed;
+		} else
+			throw new BusinessLogicException(ExceptionCode.LIKED);
+	}
 
-        else throw new BusinessLogicException(ExceptionCode.LIKED);
-    }
+	public Feed deleteFeedLike(Long feedId) {
 
-    public Feed deleteFeedLike(Long feedId) {
+		User findUser = userService.getLoginUser();
 
-        User findUser = userService.getLoginUser();
+		Feed findFeed = feedService.findVerifiedFeed(feedId);
 
-        Feed findFeed = feedService.findVerifiedFeed(feedId);
+		Like findFeedLike = likeRepository.findByFeedAndUser(findFeed, findUser);
 
-        Like findFeedLike = likeRepository.findByFeedAndUser(findFeed, findUser);
+		if (findFeedLike == null) {
 
-        if (findFeedLike == null) {
+			throw new BusinessLogicException(ExceptionCode.UNLIKED);
+		} else
+			likeRepository.delete(findFeedLike);
 
-            throw new BusinessLogicException(ExceptionCode.UNLIKED);
-        }
+		findFeed.removeLike();
 
-        else likeRepository.delete(findFeedLike);
+		return findFeed;
+	}
 
-        findFeed.removeLike();
+	public Comment createCommentLike(Long commentId) {
 
-        return findFeed;
-    }
+		User findUser = userService.getLoginUser();
 
-    public Comment createCommentLike(Long commentId) {
+		Comment findComment = commentService.findVerifiedComment(commentId);
 
-        User findUser = userService.getLoginUser();
+		Like findCommentLike = likeRepository.findByCommentAndUser(findComment, findUser);
 
-        Comment findComment = commentService.findVerifiedComment(commentId);
+		if (findCommentLike == null) {
+			findCommentLike = Like.builder()
+				.likeType(LikeType.COMMENT)
+				.user(findUser)
+				.comment(findComment)
+				.build();
 
-        Like findCommentLike = likeRepository.findByCommentAndUser(findComment, findUser);
+			likeRepository.save(findCommentLike);
 
-        if (findCommentLike == null) {
-            findCommentLike = Like.builder()
-                    .likeType(LikeType.COMMENT)
-                    .user(findUser)
-                    .comment(findComment)
-                    .build();
+			findComment.addLike();
 
-            likeRepository.save(findCommentLike);
+			return findComment;
+		} else
+			throw new BusinessLogicException(ExceptionCode.LIKED);
+	}
 
-            findComment.addLike();
+	public Comment deleteCommentLike(Long commentId) {
 
-            return findComment;
-        }
+		User findUser = userService.getLoginUser();
 
-        else throw new BusinessLogicException(ExceptionCode.LIKED);
-    }
+		Comment findComment = commentService.findVerifiedComment(commentId);
 
-    public Comment deleteCommentLike(Long commentId) {
+		Like findCommentLike = likeRepository.findByCommentAndUser(findComment, findUser);
 
-        User findUser = userService.getLoginUser();
+		if (findCommentLike == null) {
 
-        Comment findComment = commentService.findVerifiedComment(commentId);
+			throw new BusinessLogicException(ExceptionCode.UNLIKED);
+		} else
+			likeRepository.delete(findCommentLike);
 
-        Like findCommentLike = likeRepository.findByCommentAndUser(findComment, findUser);
+		findComment.removeLike();
 
-        if (findCommentLike == null) {
-
-            throw new BusinessLogicException(ExceptionCode.UNLIKED);
-        }
-
-        else likeRepository.delete(findCommentLike);
-
-        findComment.removeLike();
-
-        return findComment;
-    }
+		return findComment;
+	}
 }

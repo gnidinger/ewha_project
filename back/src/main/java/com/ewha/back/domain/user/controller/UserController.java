@@ -76,12 +76,27 @@ public class UserController {
 
 	@PostMapping("/users/verification")
 	public ResponseEntity verifyDto(@Valid @RequestBody UserDto.Verify verifyDto) {
-		userService.verifyUserId(verifyDto.getUserId());
-		userService.verifyNickname(verifyDto.getNickname());
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(verifyDto), HttpStatus.OK);
+		List<List<String>> list = userService.verifyVerifyDto(verifyDto);
+
+		if (list.isEmpty()) {
+			return ResponseEntity.ok(verifyDto);
+		} else {
+			List<UserDto.VerifyResponse> responses = userMapper.listToVerifyResponse(list);
+
+			return new ResponseEntity<>(
+				new SingleResponseDto<>(responses), HttpStatus.BAD_REQUEST);
+		}
 	}
+
+	// @PostMapping("/users/verification")
+	// public ResponseEntity verifyDto(@Valid @RequestBody UserDto.Verify verifyDto) {
+	// 	userService.verifyUserId(verifyDto.getUserId());
+	// 	// userService.verifyNickname(verifyDto.getNickname());
+	//
+	// 	return new ResponseEntity<>(
+	// 		new SingleResponseDto<>(verifyDto), HttpStatus.OK);
+	// }
 
 	@PostMapping("/users/signup")
 	public ResponseEntity postUser(@Valid @RequestBody UserDto.Post postDto) {
