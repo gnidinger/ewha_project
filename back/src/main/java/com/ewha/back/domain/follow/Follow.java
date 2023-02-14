@@ -27,8 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "FOLLOW",
-	uniqueConstraints = {@UniqueConstraint(name = "follow_following",
-		columnNames = {"followingUserId", "followedUserId"})})
+	uniqueConstraints = {
+		@UniqueConstraint(name = "follow_following", columnNames = {"followingUserId", "followedUserId"})})
 public class Follow {
 
 	@Id

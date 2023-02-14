@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,8 +41,6 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.mapper.UserMapper;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.dto.SingleResponseDto;
-import com.ewha.back.global.exception.BusinessLogicException;
-import com.ewha.back.global.exception.ExceptionCode;
 import com.ewha.back.global.security.dto.LoginDto;
 
 import lombok.RequiredArgsConstructor;

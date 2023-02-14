@@ -12,7 +12,6 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ewha.back.domain.chat.dto.ChatMessageDto;
 import com.ewha.back.domain.chat.dto.ChatRoomDto;
 import com.ewha.back.domain.chat.entity.ChatRoom;
 import com.ewha.back.domain.chat.repository.ChatQueryRepository;

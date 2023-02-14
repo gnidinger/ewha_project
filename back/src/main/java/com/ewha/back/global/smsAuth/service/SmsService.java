@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
-import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.repository.UserRepository;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.smsAuth.dto.SmsDto;

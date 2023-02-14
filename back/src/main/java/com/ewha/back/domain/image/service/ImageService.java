@@ -42,8 +42,9 @@ public class ImageService {
 
 		User findUser = userService.getLoginUser();
 
-		if (multipartFile.isEmpty())
+		if (multipartFile.isEmpty()) {
 			return null;
+		}
 
 		String originalImageName = multipartFile.getOriginalFilename(); // 업로드 파일 이름
 

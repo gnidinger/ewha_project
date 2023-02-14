@@ -74,26 +74,10 @@ public class Feed extends BaseTimeEntity implements Serializable {
 	private String body;
 
 	@Column
-	private Boolean isLiked;
-
-	@Column
 	private Long likeCount;
 
 	@Column
 	private Long viewCount;
-
-	// @Column(updatable = false)
-	// @CreatedDate
-
-	// @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	// @JsonSerialize(using = LocalDateTimeSerializer.class)
-	// private LocalDateTime createdAt = LocalDateTime.now();
-
-	// @Column
-	// @LastModifiedDate
-	// @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	// @JsonSerialize(using = LocalDateTimeSerializer.class)
-	// private LocalDateTime modifiedAt = LocalDateTime.now();
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -132,28 +116,25 @@ public class Feed extends BaseTimeEntity implements Serializable {
 	}
 
 	public void addView() {
-		if (viewCount == null)
+		if (viewCount == null) {
 			this.viewCount = 1L;
-		else
+		} else {
 			this.viewCount = viewCount + 1;
+		}
 	}
 
 	public void addLike() {
-		if (likeCount == null)
+		if (likeCount == null) {
 			this.likeCount = 1L;
-		else
+		} else {
 			this.likeCount = likeCount + 1;
-		this.isLiked = true;
+		}
 	}
 
 	public void removeLike() {
-		if (likeCount > 0)
+		if (likeCount > 0) {
 			this.likeCount = likeCount - 1;
-		this.isLiked = false;
-	}
-
-	public void setIsLiked(Boolean isLiked) {
-		this.isLiked = isLiked;
+		}
 	}
 
 	public void setComments(List<Comment> isLikedComments) {

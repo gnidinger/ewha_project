@@ -35,12 +35,7 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
-			.select(feed.count())
-			.from(feed)
-			.fetchOne();
-
-		return new PageImpl<>(feedList, pageable, total);
+		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
 	public Page<Feed> findFeedLikesListByUser(User user, Pageable pageable) {
@@ -54,12 +49,7 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
-			.select(feed.count())
-			.from(feed)
-			.fetchOne();
-
-		return new PageImpl<>(feedList, pageable, total);
+		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
 	public CustomPage<Feed> findNewestFeedList(Pageable pageable) {
@@ -91,12 +81,7 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
-			.select(feed.count())
-			.from(feed)
-			.fetchOne();
-
-		return new PageImpl<>(feedList, pageable, total);
+		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
 	public Page<Feed> findAllSearchResultPage(String queryParam, Pageable pageable) {
@@ -109,12 +94,7 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
-			.select(feed.count())
-			.from(feed)
-			.fetchOne();
-
-		return new PageImpl<>(feedList, pageable, total);
+		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
 	public Page<Feed> findCategorySearchResultPage(String categoryParam, String queryParam, Pageable pageable) {
@@ -130,12 +110,7 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		Long total = jpaQueryFactory
-			.select(feed.count())
-			.from(feed)
-			.fetchOne();
-
-		return new PageImpl<>(feedList, pageable, total);
+		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
 	public void deleteAllByUser(User findUser) {

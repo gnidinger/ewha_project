@@ -22,7 +22,6 @@ import com.ewha.back.domain.comment.dto.CommentDto;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.comment.service.CommentService;
-import com.ewha.back.global.dto.SingleResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,59 +34,59 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@PostMapping("/feeds/{feed_id}/comments/add")
-	public ResponseEntity postComment(@PathVariable("feed_id") Long feedId,
+	public ResponseEntity<CommentDto.Response> postComment(@PathVariable("feed_id") Long feedId,
 		@Valid @RequestBody CommentDto.Post postComment) {
 
 		Comment comment = commentMapper.commentPostToComment(postComment);
 		Comment createdComment = commentService.createComment(comment, feedId);
-		CommentDto.Response response = commentMapper.commentToCommentResponse(createdComment);
-
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.CREATED
-		);
+		// CommentDto.Response response = commentMapper.commentToCommentResponse(createdComment);
+		//
+		// return new ResponseEntity<>(
+		// 	new SingleResponseDto<>(response), HttpStatus.CREATED
+		// );
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
 	@PatchMapping("/comments/{comment_id}/edit")
-	public ResponseEntity patchComment(@PathVariable("comment_id") @Positive Long commentId,
+	public ResponseEntity<CommentDto.Response> patchComment(@PathVariable("comment_id") @Positive Long commentId,
 		@Valid @RequestBody CommentDto.Patch patchComment) {
 
 		Comment comment = commentMapper.commentPatchToComment(patchComment);
 		Comment updatedComment = commentService.updateComment(comment, commentId);
-		CommentDto.Response response = commentMapper.commentToCommentResponse(updatedComment);
-
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK
-		);
+		// CommentDto.Response response = commentMapper.commentToCommentResponse(updatedComment);
+		//
+		// return new ResponseEntity<>(
+		// 	new SingleResponseDto<>(response), HttpStatus.OK
+		// );
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	@GetMapping("/comments/{comment_id}")
-	public ResponseEntity getComment(
+	public ResponseEntity<CommentDto.Response> getComment(
 		@PathVariable("comment_id") @Positive Long commentId) {
 
 		Comment comment = commentService.findVerifiedComment(commentId);
 		CommentDto.Response response = commentMapper.commentToCommentResponse(comment);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/feeds/{feed_id}/comments")
-	public ResponseEntity getFeedComments(@PathVariable("feed_id") @Positive Long feedId,
+	public ResponseEntity<PageImpl<CommentDto.Response>> getFeedComments(@PathVariable("feed_id") @Positive Long feedId,
 		@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Comment> commentList = commentService.getFeedComments(feedId, page);
 		PageImpl<CommentDto.Response> responses = commentMapper.feedCommentsToPageResponse(commentList);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.status(HttpStatus.OK).body(responses);
 	}
 
 	@DeleteMapping("/comments/{comment_id}/delete")
-	public ResponseEntity deleteComment(
+	public ResponseEntity<String> deleteComment(
 		@PathVariable("comment_id") @Positive Long commentId) {
 
 		commentService.deleteComment(commentId);
 
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		return ResponseEntity.noContent().build();
 	}
 }

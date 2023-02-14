@@ -1,5 +1,10 @@
 package com.ewha.back.domain.question.service;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ewha.back.domain.question.entity.Question;
 import com.ewha.back.domain.question.repository.AnswerQueryRepository;
 import com.ewha.back.domain.question.repository.AnswerRepository;
@@ -11,13 +16,6 @@ import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional

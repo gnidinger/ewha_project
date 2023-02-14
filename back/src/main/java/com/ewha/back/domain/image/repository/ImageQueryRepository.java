@@ -1,49 +1,48 @@
 package com.ewha.back.domain.image.repository;
 
-import com.ewha.back.domain.image.entity.Image;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import static com.ewha.back.domain.image.entity.QImage.*;
+
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import com.ewha.back.domain.image.entity.Image;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import static com.ewha.back.domain.feed.entity.QFeed.feed;
-import static com.ewha.back.domain.image.entity.QImage.image;
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class ImageQueryRepository {
-    private final JPAQueryFactory jpaQueryFactory;
+	private final JPAQueryFactory jpaQueryFactory;
 
-    public Image findByFeedId(Long feedId) {
+	public Image findByFeedId(Long feedId) {
 
-        return jpaQueryFactory
-                .selectFrom(image)
-                .where(image.feed.id.eq(feedId))
-                .fetchFirst();
-    }
+		return jpaQueryFactory
+			.selectFrom(image)
+			.where(image.feed.id.eq(feedId))
+			.fetchFirst();
+	}
 
-    public Image findByUserId(Long userId) {
+	public Image findByUserId(Long userId) {
 
-        return jpaQueryFactory
-                .selectFrom(image)
-                .where(image.user.id.eq(userId))
-                .fetchFirst();
-    }
+		return jpaQueryFactory
+			.selectFrom(image)
+			.where(image.user.id.eq(userId))
+			.fetchFirst();
+	}
 
-    public void deleteByFeedId(Long feedId) {
+	public void deleteByFeedId(Long feedId) {
 
-        jpaQueryFactory
-                .delete(image)
-                .where(image.feed.id.eq(feedId))
-                .execute();
-    }
+		jpaQueryFactory
+			.delete(image)
+			.where(image.feed.id.eq(feedId))
+			.execute();
+	}
 
-    public void deleteByImagePath(String imagePath) {
+	public void deleteByImagePath(String imagePath) {
 
-        jpaQueryFactory
-                .delete(image)
-                .where(image.storedPath.eq(imagePath))
-                .execute();
-    }
+		jpaQueryFactory
+			.delete(image)
+			.where(image.storedPath.eq(imagePath))
+			.execute();
+	}
 }

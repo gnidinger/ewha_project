@@ -13,8 +13,9 @@ public interface FollowMapper {
 
 	default SliceImpl<FollowDto.Response> followersToFollowResponses(List<User> followersList) {
 
-		if (followersList == null)
+		if (followersList == null) {
 			return null;
+		}
 
 		return new SliceImpl<>(
 			followersList.stream()
@@ -28,8 +29,9 @@ public interface FollowMapper {
 
 	default SliceImpl<FollowDto.Response> followingsToFollowResponses(List<User> followingsList) {
 
-		if (followingsList == null)
+		if (followingsList == null) {
 			return null;
+		}
 
 		return new SliceImpl<>(
 			followingsList.stream()

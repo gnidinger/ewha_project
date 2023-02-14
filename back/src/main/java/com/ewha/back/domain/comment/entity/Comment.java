@@ -1,7 +1,6 @@
 package com.ewha.back.domain.comment.entity;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +26,6 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.global.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,12 +49,8 @@ public class Comment extends BaseTimeEntity implements Serializable {
 	@Column
 	private String body;
 
-	@Column
-	private Boolean isLiked;
-
 	@Column(nullable = false)
 	private Long likeCount;
-
 
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -82,20 +73,18 @@ public class Comment extends BaseTimeEntity implements Serializable {
 	}
 
 	public void addLike() {
-		if (likeCount == null)
+		if (this.likeCount == null) {
 			this.likeCount = 1L;
-		else
+		} else {
 			this.likeCount = likeCount + 1;
-		this.isLiked = true;
+		}
 	}
 
 	public void removeLike() {
-		if (likeCount > 0)
+		if (this.likeCount > 0) {
 			this.likeCount = likeCount - 1;
-		this.isLiked = false;
-	}
-
-	public void setIsLiked(Boolean isLiked) {
-		this.isLiked = isLiked;
+		} else {
+			this.likeCount = 0L;
+		}
 	}
 }
