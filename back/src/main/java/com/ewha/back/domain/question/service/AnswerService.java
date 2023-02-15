@@ -2,6 +2,8 @@ package com.ewha.back.domain.question.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,16 @@ public class AnswerService {
 	@Transactional(readOnly = true)
 	public Answer findByQuestionIdAndUserId(Long questionId, Long userId) {
 		return answerQueryRepository.findByQuestionIdAndUserId(questionId, userId);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<Answer> findMyAnswers(int page) {
+
+		User findUser = userService.getLoginUser();
+
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+
+		return answerQueryRepository.findMyAnswers(findUser, pageRequest);
 	}
 
 	@Transactional(readOnly = true)

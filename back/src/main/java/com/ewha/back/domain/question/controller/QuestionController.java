@@ -42,25 +42,24 @@ public class QuestionController {
 	private final AwsS3Service awsS3Service;
 
 	@PostMapping("/add")
-	public ResponseEntity postQuestion(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
+	public ResponseEntity<String> postQuestion(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
 		@Valid @RequestPart QuestionDto.Post postQuestion) throws Exception {
 
 		List<String> imagePath = null;
 
 		Question question = questionMapper.questionPostToQuestion(postQuestion);
 		Question createdQuestion = questionService.createQuestion(question);
+
 		if (multipartFile != null)
 			imagePath = awsS3Service.uploadQuestionImageToS3(multipartFile, createdQuestion.getId());
 		createdQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
 		QuestionDto.Response response = questionMapper.questionToQuestionResponse(createdQuestion);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.CREATED
-		);
+		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{question_id}/edit")
-	public ResponseEntity patchQuestion(@PathVariable("question_id") Long questionId,
+	public ResponseEntity<String> patchQuestion(@PathVariable("question_id") Long questionId,
 		@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
 		@Valid @RequestPart QuestionDto.Patch patchQuestion) throws Exception {
 
@@ -76,9 +75,7 @@ public class QuestionController {
 		Question updatedQuestion = questionService.updateQuestion(question, questionId);
 		QuestionDto.Response response = questionMapper.questionToQuestionResponse(updatedQuestion);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.CREATED
-		);
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/{question_id}")

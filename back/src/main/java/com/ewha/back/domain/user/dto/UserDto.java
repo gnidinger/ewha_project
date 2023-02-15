@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.user.entity.enums.AgeType;
 import com.ewha.back.domain.user.entity.enums.GenderType;
 
@@ -156,6 +157,7 @@ public class UserDto {
 		private String nickname;
 		private GenderType genderType;
 		private AgeType ageType;
+		private List<CategoryType> categoryTypes;
 		private Double ariFactor;
 		private List<String> role;
 		private String profileImage;

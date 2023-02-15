@@ -1,5 +1,7 @@
 # 가동중인 레디스 컨테이너 중단 및 삭제
 sudo docker ps -a -q --filter "name=redis-server" | grep -q . && docker stop redis-server && docker rm redis-server | true
+sudo docker ps -a -q --filter "name=redis-master" | grep -q . && docker stop ubuntu_redis-network && docker rm ubuntu_redis-network | true
+sudo docker ps -a -q --filter "name=redis-slave" | grep -q . && docker stop ubuntu_redis-network && docker rm ubuntu_redis-network | true
 
 # 가동중인 도커 중단 및 삭제
 sudo docker ps -a -q --filter "name=ewhaproject" | grep -q . && docker stop ewhaproject && docker rm ewhaproject | true

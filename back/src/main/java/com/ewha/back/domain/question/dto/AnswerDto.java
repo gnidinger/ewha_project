@@ -28,4 +28,15 @@ public class AnswerDto {
 		private Question question;
 		private String body;
 	}
+
+	@Getter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class MyAnswerResponse {
+		private Long answerId;
+		private User user;
+		private Question question;
+		private String body;
+	}
 }

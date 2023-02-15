@@ -6,8 +6,11 @@ import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
 
+import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.domain.user.entity.enums.AgeType;
+import com.ewha.back.domain.user.entity.enums.GenderType;
 import com.ewha.back.global.security.dto.LoginDto;
 
 @Mapper(componentModel = "spring")
@@ -16,7 +19,26 @@ public interface UserMapper {
 
 	User userInfotoUser(UserDto.UserInfo userInfo);
 
-	UserDto.Response userToUserResponse(User user);
+	default UserDto.Response userToUserResponse(User user) {
+
+		List<CategoryType> categoryTypeList = user.getUserCategories().stream()
+			.map(userCategory -> userCategory.getCategory().getCategoryType())
+			.collect(Collectors.toList());
+
+		UserDto.Response.ResponseBuilder responseBuilder = UserDto.Response.builder();
+
+		responseBuilder.userId(user.getUserId());
+		responseBuilder.nickname(user.getNickname());
+		responseBuilder.genderType(user.getGenderType());
+		responseBuilder.ageType(user.getAgeType());
+		responseBuilder.categoryTypes(categoryTypeList);
+		responseBuilder.ariFactor(user.getAriFactor());
+		responseBuilder.role(user.getRole());
+		responseBuilder.profileImage(user.getProfileImage());
+		responseBuilder.thumbnailPath(user.getThumbnailPath());
+
+		return responseBuilder.build();
+	}
 
 	UserDto.PostResponse userToUserPostResponse(User user);
 
