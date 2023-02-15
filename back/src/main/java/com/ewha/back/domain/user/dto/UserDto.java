@@ -116,7 +116,7 @@ public class UserDto {
 		private AgeType ageType;
 		@NotEmpty
 		@Size(max = 3, message = "관심사는 최대 3개까지 선택 가능합니다")
-		private List<String> categories;
+		private List<CategoryType> categories;
 	}
 
 	@Getter

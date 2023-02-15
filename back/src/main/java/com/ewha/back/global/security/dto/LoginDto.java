@@ -42,7 +42,7 @@ public class LoginDto {
 		private AgeType ageType;
 		@NotEmpty
 		@Size(max = 3, message = "장르는 최대 3개까지 선택 가능합니다")
-		private List<String> categories;
+		private List<CategoryType> categories;
 	}
 
 	@Getter

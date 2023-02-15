@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ewha.back.domain.category.entity.Category;
 import com.ewha.back.domain.category.entity.CategoryType;
+import com.ewha.back.domain.category.service.CategoryService;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.repository.CommentQueryRepository;
 import com.ewha.back.domain.feed.entity.Feed;
@@ -36,7 +37,9 @@ import com.ewha.back.global.security.util.CustomAuthorityUtils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Service
 @RequiredArgsConstructor
@@ -52,6 +55,7 @@ public class UserServiceImpl implements UserService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private final CustomAuthorityUtils customAuthorityUtils;
+	private final CategoryService categoryService;
 
 	@Override
 	@Transactional
@@ -194,11 +198,10 @@ public class UserServiceImpl implements UserService {
 		List<UserCategory> userCategories = userInfo.getCategories().stream()
 			.map(a -> {
 				UserCategory userCategory = new UserCategory();
-				Category category = new Category();
-				category.setId((long)CategoryType.valueOf(a).ordinal() + 1L);
+				Category category = categoryService.findVerifiedCategory(a);
 				userCategory.addUser(findUser);
 				userCategory.addCategory(category);
-				return userCategory;
+				return userCategoryRepository.save(userCategory);
 			}).collect(Collectors.toList());
 		findUser.setUserCategories(userCategories);
 
@@ -267,12 +270,13 @@ public class UserServiceImpl implements UserService {
 		List<UserCategory> userCategories = patchDto.getCategories().stream()
 			.map(a -> {
 				UserCategory userCategory = new UserCategory();
-				Category category = new Category();
-				category.setId((long)CategoryType.valueOf(a).ordinal() + 1L);
+				Category category = categoryService.findVerifiedCategory(a);
 				userCategory.addUser(findUser);
 				userCategory.addCategory(category);
-				return userCategory;
+				return userCategoryRepository.save(userCategory);
 			}).collect(Collectors.toList());
+		log.info("######" + patchDto.getCategories().get(0).toString());
+		log.info("######" + userCategories.size());
 		findUser.setUserCategories(userCategories);
 		findUser.setIsFirstLogin(false);
 
