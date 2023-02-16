@@ -56,7 +56,6 @@ public class FeedController {
 
 		Feed feed = feedMapper.feedPostToFeed(postFeed);
 		Feed createdFeed = feedService.createFeed(feed);
-		createdFeed.addFeedCategories(feed.getFeedCategories());
 
 		if (multipartFile != null) {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
@@ -64,7 +63,7 @@ public class FeedController {
 		}
 
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
-
+		createdFeed.addFeedCategories(feed.getFeedCategories());
 		// return ResponseEntity.status(HttpStatus.CREATED).body(response);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -76,14 +75,16 @@ public class FeedController {
 
 		List<String> imagePath = null;
 
-		if (multipartFile != null) {
-			imagePath = awsS3Service.updateORDeleteFeedImageFromS3(feedId, multipartFile);
-		}
-
-		patchFeed.setImagePath(imagePath.get(0));
-		patchFeed.setThumbnailPath(imagePath.get(1));
 		Feed feed = feedMapper.feedPatchToFeed(patchFeed);
 		Feed updatedFeed = feedService.updateFeed(feed, feedId);
+
+		if (patchFeed.getImagePath() != null) {
+			updatedFeed.addImagePaths(updatedFeed.getImagePath(), updatedFeed.getThumbnailPath());
+		} else {
+			imagePath = awsS3Service.updateORDeleteFeedImageFromS3(feedId, multipartFile);
+			updatedFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
+		}
+
 		updatedFeed.addFeedCategories(feed.getFeedCategories());
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(updatedFeed);
 

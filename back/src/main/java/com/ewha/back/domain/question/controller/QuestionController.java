@@ -65,14 +65,16 @@ public class QuestionController {
 
 		List<String> imagePath = null;
 
-		if (multipartFile != null) {
-			imagePath = awsS3Service.updateORDeleteQuestionImageFromS3(questionId, multipartFile);
-		}
-
-		patchQuestion.setImagePath(imagePath.get(0));
-		patchQuestion.setThumbnailPath(imagePath.get(1));
 		Question question = questionMapper.questionPatchToQuestion(patchQuestion);
 		Question updatedQuestion = questionService.updateQuestion(question, questionId);
+
+		if (patchQuestion.getImagePath() != null) {
+			updatedQuestion.addImagePaths(updatedQuestion.getImagePath(), updatedQuestion.getThumbnailPath());
+		} else {
+			imagePath = awsS3Service.updateORDeleteQuestionImageFromS3(questionId, multipartFile);
+			updatedQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
+		}
+
 		QuestionDto.Response response = questionMapper.questionToQuestionResponse(updatedQuestion);
 
 		return ResponseEntity.ok().build();

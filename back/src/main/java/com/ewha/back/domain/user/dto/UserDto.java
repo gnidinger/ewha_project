@@ -110,6 +110,7 @@ public class UserDto {
 		@NotNull
 		private String nickname;
 		private String introduction;
+		private String profileImage;
 		@NotNull
 		private GenderType genderType;
 		@NotNull

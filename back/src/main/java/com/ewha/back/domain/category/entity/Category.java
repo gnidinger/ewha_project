@@ -35,7 +35,7 @@ public class Category implements Serializable {
 	private List<UserCategory> userCategories = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
 	private List<FeedCategory> feedCategories = new ArrayList<>();
 
 	public void addUserCategory(UserCategory userCategory) {

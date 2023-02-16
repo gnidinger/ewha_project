@@ -75,7 +75,7 @@ public class User extends BaseTimeEntity {
 
 	@Nullable
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Image> images = new ArrayList<>();
 
 	@Column
@@ -129,6 +129,7 @@ public class User extends BaseTimeEntity {
 
 	public void updateUserInfo(UserDto.UserInfo userInfo) {
 		this.nickname = userInfo.getNickname();
+		this.profileImage = userInfo.getProfileImage();
 		this.genderType = userInfo.getGenderType();
 		this.ageType = userInfo.getAgeType();
 		this.introduction = userInfo.getIntroduction();

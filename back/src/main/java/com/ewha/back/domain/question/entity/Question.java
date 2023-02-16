@@ -48,7 +48,7 @@ public class Question extends BaseTimeEntity {
 
 	@Nullable
 	@JsonManagedReference
-	@OneToOne(mappedBy = "question", cascade = CascadeType.REMOVE)
+	@OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
 	private Image image;
 
 	@JsonManagedReference

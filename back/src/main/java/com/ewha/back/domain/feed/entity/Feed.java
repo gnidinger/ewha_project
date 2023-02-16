@@ -86,7 +86,7 @@ public class Feed extends BaseTimeEntity implements Serializable {
 
 	@Nullable
 	@JsonManagedReference
-	@OneToOne(mappedBy = "feed", cascade = CascadeType.REMOVE)
+	@OneToOne(mappedBy = "feed", cascade = CascadeType.ALL)
 	private Image image;
 
 	@JsonManagedReference

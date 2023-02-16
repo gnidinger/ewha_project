@@ -22,14 +22,7 @@ public class QuestionDto {
 		private String imagePath;
 		@NotBlank
 		private String answerBody;
-		@NotBlank
-		private String dummy1;
-		@NotBlank
-		private String dummy2;
-		@NotBlank
-		private String dummy3;
-		@NotBlank
-		private String dummy4;
+
 	}
 
 	@Getter
@@ -46,14 +39,6 @@ public class QuestionDto {
 		private String thumbnailPath;
 		@NotBlank
 		private String answerBody;
-		@NotBlank
-		private String dummy1;
-		@NotBlank
-		private String dummy2;
-		@NotBlank
-		private String dummy3;
-		@NotBlank
-		private String dummy4;
 	}
 
 	@Getter
@@ -66,10 +51,6 @@ public class QuestionDto {
 		private String body;
 		private String imagePath;
 		private String answerBody;
-		private String dummy1;
-		private String dummy2;
-		private String dummy3;
-		private String dummy4;
 	}
 
 	@Getter
