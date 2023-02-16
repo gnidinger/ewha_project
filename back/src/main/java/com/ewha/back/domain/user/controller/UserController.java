@@ -124,11 +124,9 @@ public class UserController {
 
 		User updatedUser = userService.updateUser(userInfo);
 
-		if (multipartFile != null) {
-			imagePath = awsS3Service.updateORDeleteUserImageFromS3(updatedUser.getId(), multipartFile);
-			updatedUser.setProfileImage(imagePath.get(0));
-			updatedUser.setThumbnailPath(imagePath.get(1));
-		}
+		imagePath = awsS3Service.updateORDeleteUserImageFromS3(updatedUser.getId(), multipartFile);
+		updatedUser.setProfileImage(imagePath.get(0));
+		updatedUser.setThumbnailPath(imagePath.get(1));
 
 		UserDto.Response response = userMapper.userToUserResponse(updatedUser);
 
