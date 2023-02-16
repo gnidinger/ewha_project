@@ -73,11 +73,11 @@ public class AwsS3Service {
 		Feed feed;
 		User user;
 
-		if (requestURI.equals("/feeds/add")) {
+		if (requestURI.contains("/feeds")) {
 			storedPath = "feedImages/";
 			imageType = ImageType.FEED;
 			feed = feedService.findVerifiedFeed(id);
-		} else if (requestURI.equals("/mypage/userinfo")) {
+		} else if (requestURI.contains("/mypage")) {
 			storedPath = "profileImages/";
 			imageType = ImageType.PROFILE_PICTURE;
 			user = userService.findVerifiedUser(id);
@@ -128,7 +128,7 @@ public class AwsS3Service {
 			.storedImageName(storedImageName)
 			.storedPath(fullPath);
 
-		if (requestURI.equals("/feeds/add")) {
+		if (requestURI.contains("/feeds")) {
 
 			Feed findFeed = feedService.findVerifiedFeed(id);
 			image.imageType(ImageType.FEED)
@@ -140,7 +140,7 @@ public class AwsS3Service {
 
 			feedRepository.save(findFeed);
 
-		} else if (requestURI.equals("/mypage/userinfo")) {
+		} else if (requestURI.contains("/mypage")) {
 
 			User findUser = userService.findVerifiedUser(id);
 
@@ -170,7 +170,7 @@ public class AwsS3Service {
 
 		String storedPath = null;
 
-		if (requestURI.equals("/mypage/userinfo")) {
+		if (requestURI.contains("/mypage")) {
 			throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
 		}
 

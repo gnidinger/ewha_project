@@ -139,9 +139,9 @@ public class ImageService {
 		int height = bufferedImage.getHeight();
 		int limit = 0;
 
-		if (requestURI.equals("/feeds/add"))
+		if (requestURI.contains("/feeds"))
 			limit = 768;
-		else if (requestURI.equals("/mypage/userinfo"))
+		else if (requestURI.contains("/mypage"))
 			limit = 320;
 
 		MarvinImage marvinImage = new MarvinImage(bufferedImage);

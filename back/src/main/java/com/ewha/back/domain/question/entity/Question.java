@@ -59,8 +59,8 @@ public class Question extends BaseTimeEntity {
 	public void updateQuestion(Question question) {
 		this.title = question.getTitle();
 		this.body = question.getBody();
-		this.imagePath = question.getImagePath();
-		this.thumbnailPath = question.getThumbnailPath();
+		// this.imagePath = question.getImagePath();
+		// this.thumbnailPath = question.getThumbnailPath();
 		this.answerBody = question.getAnswerBody();
 	}
 
