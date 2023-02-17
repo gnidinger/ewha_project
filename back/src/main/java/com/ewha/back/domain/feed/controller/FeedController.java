@@ -78,12 +78,19 @@ public class FeedController {
 		Feed feed = feedMapper.feedPatchToFeed(patchFeed);
 		Feed updatedFeed = feedService.updateFeed(feed, feedId);
 
-		if (patchFeed.getImagePath() != null) {
+		if (updatedFeed.getImagePath() != null && patchFeed.getImagePath() != null
+			&& multipartFile == null && patchFeed.getImagePath().equals(updatedFeed.getImagePath())) {
 			updatedFeed.addImagePaths(updatedFeed.getImagePath(), updatedFeed.getThumbnailPath());
-		} else {
-			imagePath = awsS3Service.updateORDeleteFeedImageFromS3(feedId, multipartFile);
+		} else if (patchFeed.getImagePath() == null && multipartFile != null) {
+			imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedFeed.getId());
 			updatedFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
+		} else if (updatedFeed.getImagePath() != null && multipartFile == null
+			&& patchFeed.getImagePath() == null) {
+			awsS3Service.updateORDeleteFeedImageFromS3(updatedFeed.getId(), multipartFile);
+			updatedFeed.addImagePaths(null, null);
 		}
+
+		feedService.saveFeed(updatedFeed);
 
 		updatedFeed.addFeedCategories(feed.getFeedCategories());
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(updatedFeed);

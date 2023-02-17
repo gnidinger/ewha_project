@@ -164,4 +164,9 @@ public class FeedServiceImpl implements FeedService {
 		return optionalPairing.orElseThrow(() ->
 			new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
 	}
+
+	@Override
+	public void saveFeed(Feed feed) {
+		feedRepository.save(feed);
+	}
 }

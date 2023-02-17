@@ -297,7 +297,9 @@ public class AwsS3Service {
 
 		Feed findFeed = feedService.findVerifiedFeed(feedId);
 		String feedImagePath = findFeed.getImagePath();
+		String thumbnailImagePath = findFeed.getThumbnailPath();
 		String imageName = feedImagePath.substring(feedImagePath.lastIndexOf("/"));
+		String thumbnailName = thumbnailImagePath.substring(thumbnailImagePath.lastIndexOf("/"));
 		List<String> newImagePath = null;
 
 		if (feedImagePath == null && multipartFile != null) {
@@ -305,6 +307,9 @@ public class AwsS3Service {
 		} else if (feedImagePath != null && multipartFile != null) {
 			deleteImageFromS3(imageName);
 			newImagePath = uploadImageToS3(multipartFile, feedId);
+		} else if (multipartFile == null) {
+			deleteImageFromS3(imageName);
+			deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;
@@ -313,15 +318,21 @@ public class AwsS3Service {
 	public List<String> updateORDeleteUserImageFromS3(Long userId, MultipartFile multipartFile) throws Exception {
 
 		User findUser = userService.findVerifiedUser(userId);
-		String feedImagePath = findUser.getProfileImage();
-		String imageName = feedImagePath.substring(feedImagePath.lastIndexOf("/"));
+
+		String userImagePath = findUser.getProfileImage();
+		String thumbnailPath = findUser.getThumbnailPath();;
+		String imageName = userImagePath.substring(userImagePath.lastIndexOf("/"));
+		String thumbnailName = thumbnailPath.substring(thumbnailPath.lastIndexOf("/"));
 		List<String> newImagePath = null;
 
-		if (feedImagePath == null && multipartFile != null) {
+		if (userImagePath == null && multipartFile != null) {
 			newImagePath = uploadImageToS3(multipartFile, userId);
-		} else if (feedImagePath != null && multipartFile != null) {
+		} else if (userImagePath != null && multipartFile != null) {
 			deleteImageFromS3(imageName);
 			newImagePath = uploadImageToS3(multipartFile, userId);
+		} else if (multipartFile == null) {
+			deleteImageFromS3(imageName);
+			deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;
@@ -331,15 +342,20 @@ public class AwsS3Service {
 		Exception {
 
 		Question findQuestion = questionService.findVerifiedQuestion(questionId);
-		String feedImagePath = findQuestion.getImagePath();
-		String imageName = feedImagePath.substring(feedImagePath.lastIndexOf("/"));
+		String questionImagePath = findQuestion.getImagePath();
+		String questionThumbnailPath = findQuestion.getThumbnailPath();
+		String imageName = questionImagePath.substring(questionImagePath.lastIndexOf("/"));
+		String thumbnailName = questionThumbnailPath.substring(questionThumbnailPath.lastIndexOf("/"));
 		List<String> newImagePath = null;
 
-		if (feedImagePath == null && multipartFile != null) {
+		if (questionImagePath == null && multipartFile != null) {
 			newImagePath = uploadQuestionImageToS3(multipartFile, questionId);
-		} else if (feedImagePath != null && multipartFile != null) {
+		} else if (questionImagePath != null && multipartFile != null) {
 			deleteImageFromS3(imageName);
 			newImagePath = uploadQuestionImageToS3(multipartFile, questionId);
+		} else if (multipartFile == null) {
+			deleteImageFromS3(imageName);
+			deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;

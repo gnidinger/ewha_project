@@ -26,4 +26,6 @@ public interface FeedService {
 	void deleteFeeds();
 
 	Feed findVerifiedFeed(Long feedId);
+
+	void saveFeed(Feed feed);
 }

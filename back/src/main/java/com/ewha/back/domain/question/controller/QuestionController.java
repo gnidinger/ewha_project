@@ -75,6 +75,20 @@ public class QuestionController {
 			updatedQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
 		}
 
+		if (updatedQuestion.getImagePath() != null && patchQuestion.getImagePath() != null
+			&& multipartFile == null && patchQuestion.getImagePath().equals(updatedQuestion.getImagePath())) {
+			updatedQuestion.addImagePaths(updatedQuestion.getImagePath(), updatedQuestion.getThumbnailPath());
+		} else if (patchQuestion.getImagePath() == null && multipartFile != null) {
+			imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedQuestion.getId());
+			updatedQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
+		} else if (updatedQuestion.getImagePath() != null && multipartFile == null
+			&& patchQuestion.getImagePath() == null) {
+			awsS3Service.updateORDeleteQuestionImageFromS3(updatedQuestion.getId(), multipartFile);
+			updatedQuestion.addImagePaths(null, null);
+		}
+
+		questionService.saveQuestion(updatedQuestion);
+
 		QuestionDto.Response response = questionMapper.questionToQuestionResponse(updatedQuestion);
 
 		return ResponseEntity.ok().build();

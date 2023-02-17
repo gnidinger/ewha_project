@@ -89,4 +89,8 @@ public class QuestionService {
 		return optionalPairing.orElseThrow(() ->
 			new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 	}
+
+	public void saveQuestion(Question question) {
+		questionRepository.save(question);
+	}
 }

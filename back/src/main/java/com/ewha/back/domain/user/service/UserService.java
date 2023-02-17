@@ -52,4 +52,5 @@ public interface UserService {
 	Page<Feed> findUserFeedLikes(int page);
 
 	Page<Question> findUserQuestions(int page);
+	void saveUser(User user);
 }

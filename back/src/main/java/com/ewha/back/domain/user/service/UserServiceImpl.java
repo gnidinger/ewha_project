@@ -357,4 +357,9 @@ public class UserServiceImpl implements UserService {
 
 		return questionQueryRepository.findQuestionListByUser(findUser, pageRequest);
 	}
+
+	@Override
+	public void saveUser(User user) {
+		userRepository.save(user);
+	}
 }
