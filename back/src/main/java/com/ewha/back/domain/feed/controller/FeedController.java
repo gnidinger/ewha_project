@@ -75,6 +75,7 @@ public class FeedController {
 
 		List<String> imagePath = null;
 
+		Feed findFeed = feedService.findVerifiedFeed(feedId);
 		Feed feed = feedMapper.feedPatchToFeed(patchFeed);
 		Feed updatedFeed = feedService.updateFeed(feed, feedId);
 

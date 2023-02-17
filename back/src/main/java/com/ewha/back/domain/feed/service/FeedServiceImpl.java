@@ -157,11 +157,14 @@ public class FeedServiceImpl implements FeedService {
 		feedRepository.deleteAllByUserId(id);
 	}
 
+	public Feed findFeedByFeedId(Long feedId) {
+		return findVerifiedFeed(feedId);
+	}
 	@Override
 	public Feed findVerifiedFeed(Long feedId) {
 
-		Optional<Feed> optionalPairing = feedRepository.findById(feedId);
-		return optionalPairing.orElseThrow(() ->
+		Optional<Feed> optionalFeed = feedRepository.findById(feedId);
+		return optionalFeed.orElseThrow(() ->
 			new BusinessLogicException(ExceptionCode.FEED_NOT_FOUND));
 	}
 

@@ -108,6 +108,7 @@ public class Feed extends BaseTimeEntity implements Serializable {
 		this.title = feed.getTitle();
 		this.body = feed.getBody();
 		// this.imagePath = feed.getImagePath();
+		// this.thumbnailPath = feed.getThumbnailPath();
 	}
 
 	public void addImagePaths(String fullPath, String thumbnailPath) {
