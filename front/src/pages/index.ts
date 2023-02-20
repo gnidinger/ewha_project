@@ -1,0 +1,10 @@
+export { default as Home } from './Home';
+export { default as Login } from './Login';
+export { default as Forgot } from './Forgot';
+export { default as AriBoard } from './AriBoard';
+export { default as Mypage } from './Mypage';
+export { default as Signup } from './Signup';
+export { default as SetInfo } from './SetInfo';
+export { default as Write } from './Write';
+export { default as View } from './View';
+export { default as Setting } from './Setting';
