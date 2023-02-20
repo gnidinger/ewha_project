@@ -50,6 +50,7 @@ public class FeedServiceImpl implements FeedService {
 			.user(findUser)
 			.title(feed.getTitle())
 			.body(feed.getBody())
+			// .feedCategories(feed.getFeedCategories())
 			.viewCount(0L)
 			.likeCount(0L)
 			.build();
@@ -110,7 +111,7 @@ public class FeedServiceImpl implements FeedService {
 
 		return findFeed.getComments().stream()
 			.map(comment -> likeQueryRepository.findCommentLikeByFeedAndUser(comment, findUser))
-			.sorted(Comparator.comparing(a -> a.getFeed().getId()))
+			// .sorted(Comparator.comparing(a -> a.getFeed().getId()))
 			.collect(Collectors.toList());
 	}
 

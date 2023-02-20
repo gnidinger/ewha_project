@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,7 +108,8 @@ public class FeedController {
 
 		FeedDto.Response response;
 
-		if (jwtTokenizer.checkUserWithToken(request, token)) { // 로그인 사용자
+		// if (jwtTokenizer.checkUserWithToken(request, token)) { // 로그인 사용자
+		if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
 			// 로그인 사용자이면서 Auth가 있는 경우
 			Feed feed = feedService.updateView(feedId);
 			Boolean isLikedFeed = likeService.isLikedFeed(feed);

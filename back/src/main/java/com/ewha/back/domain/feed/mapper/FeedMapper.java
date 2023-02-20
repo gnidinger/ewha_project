@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 
 import com.ewha.back.domain.category.dto.CategoryDto;
 import com.ewha.back.domain.category.entity.Category;
+import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.comment.dto.CommentDto;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
@@ -82,10 +83,15 @@ public interface FeedMapper {
 
 		List<CommentDto.FeedCommentResponse> finalCommentsList = commentsList;
 
-		commentLikeList.forEach(like -> {
-			Long index = like.getComment().getId();
-			finalCommentsList.get(Math.toIntExact(index)).setIsLikedComment(true);
-		});
+			commentLikeList.forEach(like -> {
+				if (like != null) {
+					Long index = like.getComment().getId();
+					finalCommentsList.stream()
+						.filter(feedCommentResponse -> feedCommentResponse.getCommentId().equals(index))
+						.forEach(feedCommentResponse -> feedCommentResponse.setIsLikedComment(true));
+					// finalCommentsList.get(Math.toIntExact(index)).setIsLikedComment(true);
+				}
+			});
 
 		return FeedDto.Response.builder()
 			.feedId(feed.getId())
@@ -100,7 +106,7 @@ public interface FeedMapper {
 			.viewCount(feed.getViewCount())
 			.imagePath(feed.getImagePath())
 			.thumbnailPath(feed.getThumbnailPath())
-			.comments(commentsList)
+			.comments(finalCommentsList)
 			.createdAt(feed.getCreatedAt())
 			.modifiedAt(feed.getModifiedAt())
 			.build();

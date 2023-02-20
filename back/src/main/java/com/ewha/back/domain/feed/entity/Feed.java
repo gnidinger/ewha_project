@@ -57,7 +57,7 @@ public class Feed extends BaseTimeEntity implements Serializable {
 	private Long id;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<FeedCategory> feedCategories = new ArrayList<>();
 
