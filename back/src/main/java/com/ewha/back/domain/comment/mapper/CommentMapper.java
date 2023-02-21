@@ -48,6 +48,7 @@ public interface CommentMapper {
 		return new PageImpl<>(commentList.stream()
 			.map(comment -> {
 				return CommentDto.ListResponse.builder()
+					.feedId(comment.getFeed().getId())
 					.commentId(comment.getId())
 					.body(comment.getBody())
 					.likeCount(comment.getLikeCount())
