@@ -4,6 +4,7 @@ import axios from "axios";
 import { setCookie } from "./cookie";
 import { Info } from "../pages/SetInfo";
 import { SettingData } from "../pages/Setting";
+import { PasswordData } from "../components/setting/ChangePassword";
 
 export const check = async({ userId, nickname, password }: SignupData) => {
   try {
@@ -157,12 +158,19 @@ export const deleteAccount = async() => {
   }
 };
 
-export const changePassword = async() => {
+export const changePassword = async({ oldPassword, newPassword, newPasswordRepeat }: PasswordData) => {
   try {
-    const data = await axiosApi.patch('/mypage/patch/password');
+    const body = { oldPassword, newPassword, newPasswordRepeat };
+    const { data } = await axiosApi.patch('/mypage/patch/password', body);
     return data;
   }
   catch(e) {
+    if(axios.isAxiosError(e)) {
+      if(e.response?.data?.status === 400) return 'newPassword';
+      else if(e.response?.data?.message === 'Password Not Match') return 'password';
+      else if(e.response?.data?.message === 'Passwords Not Match') return 'passwordConfirm';
+      console.log(e);
+    }
     console.log(e);
   }
 }

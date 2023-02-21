@@ -163,14 +163,14 @@ const Setting = () => {
             <Button variant='contained' onClick={() => setShowDeleteModal(true)}>회원탈퇴</Button>
             <Button variant='contained' type='submit'>저장하기</Button>
           </StButtonBox>
-          <Dialog open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
-            <DeleteAccount />
-          </Dialog>
-          <Dialog open={showChangeModal} onClose={() => setShowChangeModal(false)}>
-            <ChangePassword />
-          </Dialog>
         </Box>
         }
+        <Dialog open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+          <DeleteAccount />
+        </Dialog>
+        <Dialog open={showChangeModal} onClose={() => setShowChangeModal(false)}>
+          <ChangePassword show={setShowChangeModal} />
+        </Dialog>
       </ThemeProvider>
     </>
   );
