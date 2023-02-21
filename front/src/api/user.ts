@@ -156,3 +156,13 @@ export const deleteAccount = async() => {
     console.log(e);
   }
 };
+
+export const changePassword = async() => {
+  try {
+    const data = await axiosApi.patch('/mypage/patch/password');
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+}
