@@ -72,7 +72,7 @@ public class NotificationService {
 		}
 	}
 
-	@Async("threadPoolTaskExecutor")
+	// @Async("threadPoolTaskExecutor")
 	@Transactional
 	public void notifyUpdateLikeFeedEvent(Feed feed) { // 피드 좋아요 알림
 
@@ -108,7 +108,7 @@ public class NotificationService {
 		notificationRepository.save(notification);
 	}
 
-	@Async("threadPoolTaskExecutor")
+	// @Async("threadPoolTaskExecutor")
 	@Transactional
 	public void notifyUpdateLikeCommentEvent(Comment comment) { // 코멘트 좋아요 알림
 
@@ -141,7 +141,7 @@ public class NotificationService {
 		notificationRepository.save(notification);
 	}
 
-	@Async("threadPoolTaskExecutor")
+	// @Async("threadPoolTaskExecutor")
 	@Transactional
 	public void notifyPostPairingCommentEvent(Comment comment) { // 페어링 댓글 알림
 
@@ -180,7 +180,7 @@ public class NotificationService {
 		notificationRepository.save(notification);
 	}
 
-	@Async("threadPoolTaskExecutor")
+	// @Async("threadPoolTaskExecutor")
 	@Transactional
 	public void notifyMessagingEvent(User user) { // 페어링 댓글 알림
 
