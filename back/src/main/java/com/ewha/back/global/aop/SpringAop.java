@@ -1,10 +1,13 @@
 package com.ewha.back.global.aop;
 
+import javax.validation.Valid;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.ewha.back.domain.comment.dto.CommentDto;
 import com.ewha.back.domain.comment.entity.Comment;
@@ -51,15 +54,15 @@ public class SpringAop {
 		}
 	}
 
-	@AfterReturning(value = "Pointcuts.createFeedComment()", returning = "response")
-	public void createCommentNotification(JoinPoint joinPoint, ResponseEntity response) { // 코멘트 알림 보내기
+	@AfterReturning(value = "Pointcuts.createFeedComment() && args(feedId, postComment)", returning = "response")
+	public void createCommentNotification(JoinPoint joinPoint, Long feedId,
+		CommentDto.Post postComment, ResponseEntity<CommentDto.Response> response) { // 코멘트 알림 보내기
 
 		String method = joinPoint.getSignature().getName(); // 좋아요 달린 대상
 		long idx = Long.parseLong(joinPoint.getArgs()[0].toString()); // 대상 ID
 		CommentDto.Post commentDto = (CommentDto.Post)joinPoint.getArgs()[1]; // 달린 댓글 DTO
 
-		Comment comment = commentMapper.commentPostToComment(commentDto);
-		Comment createdComment = commentService.createComment(comment, idx);
+		Comment createdComment = commentService.findVerifiedComment(response.getBody().getCommentId());
 		notificationService.notifyPostPairingCommentEvent(createdComment);
 
 		log.info("Pairing Comment Notification Sent");

@@ -39,12 +39,12 @@ public class CommentController {
 
 		Comment comment = commentMapper.commentPostToComment(postComment);
 		Comment createdComment = commentService.createComment(comment, feedId);
-		// CommentDto.Response response = commentMapper.commentToCommentResponse(createdComment);
+		CommentDto.Response response = commentMapper.commentToCommentResponse(createdComment);
 		//
 		// return new ResponseEntity<>(
 		// 	new SingleResponseDto<>(response), HttpStatus.CREATED
 		// );
-		return ResponseEntity.status(HttpStatus.CREATED).build();
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PatchMapping("/comments/{comment_id}/edit")
