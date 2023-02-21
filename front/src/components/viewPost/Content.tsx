@@ -35,7 +35,7 @@ const Content = ({ postData, rerender }: Props) => {
       <Avatar sx={{ float: 'left', width: 36, height: 36 }} />
       <Typography sx={{ lineHeight: '36px', verticalAlign: 'middle', ml: 6 }} gutterBottom>{postData.userInfo.nickname}</Typography>
       <Typography sx={{ fontSize: 11 }} gutterBottom>{postData.createdAt.substring(0, 10)}</Typography>
-      <Typography sx={{ fontSize: 12 }}>
+      <Typography sx={{ fontSize: 12 }} gutterBottom>
         {postData.categories.map((t) => (
           <span key={t}>#{interestsObject[t as keyof INTERESTS]} </span>
         ))}
@@ -48,7 +48,7 @@ const Content = ({ postData, rerender }: Props) => {
         {` ${postData.comments.length} `}
       </Typography>
       {postData.imagePath &&
-        <Box sx={{ width: '100%', maxWidth: '32rem', border: '1px solid black' }}>
+        <Box sx={{ width: '100%', maxWidth: '32rem' }}>
           <img style={{ width: '100%' }} src={postData.imagePath} />
         </Box>
       }

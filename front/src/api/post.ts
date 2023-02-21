@@ -39,7 +39,7 @@ export const writePost = async( post: PostData, image?: File ) => {
       type: 'application/json'
     })
     body.append('post', blob);
-    if(image instanceof String) body.append('image', image);
+    if(image instanceof File) body.append('image', image);
     const data = await axiosApi.post('/feeds/add', body);
     return data;
   }

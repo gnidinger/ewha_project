@@ -57,9 +57,20 @@ const View = () => {
   return(
     <>
       <Header>아리공간</Header>
-      {postData && <Content postData={postData} rerender={getPostData} />}
+      {postData && 
+        <Content
+          postData={postData}
+          rerender={getPostData}
+        />
+      }
       <Divider />
-      {postData && <Comments commentsData={postData.comments ? postData.comments : []} />}
+      {postData && 
+        <Comments
+          feedId={postData.feedId}
+          commentsData={postData.comments ? postData.comments : []}
+          rerender={getPostData}
+        />
+      }
     </>
   );
 };
