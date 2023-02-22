@@ -13,7 +13,8 @@ export interface ItemProps {
   title: string,
   body: string,
   likeCount: number, 
-  commentCount: number
+  commentCount: number, 
+  isComment: boolean
 }
 
 const TabPanel = ({ value, index, getFunc }: TabPanelProps) => {
@@ -21,6 +22,7 @@ const TabPanel = ({ value, index, getFunc }: TabPanelProps) => {
 
   const getItemList = async() => {
     const data = await getFunc();
+    console.log(data);
     setItemList(data.content);
   };
 
@@ -42,7 +44,9 @@ const TabPanel = ({ value, index, getFunc }: TabPanelProps) => {
             title={item.title}
             body={item.body}
             likeCount={item.likeCount}
-            commentCount={item.commentCount} />
+            commentCount={item.commentCount}
+            isComment={index === 1}
+          />
         </Box>)
       )}
     </div>

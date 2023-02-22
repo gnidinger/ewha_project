@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Params, useParams } from 'react-router-dom';
 import { getPost } from '../api/post';
 import { Header } from '../components/common';
-import { Content, Comments } from '../components/viewPost';
+import { Content, CommentsBox } from '../components/viewPost';
 import Divider from '@mui/material/Divider';
 
 interface User {
@@ -11,12 +11,12 @@ interface User {
   userId: string
 }
 
-export interface Comment {
+export interface CommentData {
   body: string,
-  commentId: number,
+  commentId: string,
   createdAt: string,
   modifiedAt: string,
-  feedId: number,
+  feedId: string,
   likeCount: number,
   isLikedComment: boolean,
   userInfo: User
@@ -31,7 +31,7 @@ export interface Post {
   categories: string[],
   likeCount: number,
   body: string,
-  comments: Comment[],
+  comments: CommentData[],
   isLiked: boolean,
   imagePath: string,
   thumbnailPath: string
@@ -46,6 +46,7 @@ const View = () => {
   const getPostData = async() => {
     if(postId) {
       const data = await getPost(postId);
+      console.log(data);
       setPostData(data);
     }
   };
@@ -65,7 +66,7 @@ const View = () => {
       }
       <Divider />
       {postData && 
-        <Comments
+        <CommentsBox
           feedId={postData.feedId}
           commentsData={postData.comments ? postData.comments : []}
           rerender={getPostData}
