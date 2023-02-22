@@ -15,7 +15,7 @@ import { writePost } from '../api/post';
 
 export interface PostData {
   title: string,
-  categories: string[],
+  categories: Object[],
   body: string
 }
 
@@ -36,7 +36,7 @@ const Write = () => {
       if(pair[0] === 'title') postData.title = String(pair[1]);
       else if(pair[0] === 'body') postData.body = String(pair[1]);
     }
-    postData.categories = tags;
+    postData.categories = tags.map((tag) => { return { categoryType: tag } });
     if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File));
     else await writePost(postData);
     navigation('/ari');

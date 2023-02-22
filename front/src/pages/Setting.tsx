@@ -7,12 +7,12 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
+import Dialog from '@mui/material/Dialog';
 import { IconButton } from '@mui/material';
 import { MyInformation } from './Mypage';
 import { MAIN_COLOR } from '../style/palette';
 import { Header } from '../components/common';
-import { DeleteAccount } from '../components/setting';
+import { DeleteAccount, ChangePassword } from '../components/setting';
 import { interests } from '../components/common/interestsList';
 import { modifyMypage } from '../api/user';
 
@@ -55,6 +55,7 @@ const Setting = () => {
   const [checked, setChecked] = useState<string[]>([]);
   const [imageSrc, setImageSrc] = useState<string>('');
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showChangeModal, setShowChangeModal] = useState<boolean>(false);
 
   const location = useLocation();
   const navigation = useNavigate();
@@ -132,7 +133,7 @@ const Setting = () => {
             <StLabel>한 줄 소개</StLabel>
             <TextField sx={TextFieldStyle} id='introduction' name='introduction' defaultValue={profileData.introduction} />
             <StChangePassword>
-              <Link to='/' style={{ textDecoration: 'underline' }}>비밀번호 변경</Link>
+              <span onClick={() => setShowChangeModal(true)} style={{ textDecoration: 'underline' }}>비밀번호 변경</span>
             </StChangePassword>
           </Box>
           <Box>
@@ -162,11 +163,14 @@ const Setting = () => {
             <Button variant='contained' onClick={() => setShowDeleteModal(true)}>회원탈퇴</Button>
             <Button variant='contained' type='submit'>저장하기</Button>
           </StButtonBox>
-          <Modal open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
-            <DeleteAccount />
-          </Modal>
         </Box>
         }
+        <Dialog open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+          <DeleteAccount />
+        </Dialog>
+        <Dialog open={showChangeModal} onClose={() => setShowChangeModal(false)}>
+          <ChangePassword show={setShowChangeModal} />
+        </Dialog>
       </ThemeProvider>
     </>
   );

@@ -10,22 +10,23 @@ import { Post } from '../../pages/View';
 import { like, dislike } from '../../api/post';
 
 interface Props {
-  postData: Post
+  postData: Post,
+  rerender: () => void
 }
 
 const heartIconStyle = {
   fontSize: 16, color: pink[500], verticalAlign: 'middle'
 }
 
-const Content = ({ postData }: Props) => {
-  console.log(postData);
-
+const Content = ({ postData, rerender }: Props) => {
   const clickLike = async() => {
     await like(postData.feedId);
+    rerender();
   };
 
   const clickDislike = async() => {
     await dislike(postData.feedId);
+    rerender();
   };
 
   return(
@@ -33,8 +34,8 @@ const Content = ({ postData }: Props) => {
       <Typography sx={{ fontSize: 18 }} gutterBottom>{postData.title}</Typography>
       <Avatar sx={{ float: 'left', width: 36, height: 36 }} />
       <Typography sx={{ lineHeight: '36px', verticalAlign: 'middle', ml: 6 }} gutterBottom>{postData.userInfo.nickname}</Typography>
-      <Typography sx={{ fontSize: 11 }}>{postData.createdAt.substring(0, 10)}</Typography>
-      <Typography sx={{ fontSize: 11 }}>
+      <Typography sx={{ fontSize: 11 }} gutterBottom>{postData.createdAt.substring(0, 10)}</Typography>
+      <Typography sx={{ fontSize: 12 }} gutterBottom>
         {postData.categories.map((t) => (
           <span key={t}>#{interestsObject[t as keyof INTERESTS]} </span>
         ))}
@@ -47,7 +48,7 @@ const Content = ({ postData }: Props) => {
         {` ${postData.comments.length} `}
       </Typography>
       {postData.imagePath &&
-        <Box sx={{ width: '100%', maxWidth: '32rem', border: '1px solid black' }}>
+        <Box sx={{ width: '100%', maxWidth: '32rem' }}>
           <img style={{ width: '100%' }} src={postData.imagePath} />
         </Box>
       }

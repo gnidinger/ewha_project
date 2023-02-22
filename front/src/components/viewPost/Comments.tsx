@@ -5,12 +5,22 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Comment } from '../../pages/View';
 import { getCookie } from '../../api/cookie';
+import { writeComment } from '../../api/comment';
 
 interface Props {
-  commentsData: Comment[]
+  feedId: string,
+  commentsData: Comment[],
+  rerender: () => void
 }
 
-const Comments = ({ commentsData }: Props) => {
+const Comments = ({ feedId, commentsData, rerender }: Props) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    await writeComment(feedId, String(formData.get('comment')));
+    rerender();
+  };
+
   return(
     <Box sx={{ padding: 2 }}>
       <Typography sx={{ mb: 2 }}>댓글 {commentsData.length}</Typography>
@@ -22,12 +32,13 @@ const Comments = ({ commentsData }: Props) => {
         </Box>
       ))}
       {getCookie('ari_login') &&
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'auto 5rem' }}>
+        <Box component='form' onSubmit={handleSubmit} sx={{ display: 'grid', gridTemplateColumns: 'auto 5rem' }}>
           <TextField
             fullWidth
             label='댓글을 남겨보세요.'
+            name='comment'
           />
-          <Button variant='contained' sx={{ ml: 1 }}>등록</Button>
+          <Button type='submit' variant='contained' sx={{ ml: 1 }}>등록</Button>
         </Box>
       }
     </Box>

@@ -17,7 +17,8 @@ export interface Comment {
   createdAt: string,
   modifiedAt: string,
   feedId: number,
-  likeCount: number
+  likeCount: number,
+  isLikedComment: boolean,
   userInfo: User
 }
 
@@ -45,7 +46,6 @@ const View = () => {
   const getPostData = async() => {
     if(postId) {
       const data = await getPost(postId);
-      console.log(data);
       setPostData(data);
     }
   };
@@ -57,9 +57,20 @@ const View = () => {
   return(
     <>
       <Header>아리공간</Header>
-      {postData && <Content postData={postData} />}
+      {postData && 
+        <Content
+          postData={postData}
+          rerender={getPostData}
+        />
+      }
       <Divider />
-      {postData && <Comments commentsData={postData.comments ? postData.comments : []} />}
+      {postData && 
+        <Comments
+          feedId={postData.feedId}
+          commentsData={postData.comments ? postData.comments : []}
+          rerender={getPostData}
+        />
+      }
     </>
   );
 };
