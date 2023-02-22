@@ -34,7 +34,8 @@ export interface Post {
   comments: CommentData[],
   isLiked: boolean,
   imagePath: string,
-  thumbnailPath: string
+  thumbnailPath: string,
+  isMyFeed: boolean
 }
 
 const View = () => {

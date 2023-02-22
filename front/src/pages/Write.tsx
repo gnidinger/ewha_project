@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Header } from '../components/common';
 import { TagBox } from '../components/write';
 import Box from '@mui/material/Box';
@@ -16,16 +16,19 @@ import { writePost } from '../api/post';
 export interface PostData {
   title: string,
   categories: Object[],
-  body: string
+  body: string,
+  imagePath?: string | null
 }
 
 const Write = () => {
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagbox, setTagbox] = useState<string>('none');
-  const [imageFile, setImageFile] = useState<string>('');
-
   const tagboxRef: any = useRef();
   const navigation = useNavigate();
+  const location = useLocation();
+  const feedData = location.state ? location.state.feedData : undefined;
+
+  const [tags, setTags] = useState<string[]>(feedData ? feedData.categories : []);
+  const [tagbox, setTagbox] = useState<string>('none');
+  const [imageFile, setImageFile] = useState<string | null>(feedData ? feedData.imagePath : null);
 
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,6 +40,10 @@ const Write = () => {
       else if(pair[0] === 'body') postData.body = String(pair[1]);
     }
     postData.categories = tags.map((tag) => { return { categoryType: tag } });
+    if(imageFile && !formData.get('image')) {
+      postData.imagePath = imageFile;
+      await writePost(postData, undefined, feedData.feedId);
+    }
     if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File));
     else await writePost(postData);
     navigation('/ari');
@@ -84,6 +91,7 @@ const Write = () => {
             id='title'
             label='제목'
             autoFocus
+            defaultValue={feedData && feedData.title}
             sx={{ mb: 1 }}
           />
           <Stack direction='row' sx={{ mb: 1 }}>
@@ -111,6 +119,7 @@ const Write = () => {
             id='body'
             label='내용'
             multiline
+            defaultValue={feedData && feedData.body}
             rows={15}
           />
         </Grid>

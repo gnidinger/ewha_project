@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
@@ -32,7 +34,8 @@ const Content = ({ postData, rerender }: Props) => {
   return(
     <Box sx={{ padding: 3 }}>
       <Typography sx={{ fontSize: 18 }} gutterBottom>{postData.title}</Typography>
-      <Avatar src={postData.userInfo.profileImage} sx={{ float: 'left', width: 36, height: 36 }} />
+      {postData.isMyFeed && <Link to='/write' state={{ feedData: postData }}><Button sx={{ float: 'right' }}>수정하기</Button></Link>}
+      <Avatar sx={{ float: 'left', width: 36, height: 36 }} />
       <Typography sx={{ lineHeight: '36px', verticalAlign: 'middle', ml: 6 }} gutterBottom>{postData.userInfo.nickname}</Typography>
       <Typography sx={{ fontSize: 11 }} gutterBottom>{postData.createdAt.substring(0, 10)}</Typography>
       <Typography sx={{ fontSize: 12 }} gutterBottom>
