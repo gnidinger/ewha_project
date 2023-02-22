@@ -1,6 +1,8 @@
 package com.ewha.back.domain.comment.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,6 +73,18 @@ public class CommentServiceImpl implements CommentService {
 
 		return commentQueryRepository.findFeedComment(feedId, pageRequest);
 
+	}
+
+	@Override
+	public List<Comment> isMyComments(Long feedId) {
+
+		User findUser = userService.getLoginUser();
+
+		Feed findFeed = feedService.findFeedByFeedId(feedId);
+
+		return findFeed.getComments().stream()
+			.filter(comment -> comment.getUser().equals(findUser))
+			.collect(Collectors.toList());
 	}
 
 	@Override

@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ewha.back.domain.comment.entity.Comment;
+import com.ewha.back.domain.comment.service.CommentService;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
@@ -45,8 +47,8 @@ public class FeedController {
 	private final FeedMapper feedMapper;
 	private final FeedService feedService;
 	private final LikeService likeService;
+	private final CommentService commentService;
 	private final AwsS3Service awsS3Service;
-	private final JwtTokenizer jwtTokenizer;
 
 	@PostMapping("/add")
 	public ResponseEntity<HttpStatus> postFeed(
@@ -114,8 +116,10 @@ public class FeedController {
 			Feed feed = feedService.updateView(feedId);
 			Boolean isLikedFeed = likeService.isLikedFeed(feed);
 			List<Like> isLikedComments = feedService.isLikedComments(feedId);
+			Boolean isMyFeed = feedService.isMyFeed(feed);
+			List<Comment> isMyComments = commentService.isMyComments(feedId);
 
-			response = feedMapper.feedGetToFeedResponse(feed, isLikedFeed, isLikedComments);
+			response = feedMapper.feedGetToFeedResponse(feed, isLikedFeed, isLikedComments, isMyFeed, isMyComments);
 
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}

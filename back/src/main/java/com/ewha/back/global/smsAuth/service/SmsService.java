@@ -59,7 +59,31 @@ public class SmsService {
 		return "인증번호 일치";
 	}
 
+	public String findVerifyCertification(SmsDto.FindCertificationRequest request) {
+		if (!isFindVerified(request)) {
+			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
+		}
+		return "인증번호 일치";
+	}
+
+	public String findPasswordVerifyCertification(SmsDto.FindPasswordCertificationRequest request) {
+		if (!isFindPasswordVerified(request)) {
+			throw new AuthenticationCredentialsNotFoundException("인증번호가 일치하지 않습니다.");
+		}
+		return "인증번호 일치";
+	}
+
 	public Boolean isVerified(SmsDto.CertificationRequest request) {
+		return (smsRedisRepository.hasKey(request.getPhoneNumber()))
+			&& smsRedisRepository.getCertification(request.getPhoneNumber()).equals(request.getCertificationNumber());
+	}
+
+	public Boolean isFindVerified(SmsDto.FindCertificationRequest request) {
+		return (smsRedisRepository.hasKey(request.getPhoneNumber()))
+			&& smsRedisRepository.getCertification(request.getPhoneNumber()).equals(request.getCertificationNumber());
+	}
+
+	public Boolean isFindPasswordVerified(SmsDto.FindPasswordCertificationRequest request) {
 		return (smsRedisRepository.hasKey(request.getPhoneNumber()))
 			&& smsRedisRepository.getCertification(request.getPhoneNumber()).equals(request.getCertificationNumber());
 	}

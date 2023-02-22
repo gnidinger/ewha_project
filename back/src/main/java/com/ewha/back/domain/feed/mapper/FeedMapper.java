@@ -13,6 +13,7 @@ import com.ewha.back.domain.category.dto.CategoryDto;
 import com.ewha.back.domain.category.entity.Category;
 import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.comment.dto.CommentDto;
+import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.entity.FeedCategory;
@@ -40,7 +41,8 @@ public interface FeedMapper {
 			.build();
 	}
 
-	default FeedDto.Response feedGetToFeedResponse(Feed feed, Boolean isLikedFeed, List<Like> commentLikeList) {
+	default FeedDto.Response feedGetToFeedResponse(Feed feed, Boolean isLikedFeed,
+		List<Like> commentLikeList, Boolean isMyFeed, List<Comment> isMyComments) {
 
 		User findUser = feed.getUser();
 
@@ -71,6 +73,11 @@ public interface FeedMapper {
 								.profileImage(comment.getUser().getProfileImage())
 								.build()
 						);
+						if (isMyComments.contains(comment)) {
+							commentResponseBuilder.isMyComment(true);
+						} else {
+							commentResponseBuilder.isMyComment(false);
+						}
 						commentResponseBuilder.body(comment.getBody());
 						commentResponseBuilder.likeCount(comment.getLikeCount());
 						commentResponseBuilder.createdAt(comment.getCreatedAt());
@@ -83,15 +90,15 @@ public interface FeedMapper {
 
 		List<CommentDto.FeedCommentResponse> finalCommentsList = commentsList;
 
-			commentLikeList.forEach(like -> {
-				if (like != null) {
-					Long index = like.getComment().getId();
-					finalCommentsList.stream()
-						.filter(feedCommentResponse -> feedCommentResponse.getCommentId().equals(index))
-						.forEach(feedCommentResponse -> feedCommentResponse.setIsLikedComment(true));
-					// finalCommentsList.get(Math.toIntExact(index)).setIsLikedComment(true);
-				}
-			});
+		commentLikeList.forEach(like -> {
+			if (like != null) {
+				Long index = like.getComment().getId();
+				finalCommentsList.stream()
+					.filter(feedCommentResponse -> feedCommentResponse.getCommentId().equals(index))
+					.forEach(feedCommentResponse -> feedCommentResponse.setIsLikedComment(true));
+				// finalCommentsList.get(Math.toIntExact(index)).setIsLikedComment(true);
+			}
+		});
 
 		return FeedDto.Response.builder()
 			.feedId(feed.getId())
@@ -102,6 +109,7 @@ public interface FeedMapper {
 			.title(feed.getTitle())
 			.body(feed.getBody())
 			.isLiked(isLikedFeed)
+			.isMyFeed(isMyFeed)
 			.likeCount(feed.getLikeCount())
 			.viewCount(feed.getViewCount())
 			.imagePath(feed.getImagePath())

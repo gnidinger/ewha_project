@@ -116,6 +116,18 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
+	public Boolean isMyFeed(Feed feed) {
+
+		User findUser = userService.getLoginUser();
+
+		if (feed.getUser().equals(findUser)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	public CustomPage<Feed> findNewestFeeds(int page) {
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);

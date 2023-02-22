@@ -39,6 +39,11 @@ public interface UserService {
 
 	User onFirstLogin(LoginDto.PatchDto patchDto);
 
+	Boolean verifyNicknameAndPhoneNumber(String nickname, String phoneNumber);
+	Boolean verifyUserIdAndPhoneNumber(String userId, String phoneNumber);
+
+	User findByNickname(String nickname);
+
 	User findByUserId(String userId);
 
 	User findVerifiedUser(Long id);
@@ -52,5 +57,6 @@ public interface UserService {
 	Page<Feed> findUserFeedLikes(int page);
 
 	Page<Question> findUserQuestions(int page);
+
 	void saveUser(User user);
 }

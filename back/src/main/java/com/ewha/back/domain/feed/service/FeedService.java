@@ -17,6 +17,8 @@ public interface FeedService {
 
 	List<Like> isLikedComments(Long feedId);
 
+	Boolean isMyFeed(Feed feed);
+
 	CustomPage<Feed> findNewestFeeds(int page);
 
 	Page<Feed> findCategoryFeeds(String categoryName, int page);

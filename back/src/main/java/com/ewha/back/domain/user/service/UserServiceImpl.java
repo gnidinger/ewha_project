@@ -285,6 +285,45 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public Boolean verifyNicknameAndPhoneNumber(String nickname, String phoneNumber) {
+
+		try {
+			userRepository.findByNickname(nickname);
+		} catch (RuntimeException e) {
+			throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
+		}
+
+		User findUser = userRepository.findByNickname(nickname);
+
+		if (findUser.getPhoneNumber().equals(phoneNumber)) {
+			return true;
+		} else {
+			throw new BusinessLogicException(ExceptionCode.PHONE_NUMBER_NOT_MATCH);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Boolean verifyUserIdAndPhoneNumber(String userId, String phoneNumber) {
+
+		User findUser = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+
+		if (findUser.getPhoneNumber().equals(phoneNumber)) {
+			return true;
+		} else {
+			throw new BusinessLogicException(ExceptionCode.PHONE_NUMBER_NOT_MATCH);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public User findByNickname(String nickname) {
+		return userRepository.findByNickname(nickname);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public User findByUserId(String userId) {
 		Optional<User> optionalUser = userRepository.findByUserId(userId);
 		User user = optionalUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
@@ -293,6 +332,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public User findVerifiedUser(Long id) {
 		return userRepository.findById(id)
 			.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));

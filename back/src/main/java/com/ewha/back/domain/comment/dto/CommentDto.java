@@ -23,7 +23,7 @@ public class CommentDto {
 	public static class Post {
 
 		@NotBlank(message = "내용을 입력하셔야 합니다.")
-		@Size(min = 5, max = 500, message = "5자 이상 입력하셔야 합니다.")
+		// @Size(min = 5, max = 500, message = "5자 이상 입력하셔야 합니다.")
 		private String body;
 	}
 
@@ -65,6 +65,7 @@ public class CommentDto {
 		private Long commentId;
 		private Long feedId;
 		private Boolean isLikedComment;
+		private Boolean isMyComment;
 		private UserDto.FeedCommentResponse userInfo;
 		private String body;
 		private Long likeCount;

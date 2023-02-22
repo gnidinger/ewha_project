@@ -82,6 +82,7 @@ public class FeedDto {
 		private String title;
 		private String body;
 		private Boolean isLiked;
+		private Boolean isMyFeed;
 		private Long likeCount;
 		private Long viewCount;
 		private String imagePath;
