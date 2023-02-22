@@ -85,6 +85,16 @@ export const firstLogin = async({ genderType, ageType, categories }: Info) => {
   }
 };
 
+export const logout = async() => {
+  try {
+    const data = await axiosApi.post('/logout');
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
 export const mypage = async() => {
   try {
     const { data: { data } } = await axiosApi.get('/mypage');

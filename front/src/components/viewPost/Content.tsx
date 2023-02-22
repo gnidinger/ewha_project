@@ -14,7 +14,7 @@ interface Props {
   rerender: () => void
 }
 
-const heartIconStyle = {
+export const heartIconStyle = {
   fontSize: 16, color: pink[500], verticalAlign: 'middle'
 }
 
@@ -32,7 +32,7 @@ const Content = ({ postData, rerender }: Props) => {
   return(
     <Box sx={{ padding: 3 }}>
       <Typography sx={{ fontSize: 18 }} gutterBottom>{postData.title}</Typography>
-      <Avatar sx={{ float: 'left', width: 36, height: 36 }} />
+      <Avatar src={postData.userInfo.profileImage} sx={{ float: 'left', width: 36, height: 36 }} />
       <Typography sx={{ lineHeight: '36px', verticalAlign: 'middle', ml: 6 }} gutterBottom>{postData.userInfo.nickname}</Typography>
       <Typography sx={{ fontSize: 11 }} gutterBottom>{postData.createdAt.substring(0, 10)}</Typography>
       <Typography sx={{ fontSize: 12 }} gutterBottom>

@@ -14,7 +14,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SendIcon from '@mui/icons-material/Send';
-import { getCookie, removeCookie } from '../../api/cookie';
+import { getCookie } from '../../api/cookie';
+import { logout } from '../../api/user';
 
 interface Props {
   children?: string
@@ -38,8 +39,8 @@ const Header = ({ children }: Props) => {
       setDrawerOpened(open);
     };
 
-  const logout = () => {
-    isLoggedIn && removeCookie('ari_login');
+  const handleLogout = async() => {
+    await logout();
     setIsLoggedIn(!isLoggedIn);
     navigation('/login');
   };
@@ -80,7 +81,7 @@ const Header = ({ children }: Props) => {
           </Link>
         }
         <ListItem disablePadding>
-          <ListItemButton onClick={logout}>
+          <ListItemButton onClick={handleLogout}>
             <ListItemText primary={isLoggedIn ? '로그아웃' : '로그인'} />
           </ListItemButton>
         </ListItem>
