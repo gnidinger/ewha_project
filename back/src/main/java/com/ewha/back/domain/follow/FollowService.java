@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,8 @@ public class FollowService {
 	}
 
 	public List<User> findFollowers(long userId) {
+
+		// PageRequest pageRequest = PageRequest.of(page - 1, 10);
 
 		List<Long> followerIdList = followRepository.findFollowersByUserId(userId);
 

@@ -22,6 +22,7 @@ import com.ewha.back.domain.comment.dto.CommentDto;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.comment.service.CommentService;
+import com.ewha.back.global.dto.MultiResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -72,13 +73,13 @@ public class CommentController {
 	}
 
 	@GetMapping("/feeds/{feed_id}/comments")
-	public ResponseEntity<PageImpl<CommentDto.Response>> getFeedComments(@PathVariable("feed_id") @Positive Long feedId,
+	public ResponseEntity<MultiResponseDto<CommentDto.Response>> getFeedComments(@PathVariable("feed_id") @Positive Long feedId,
 		@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Comment> commentList = commentService.getFeedComments(feedId, page);
 		PageImpl<CommentDto.Response> responses = commentMapper.feedCommentsToPageResponse(commentList);
 
-		return ResponseEntity.status(HttpStatus.OK).body(responses);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), commentList));
 	}
 
 	@DeleteMapping("/comments/{comment_id}/delete")

@@ -17,6 +17,7 @@ import com.ewha.back.domain.feed.dto.FeedDto.ListResponse;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.search.service.SearchService;
+import com.ewha.back.global.dto.MultiResponseDto;
 import com.ewha.back.global.dto.SingleResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,6 @@ public class SearchController {
 
 		PageImpl<ListResponse> responses = feedMapper.newFeedsToPageResponse(feedPage);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedPage));
 	}
 }

@@ -8,10 +8,12 @@ import javax.validation.constraints.Positive;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,7 @@ import com.ewha.back.domain.image.service.AwsS3Service;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.like.service.LikeService;
 import com.ewha.back.global.config.CustomPage;
+import com.ewha.back.global.dto.MultiResponseDto;
 import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
 
 import lombok.RequiredArgsConstructor;
@@ -134,24 +137,25 @@ public class FeedController {
 	}
 
 	@GetMapping("/newest")
-	public ResponseEntity<CustomPage<FeedDto.ListResponse>> getFeeds(
+	public ResponseEntity<MultiResponseDto<FeedDto.ListResponse>> getFeeds(
 		@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		CustomPage<Feed> feedList = feedService.findNewestFeeds(page);
 		CustomPage<FeedDto.ListResponse> responses = feedMapper.TESTnewFeedsToPageResponse(feedList);
 
-		return ResponseEntity.status(HttpStatus.OK).body(responses);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedList));
+		// return ResponseEntity.status(HttpStatus.OK).body(feedList);
 	}
 
 	@GetMapping("/categories")
-	public ResponseEntity<PageImpl<FeedDto.ListResponse>> getCategoryFeeds(
+	public ResponseEntity<MultiResponseDto<FeedDto.ListResponse>> getCategoryFeeds(
 		@RequestParam("category") String categoryName,
 		@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Feed> feedList = feedService.findCategoryFeeds(categoryName, page);
 		PageImpl<FeedDto.ListResponse> responses = feedMapper.newFeedsToPageResponse(feedList);
 
-		return ResponseEntity.status(HttpStatus.OK).body(responses);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedList));
 	}
 
 	@DeleteMapping("/{feed_id}/delete")

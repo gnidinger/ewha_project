@@ -40,6 +40,7 @@ import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.mapper.UserMapper;
 import com.ewha.back.domain.user.service.UserService;
+import com.ewha.back.global.dto.MultiResponseDto;
 import com.ewha.back.global.dto.SingleResponseDto;
 import com.ewha.back.global.security.dto.LoginDto;
 
@@ -190,8 +191,7 @@ public class UserController {
 		Page<Feed> feedList = userService.findUserFeeds(page);
 		PageImpl<FeedDto.ListResponse> responses = feedMapper.myFeedsToPageResponse(feedList);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedList));
 	}
 
 	@GetMapping("/mypage/mycomments")
@@ -200,8 +200,7 @@ public class UserController {
 		Page<Comment> commentList = userService.findUserComments(page);
 		PageImpl<CommentDto.ListResponse> responses = commentMapper.myCommentsToPageResponse(commentList);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), commentList));
 	}
 
 	@GetMapping("/mypage/myfeedlikes")
@@ -210,8 +209,7 @@ public class UserController {
 		Page<Feed> feedList = userService.findUserFeedLikes(page);
 		PageImpl<FeedDto.ListResponse> responses = feedMapper.myFeedsToPageResponse(feedList);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedList));
 	}
 
 	@GetMapping("/mypage/myquestions")
@@ -220,8 +218,7 @@ public class UserController {
 		Page<Question> questionList = userService.findUserQuestions(page);
 		PageImpl<QuestionDto.AnsweredResponse> responses = questionMapper.myQuestionsToPageResponse(questionList);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(responses), HttpStatus.OK);
+		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), questionList));
 	}
 
 }

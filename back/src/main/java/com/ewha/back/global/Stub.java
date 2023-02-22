@@ -94,7 +94,7 @@ public class Stub {
 			Long rand = (long)((Math.random() * 11) + 1);
 
 			Category category = Category.builder()
-				.id(rand)
+				.id(3L)
 				.categoryType(CategoryType.CULTURE)
 				.build();
 

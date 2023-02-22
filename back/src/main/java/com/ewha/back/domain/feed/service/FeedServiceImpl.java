@@ -135,6 +135,7 @@ public class FeedServiceImpl implements FeedService {
 		return feedQueryRepository.findNewestFeedList(pageRequest);
 	}
 
+
 	@Override
 	public Page<Feed> findCategoryFeeds(String categoryName, int page) {
 

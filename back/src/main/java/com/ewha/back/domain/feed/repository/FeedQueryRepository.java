@@ -66,6 +66,8 @@ public class FeedQueryRepository {
 			.from(feed)
 			.fetchOne();
 
+		System.out.println(total);
+
 		return new CustomPage<>(feedList, pageable, total);
 	}
 
@@ -81,7 +83,14 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		return new PageImpl<>(feedList, pageable, feedList.size());
+		Long total = jpaQueryFactory
+			.select(feed.count())
+			.from(feed)
+			.join(feed.feedCategories, feedCategory)
+			.join(feedCategory.category, category)
+			.fetchOne();
+
+		return new PageImpl<>(feedList, pageable, total);
 	}
 
 	public Page<Feed> findAllSearchResultPage(String queryParam, Pageable pageable) {
