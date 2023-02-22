@@ -34,7 +34,8 @@ export interface Post {
   comments: Comment[],
   isLiked: boolean,
   imagePath: string,
-  thumbnailPath: string
+  thumbnailPath: string,
+  isMyFeed: boolean
 }
 
 const View = () => {
@@ -46,6 +47,7 @@ const View = () => {
   const getPostData = async() => {
     if(postId) {
       const data = await getPost(postId);
+      console.log(data);
       setPostData(data);
     }
   };

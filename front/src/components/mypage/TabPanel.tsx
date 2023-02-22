@@ -21,7 +21,7 @@ const TabPanel = ({ value, index, getFunc }: TabPanelProps) => {
 
   const getItemList = async() => {
     const data = await getFunc();
-    setItemList(data.content);
+    setItemList(data);
   };
 
   useEffect(() => {
