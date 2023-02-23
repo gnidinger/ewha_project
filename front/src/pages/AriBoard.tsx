@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Header } from '../components/common';
 import { Post, Subjects } from '../components/ariBoard';
 import Fab from '@mui/material/Fab';
-import ExpandCircleDownRoundedIcon from '@mui/icons-material/ExpandCircleDownRounded';
+import Pagination from '@mui/material/Pagination';
 import { getLatest, getPostsBySubject } from '../api/post';
 
 export interface PostType {
@@ -20,14 +20,14 @@ export interface PostType {
 const AriBoard = () => {
   const [isLatest, setIsLatest] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(1);
   const [currentSubject, setCurrentSubject] = useState<string>('HEALTH');
   const [posts, setPosts] = useState<PostType[]>([]);
 
   const navigation = useNavigate();
 
-  const changeTopic = (e: React.MouseEvent<HTMLElement>): void => {
-    setIsLatest(Boolean((e.target as any).id));
+  const changeTopic = (event: React.MouseEvent<HTMLElement>): void => {
+    setIsLatest(Boolean((event.target as any).id));
     setCurrentPage(1);
   };
 
@@ -35,13 +35,18 @@ const AriBoard = () => {
     let data;
     if(isLatest) data = await getLatest(currentPage);
     else data = await getPostsBySubject(currentSubject, currentPage);
-    setTotalPage(data.totalPages ? data.totalPages : 0);
-    setPosts(data.content);
+    setTotalPage(data.pageInfo ? data.pageInfo.totalPages : 1);
+    setPosts(data.data);
+  };
+
+  const handlePage = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
   };
 
   useEffect(() => {
     getPosts();
-  }, [isLatest, currentSubject]);
+    window.scrollTo(0, 0);
+  }, [isLatest, currentSubject, currentPage]);
 
   return(
     <StPageWrapper>
@@ -57,9 +62,12 @@ const AriBoard = () => {
         <Post key={index} postData={post} />
       ))
       }
-      {totalPage > currentPage &&
-        <ExpandCircleDownRoundedIcon sx={{ fontSize: 18 }} />
-      }
+      <Pagination
+        count={totalPage}
+        sx={{ display: 'grid', placeItems: 'center', margin: '1rem 0' }}
+        onChange={handlePage}
+        page={currentPage}
+      />
       <Fab
         size='medium'
         variant='extended'

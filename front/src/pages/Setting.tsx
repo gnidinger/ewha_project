@@ -62,7 +62,6 @@ const Setting = () => {
 
   useEffect(() => {
     if(location.state.profileData) {
-      console.log(location.state.profileData);
       setProfileData(location.state.profileData);
       setImageSrc(location.state.profileData.profileImage);
       setChecked(location.state.profileData.categories);
@@ -100,7 +99,6 @@ const Setting = () => {
   };
 
   const countCheck = (event: React.MouseEvent<HTMLInputElement>) => {
-    console.log(event.currentTarget.id);
     if(checked.includes(event.currentTarget.id)) {
       const newChecked = checked.filter((element) => element !== event.currentTarget.id);
       setChecked(newChecked);

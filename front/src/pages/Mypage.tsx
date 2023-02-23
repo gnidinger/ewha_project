@@ -52,7 +52,6 @@ const Mypage = () => {
 
   const getMydata = async() => {
     const data = await mypage();
-    console.log(data);
     if(data.error === 'Unauthorized' || data.message === 'Unauthorized') {
       navigation('/login');
     }

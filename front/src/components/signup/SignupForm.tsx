@@ -51,7 +51,6 @@ const SignupForm = () => {
       newSignupData.nickname = data.get('nickname') as string;
       newSignupData.password = data.get('password') as string;
       const checking = await check(newSignupData);
-      console.log(checking);
       if(checking === 200) {
         setSignupData(newSignupData);
         setStep(step + 1);

@@ -118,7 +118,6 @@ export const modifyMypage = async( patch: SettingData, image: File | string ) =>
       patch.profileImage = image;
     }
     else body.append('image', image);
-    console.log(patch);
     body.append('patch', blob);
     const data = await axiosApi.patch('/mypage/patch', body);
     return data;

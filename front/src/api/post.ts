@@ -31,16 +31,17 @@ export const getPost = async( postId: string ) => {
   }
 };
 
-export const writePost = async( post: PostData, image?: File ) => {
+export const writePost = async( post: PostData, image?: File, postId?: string ) => {
   try {
-    console.log(post);
     const body = new FormData();
     const blob = new Blob([JSON.stringify(post)], {
       type: 'application/json'
     })
     body.append('post', blob);
     if(image instanceof File) body.append('image', image);
-    const data = await axiosApi.post('/feeds/add', body);
+    let data;
+    if(postId) data = await axiosApi.patch(`/feeds/${postId}/edit`);
+    else data = await axiosApi.post('/feeds/add', body);
     return data;
   }
   catch(e) {
