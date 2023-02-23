@@ -88,6 +88,7 @@ public class FeedQueryRepository {
 			.from(feed)
 			.join(feed.feedCategories, feedCategory)
 			.join(feedCategory.category, category)
+			.where(category.categoryType.stringValue().eq(categoryName))
 			.fetchOne();
 
 		return new PageImpl<>(feedList, pageable, total);
@@ -103,7 +104,13 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		return new PageImpl<>(feedList, pageable, feedList.size());
+		Long total = jpaQueryFactory
+			.select(feed.count())
+			.from(feed)
+			.where(feed.title.contains(queryParam).or(feed.body.contains(queryParam)))
+			.fetchOne();
+
+		return new PageImpl<>(feedList, pageable, total);
 	}
 
 	public Page<Feed> findCategorySearchResultPage(String categoryParam, String queryParam, Pageable pageable) {
@@ -119,7 +126,14 @@ public class FeedQueryRepository {
 			.limit(pageable.getPageSize())
 			.fetch();
 
-		return new PageImpl<>(feedList, pageable, feedList.size());
+		Long total = jpaQueryFactory
+			.select(feed.count())
+			.from(feed)
+			.where(category.categoryType.stringValue().eq(categoryParam))
+			.where(feed.title.contains(queryParam).or(feed.body.contains(queryParam)))
+			.fetchOne();
+
+		return new PageImpl<>(feedList, pageable, total);
 	}
 
 	public void deleteAllByUser(User findUser) {
