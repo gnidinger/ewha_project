@@ -26,8 +26,8 @@ const AriBoard = () => {
 
   const navigation = useNavigate();
 
-  const changeTopic = (e: React.MouseEvent<HTMLElement>): void => {
-    setIsLatest(Boolean((e.target as any).id));
+  const changeTopic = (event: React.MouseEvent<HTMLElement>): void => {
+    setIsLatest(Boolean((event.target as any).id));
     setCurrentPage(1);
   };
 
@@ -39,9 +39,14 @@ const AriBoard = () => {
     setPosts(data.data);
   };
 
+  const handlePage = (event: React.ChangeEvent<unknown>, page: number) => {
+    setCurrentPage(page);
+  };
+
   useEffect(() => {
     getPosts();
-  }, [isLatest, currentSubject]);
+    window.scrollTo(0, 0);
+  }, [isLatest, currentSubject, currentPage]);
 
   return(
     <StPageWrapper>
@@ -60,6 +65,8 @@ const AriBoard = () => {
       <Pagination
         count={totalPage}
         sx={{ display: 'grid', placeItems: 'center', margin: '1rem 0' }}
+        onChange={handlePage}
+        page={currentPage}
       />
       <Fab
         size='medium'

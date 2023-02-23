@@ -47,7 +47,6 @@ const View = () => {
   const getPostData = async() => {
     if(postId) {
       const data = await getPost(postId);
-      console.log(data);
       setPostData(data);
     }
   };
