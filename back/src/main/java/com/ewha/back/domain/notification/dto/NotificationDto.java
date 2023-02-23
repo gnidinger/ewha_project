@@ -2,6 +2,8 @@ package com.ewha.back.domain.notification.dto;
 
 import java.time.LocalDateTime;
 
+import com.ewha.back.domain.notification.entity.NotificationType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +19,7 @@ public class NotificationDto {
 	@AllArgsConstructor
 	public static class Response {
 		private Long notificationId;
+		private NotificationType type;
 		private String receiverFeedTitle;
 		private String receiverCommentBody;
 		private Boolean isRead;

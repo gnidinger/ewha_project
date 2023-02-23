@@ -21,6 +21,7 @@ public interface NotificationMapper {
 			.map(notification -> {
 				return NotificationDto.Response.builder()
 					.notificationId(notification.getId())
+					.type(notification.getType())
 					.receiverFeedTitle(notification.getReceiverFeedTitle())
 					.receiverCommentBody(notification.getReceiverCommentBody())
 					.isRead(notification.getIsRead())
