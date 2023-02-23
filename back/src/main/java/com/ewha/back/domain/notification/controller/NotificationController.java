@@ -37,6 +37,14 @@ public class NotificationController {
 			new ListResponseDto<>(responses), HttpStatus.OK);
 	}
 
+	@GetMapping("/check")
+	public ResponseEntity findIfNotReadNotifications() {
+
+		Boolean response = notificationService.findIfNotReadNotifications();
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
 	@GetMapping("/{notification_id}")
 	public ResponseEntity getMyNotification(@PathVariable("notification_id") Long notificationId) {
 

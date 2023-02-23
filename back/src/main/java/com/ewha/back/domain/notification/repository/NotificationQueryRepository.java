@@ -36,6 +36,21 @@ public class NotificationQueryRepository {
 			.fetch();
 	}
 
+	public Boolean findIfNotReadNotifications(Long userId) {
+
+		Long size = jpaQueryFactory
+			.select(notification.count())
+			.from(notification)
+			.where(notification.user.id.eq(userId).and(notification.isRead.eq(false)))
+			.fetchOne();
+
+		if (size == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public void deleteNotifications(Long notificationId) {
 
 		jpaQueryFactory

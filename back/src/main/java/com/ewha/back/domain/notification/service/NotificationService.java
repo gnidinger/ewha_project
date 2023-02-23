@@ -227,6 +227,15 @@ public class NotificationService {
 	}
 
 	@Transactional
+	public Boolean findIfNotReadNotifications() {
+
+		User findUser = userService.getLoginUser();
+		Long userId = findUser.getId();
+
+		return notificationQueryRepository.findIfNotReadNotifications(userId);
+	}
+
+	@Transactional
 	public void deleteNotification(Long notificationId) {
 
 		User findUser = userService.getLoginUser();
