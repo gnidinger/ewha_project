@@ -209,6 +209,15 @@ public class NotificationService {
 	}
 
 	@Transactional
+	public Notification getMyNotification(Long notificationId) {
+
+		User findUser = userService.getLoginUser();
+		Long userId = findUser.getId();
+
+		return notificationQueryRepository.getMyNotification(userId, notificationId);
+	}
+
+	@Transactional
 	public List<Notification> getMyNotifications() {
 
 		User findUser = userService.getLoginUser();

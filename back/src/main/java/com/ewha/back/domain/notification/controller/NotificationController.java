@@ -37,6 +37,15 @@ public class NotificationController {
 			new ListResponseDto<>(responses), HttpStatus.OK);
 	}
 
+	@GetMapping("/{notification_id}")
+	public ResponseEntity getMyNotification(@PathVariable("notification_id") Long notificationId) {
+
+		Notification notification = notificationService.getMyNotification(notificationId);
+		NotificationDto.Response response = notificationMapper.myNotificationToResponse(notification);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
 	@DeleteMapping("/{notification_id}/delete")
 	public void deleteNotification(@PathVariable("notification_id") Long notificationId) {
 		notificationService.deleteNotification(notificationId);

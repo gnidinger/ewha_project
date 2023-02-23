@@ -11,6 +11,23 @@ import com.ewha.back.domain.notification.entity.Notification;
 @Mapper(componentModel = "spring")
 public interface NotificationMapper {
 
+	default NotificationDto.Response myNotificationToResponse(Notification notification) {
+
+		if (notification == null) {
+			return null;
+		}
+
+		return  NotificationDto.Response.builder()
+					.notificationId(notification.getId())
+					.type(notification.getType())
+					.receiverFeedTitle(notification.getReceiverFeedTitle())
+					.receiverCommentBody(notification.getReceiverCommentBody())
+					.isRead(true)
+					.createdAt(notification.getCreatedAt())
+					.build();
+
+	}
+
 	default List<NotificationDto.Response> myNotificationsToResponses(List<Notification> notificationList) {
 
 		if (notificationList == null) {

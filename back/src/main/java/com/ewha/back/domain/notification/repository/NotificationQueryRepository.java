@@ -20,6 +20,14 @@ public class NotificationQueryRepository {
 	private final JPAQueryFactory jpaQueryFactory;
 	private final EntityManager entityManager;
 
+	public Notification getMyNotification(Long userId, Long notificationId) {
+
+		return jpaQueryFactory
+			.selectFrom(notification)
+			.where(notification.user.id.eq(userId).and(notification.id.eq(notificationId)))
+			.fetchOne();
+	}
+
 	public List<Notification> getMyNotifications(Long userId) {
 
 		return jpaQueryFactory
