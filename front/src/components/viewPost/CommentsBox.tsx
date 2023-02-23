@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -14,20 +15,23 @@ interface Props {
 }
 
 const CommentsBox = ({ feedId, commentsData, rerender }: Props) => {
+  const [showInput, setShowInput] = useState<boolean>(true);
+
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     await writeComment(feedId, String(formData.get('comment')));
     rerender();
+    (document.getElementsByName('comment')[0] as HTMLFormElement).value = '';
   };
 
   return(
     <Box sx={{ padding: 2 }}>
       <Typography sx={{ mb: 2 }}>댓글 {commentsData.length}</Typography>
       {commentsData.map((comment: CommentData) => (
-        <Comment key={comment.commentId} comment={comment} rerender={rerender} />
+        <Comment key={comment.commentId} comment={comment} rerender={rerender} setShowInput={setShowInput} />
       ))}
-      {getCookie('ari_login') &&
+      {getCookie('ari_login') && showInput &&
         <Box component='form' onSubmit={handleSubmit} sx={{ display: 'grid', gridTemplateColumns: 'auto 5rem' }}>
           <TextField
             fullWidth

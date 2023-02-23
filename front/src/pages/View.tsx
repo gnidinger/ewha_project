@@ -19,6 +19,7 @@ export interface CommentData {
   feedId: string,
   likeCount: number,
   isLikedComment: boolean,
+  isMyComment: boolean,
   userInfo: User
 }
 

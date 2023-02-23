@@ -10,6 +10,16 @@ export const writeComment = async( feedId: string, body: string ) => {
   }
 };
 
+export const modify = async( commentId: string, body: string ) => {
+  try {
+    const { data } = await axiosApi.patch(`/comments/${commentId}/edit`, { body });
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
 export const like = async( feedId: string ) => {
   try {
     const { data } = await axiosApi.patch(`/comments/${feedId}/like`);
