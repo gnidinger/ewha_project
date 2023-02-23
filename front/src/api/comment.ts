@@ -20,6 +20,16 @@ export const modify = async( commentId: string, body: string ) => {
   }
 };
 
+export const deleteComment = async( commentId: string ) => {
+  try {
+    const { data } = await axiosApi.delete(`/comments/${commentId}/delete`);
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
 export const like = async( feedId: string ) => {
   try {
     const { data } = await axiosApi.patch(`/comments/${feedId}/like`);

@@ -8,7 +8,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import { CommentData } from '../../pages/View';
 import { heartIconStyle } from './Content';
-import { like, dislike, modify } from '../../api/comment';
+import { like, dislike, modify, deleteComment } from '../../api/comment';
 
 interface Props {
   comment: CommentData, 
@@ -40,6 +40,11 @@ const Comment = ({ comment, rerender, setShowInput }: Props) => {
     setShowInput(true);
   };
 
+  const handleDelete = async() => {
+    await deleteComment(comment.commentId);
+    rerender();
+  };
+
   return(
     <Box sx={{ mb: 2 }}>
       <Avatar src={comment.userInfo.profileImage} sx={{ float: 'left', width: 32, height: 32 }} />
@@ -55,6 +60,7 @@ const Comment = ({ comment, rerender, setShowInput }: Props) => {
         </Box> :
         <>
         {comment.isMyComment && <Button onClick={clickEditBtn} sx={{ float: 'right' }}>수정하기</Button>}
+        {comment.isMyComment && <Button onClick={handleDelete} sx={{ float: 'right' }}>삭제하기</Button>}
         <Typography>{comment.body}</Typography>
         </>
       }
