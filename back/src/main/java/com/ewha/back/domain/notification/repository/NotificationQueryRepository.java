@@ -46,9 +46,10 @@ public class NotificationQueryRepository {
 
 		if (size == 0) {
 			return false;
+		} else {
+			return true;
 		}
 
-		return true;
 	}
 
 	public void deleteNotifications(Long notificationId) {

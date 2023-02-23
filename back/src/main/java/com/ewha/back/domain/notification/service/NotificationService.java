@@ -223,7 +223,11 @@ public class NotificationService {
 		User findUser = userService.getLoginUser();
 		Long userId = findUser.getId();
 
-		return notificationQueryRepository.getMyNotifications(userId);
+		List<Notification> response =  notificationQueryRepository.getMyNotifications(userId);
+
+		response.forEach(notification -> notification.setRead(true));
+
+		return response;
 	}
 
 	@Transactional

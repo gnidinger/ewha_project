@@ -41,7 +41,7 @@ public interface NotificationMapper {
 					.type(notification.getType())
 					.receiverFeedTitle(notification.getReceiverFeedTitle())
 					.receiverCommentBody(notification.getReceiverCommentBody())
-					.isRead(true)
+					.isRead(notification.getIsRead())
 					.createdAt(notification.getCreatedAt())
 					.build();
 			}).collect(Collectors.toList());

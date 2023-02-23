@@ -54,4 +54,7 @@ public class Notification extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Boolean isRead;
 
+	public void setRead(Boolean read) {
+		isRead = read;
+	}
 }
