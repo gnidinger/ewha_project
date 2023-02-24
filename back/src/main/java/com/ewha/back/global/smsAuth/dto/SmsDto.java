@@ -26,7 +26,6 @@ public class SmsDto {
 	public static class FindRequest {
 		private String nickname;
 		private String phoneNumber;
-		private String certificationNumber;
 	}
 
 	@Getter
@@ -37,7 +36,6 @@ public class SmsDto {
 	public static class FindPasswordRequest {
 		private String userId;
 		private String phoneNumber;
-		private String certificationNumber;
 	}
 
 	@Getter

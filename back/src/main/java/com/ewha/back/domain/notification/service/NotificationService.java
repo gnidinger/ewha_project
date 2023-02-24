@@ -194,7 +194,7 @@ public class NotificationService {
 
 	// @Async("threadPoolTaskExecutor")
 	@Transactional
-	public void notifyMessagingEvent(User user) { // 페어링 댓글 알림
+	public void notifyMessagingEvent(User user) { // 메세지 알림
 
 		User findUser = userService.getLoginUser();
 

@@ -13,6 +13,7 @@ import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.like.service.LikeService;
+import com.ewha.back.domain.notification.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,12 +25,14 @@ public class LikeController {
 	private final LikeService likeService;
 	private final FeedMapper feedMapper;
 	private final CommentMapper commentMapper;
+	private final NotificationService notificationService;
 
 	@PatchMapping("/feeds/{feed_id}/like")
 	public ResponseEntity<HttpStatus> postFeedLike(@PathVariable("feed_id") Long feedId) {
 
 		Feed likedFeed = likeService.createFeedLike(feedId);
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
+		notificationService.notifyUpdateLikeFeedEvent(likedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 
@@ -54,6 +57,8 @@ public class LikeController {
 	public ResponseEntity<HttpStatus> postCommentLike(@PathVariable("comment_id") Long commentId) {
 
 		Comment likedComment = likeService.createCommentLike(commentId);
+
+		notificationService.notifyUpdateLikeCommentEvent(likedComment);
 		// CommentDto.Response response = commentMapper.commentToCommentResponse(likedComment);
 		//
 		// return new ResponseEntity<>(
