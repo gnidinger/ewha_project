@@ -8,3 +8,4 @@ export { default as SetInfo } from './SetInfo';
 export { default as Write } from './Write';
 export { default as View } from './View';
 export { default as Setting } from './Setting';
+export { default as Notice } from './Notice';

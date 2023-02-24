@@ -15,7 +15,7 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SendIcon from '@mui/icons-material/Send';
 import { getCookie } from '../../api/cookie';
-import { logout } from '../../api/user';
+import { isNewNotification, logout } from '../../api/user';
 
 interface Props {
   children?: string
@@ -24,6 +24,8 @@ interface Props {
 const Header = ({ children }: Props) => {
   const [drawerOpened, setDrawerOpened] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [invisibleNI, setInvisibleNI] = useState<boolean>(true);
+  const [invisibleSI, setInvisibleSI] = useState<boolean>(true);
 
   const navigation = useNavigate();
 
@@ -45,8 +47,16 @@ const Header = ({ children }: Props) => {
     navigation('/login');
   };
 
+  const clickNotice = () => {
+    setInvisibleNI(true);
+    navigation('/notice');
+  };
+
   useEffect(() => {
-    if(getCookie('ari_login')) setIsLoggedIn(true);
+    if(getCookie('ari_login')) {
+      setIsLoggedIn(true);
+      isNewNotification().then(data => setInvisibleNI(!data));
+    }
   }, []);
 
   const list = () => (
@@ -106,10 +116,10 @@ const Header = ({ children }: Props) => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {children}
           </Typography>
-          <Badge variant='dot' color="primary" sx={{ mr: 1 }}>
+          <Badge variant='dot' invisible={invisibleNI} onClick={clickNotice} color="primary" sx={{ mr: 1 }}>
             <NotificationsIcon sx={{ fontSize: 25 }} color='action' />
           </Badge>
-          <Badge variant='dot' color="primary">
+          <Badge variant='dot' invisible={invisibleSI} color="primary">
             <SendIcon sx={{ fontSize: 25 }} color='action' />
           </Badge>
         </Toolbar>
