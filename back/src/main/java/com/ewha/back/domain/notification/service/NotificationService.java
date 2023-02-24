@@ -80,6 +80,10 @@ public class NotificationService {
 
 		Long userId = feed.getUser().getId();
 
+		if (findUser.getId().equals(userId)) {
+			return;
+		}
+
 		if (SseController.sseEmitters.containsKey(userId)) {
 			SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
 			try {
@@ -116,6 +120,10 @@ public class NotificationService {
 
 		Long userId = comment.getUser().getId();
 
+		if (findUser.getId().equals(userId)) {
+			return;
+		}
+
 		if (SseController.sseEmitters.containsKey(userId)) {
 			SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
 			try {
@@ -150,6 +158,10 @@ public class NotificationService {
 		Feed feed = comment.getFeed();
 
 		Long userId = feed.getUser().getId();
+
+		if (findUser.getId().equals(userId)) {
+			return;
+		}
 
 		if (SseController.sseEmitters.containsKey(userId)) {
 			SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
