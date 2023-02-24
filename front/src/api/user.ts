@@ -182,4 +182,34 @@ export const changePassword = async({ oldPassword, newPassword, newPasswordRepea
     }
     console.log(e);
   }
-}
+};
+
+export const notification = async() => {
+  try {
+    const data = await axiosApi.get('/notice');
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
+export const isNewNotification = async() => {
+  try {
+    const { data } = await axiosApi.get('/notifications/check');
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
+export const getNotice = async() => {
+  try {
+    const { data: { data } } = await axiosApi.get('/notifications');
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};

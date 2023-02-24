@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { Input } from '../../style/Input';
 import { Button } from '../../style/Button';
-import { login } from '../../api/user';
+import { login, notification } from '../../api/user';
 import { getCookie } from '../../api/cookie';
 
 const LoginForm = () => {
@@ -21,9 +21,11 @@ const LoginForm = () => {
     const data = new FormData(event.currentTarget);
     const loginData = await login(data.get('id') as string, data.get('password') as string);
     if(loginData.isFirstLogin === false) {
+      notification();
       window.location.replace('/');
     }
     else if(loginData.isFirstLogin === true) {
+      notification();
       window.location.replace('/first-setting');
     }
     else if(loginData.message === 'Unauthorized') setShowInvalid(true);
@@ -42,10 +44,10 @@ const LoginForm = () => {
       <Button onClick={clickSignupBtn}>회원가입</Button>
       <StSNSLogin>
         SNS 간편 로그인
-        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/naver?redirect_uri=http://localhost:3000`}>
+        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/naver?redirect_uri=http://localhost:3000/login`}>
           <SocialIcon src='img/icon/naver_icon.png' />
         </a>
-        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/kakao?redirect_uri=http://localhost:3000`}>
+        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/kakao?redirect_uri=http://localhost:3000/login`}>
           <SocialIcon src='img/icon/kakao_icon.png' />
         </a>
       </StSNSLogin>
