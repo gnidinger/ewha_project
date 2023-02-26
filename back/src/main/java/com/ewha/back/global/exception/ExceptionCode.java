@@ -8,6 +8,7 @@ public enum ExceptionCode {
 	USER_NOT_FOUND(404, "User Not Found"),
 	USER_ID_NOT_VALID(400, "User ID Not Valid"),
 	USER_ID_NOT_FOUND(404, "User ID Not Found"),
+	USER_ID_NOT_MATCH(403, "User ID Not Match"),
 	USER_ID_EXISTS(409, "User ID Exists"),
 	NICKNAME_NOT_VALID(400, "Nickname Not Valid"),
 	PHONE_NUMBER_NOT_MATCH(400, "Phone Number Not Match"),

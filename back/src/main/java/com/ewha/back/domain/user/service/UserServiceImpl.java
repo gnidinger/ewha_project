@@ -214,10 +214,11 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void updatePassword(UserDto.Password password) {
 
-		User findUser = getLoginUser();
+		User loginUser = getLoginUser();
+		User findUser = findByUserId(password.getUserId());
 
-		if (!verifyLoginUserPassword(password.getOldPassword())) {
-			throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
+		if (!loginUser.getUserId().equals(findUser.getUserId())) {
+			throw new BusinessLogicException(ExceptionCode.USER_ID_NOT_MATCH);
 		}
 
 		if (!password.getNewPassword().equals(password.getNewPasswordRepeat())) {

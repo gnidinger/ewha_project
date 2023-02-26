@@ -139,8 +139,8 @@ public class UserDto {
 	@NoArgsConstructor
 	public static class Password {
 
-		@NotBlank(message = "패스워드를 입력해주세요.")
-		private String oldPassword;
+		@NotBlank(message = "아이디를 입력해주세요.")
+		private String userId;
 		@NotBlank(message = "패스워드를 입력해주세요.")
 		@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
 		private String newPassword;
