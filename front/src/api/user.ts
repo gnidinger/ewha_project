@@ -213,3 +213,47 @@ export const getNotice = async() => {
     console.log(e);
   }
 };
+
+export const getFindIdSMS = async( nickname: string, phoneNumber: string ) => {
+  try {
+    const body = { nickname, phoneNumber };
+    const data = await axiosApi.post('/find/id/sms/send', body);
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
+export const verifyId = async( nickname: string, phoneNumber: string, certificationNumber: string ) => {
+  try {
+    const body = { nickname, phoneNumber, certificationNumber };
+    const { data } = await axiosApi.post('/find/id/sms/send', body);
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
+export const getFindPasswordSMS = async( userId: string, phoneNumber: string ) => {
+  try {
+    const body = { userId, phoneNumber };
+    const data = await axiosApi.post('/find/password/sms/send', body);
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
+export const verifyPassword = async( userId: string, phoneNumber: string, certificationNumber: string ) => {
+  try {
+    const body = { userId, phoneNumber, certificationNumber };
+    const { status } = await axiosApi.post('/find/id/sms/send', body);
+    return status;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};

@@ -17,13 +17,6 @@ const theme = createTheme({
     }
   },
   components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          maxWidth: '22rem'
-        }
-      }
-    },
     MuiButton: {
       styleOverrides: {
         sizeSmall: {
