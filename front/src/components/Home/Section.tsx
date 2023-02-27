@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 interface Props {
   title: string,
-  children?: string
+  children?: any
 }
 
 const Section = ({ title, children }: Props) => {
   return(
     <SectionWrapper>
       <StTitle>{title}</StTitle>
-      {children}
+      <StContent>{children}</StContent>
     </SectionWrapper>
   );
 };
@@ -22,7 +22,11 @@ const SectionWrapper = styled.div`
 `;
 
 const StTitle = styled.div`
-  
-`
+`;
+
+const StContent = styled.div`
+  display: grid;
+  place-items: center;
+`;
 
 export default Section;

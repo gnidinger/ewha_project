@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from '../components/common';
 import { Post, Subjects } from '../components/ariBoard';
@@ -25,6 +25,7 @@ const AriBoard = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
 
   const navigation = useNavigate();
+  const location = useLocation();
 
   const changeTopic = (event: React.MouseEvent<HTMLElement>): void => {
     setIsLatest(Boolean((event.target as any).id));
@@ -47,6 +48,10 @@ const AriBoard = () => {
     getPosts();
     window.scrollTo(0, 0);
   }, [isLatest, currentSubject, currentPage]);
+
+  useEffect(() => {
+    location.state && setIsLatest(location.state.latest);
+  }, []);
 
   return(
     <StPageWrapper>
