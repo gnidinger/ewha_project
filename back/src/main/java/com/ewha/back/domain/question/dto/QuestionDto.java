@@ -19,7 +19,6 @@ public class QuestionDto {
 		private String title;
 		@NotBlank
 		private String body;
-		private String imagePath;
 		@NotBlank
 		private String answerBody;
 
