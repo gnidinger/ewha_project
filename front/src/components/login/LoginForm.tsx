@@ -44,10 +44,11 @@ const LoginForm = () => {
       <Button onClick={clickSignupBtn}>회원가입</Button>
       <StSNSLogin>
         SNS 간편 로그인
-        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/naver?redirect_uri=http://localhost:3000/login`}>
+        {/* <a href={`${process.env.REACT_APP_API_URL}/oauth2/authorization/naver?redirect_uri=http://localhost:3000/login`}> */}
+        <a href={`https://kauth.kakao.com/oauth/authorize?client_id=3c1d40614ee038dde6e45dc15964476c&redirect_uri=http://localhost:3000/login&response_type=code`}>
           <SocialIcon src='img/icon/naver_icon.png' />
         </a>
-        <a href={`${process.env.REACT_APP_API_URL}/oauth/signin/kakao?redirect_uri=http://localhost:3000/login`}>
+        <a href={`${process.env.REACT_APP_API_URL}/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/login`}>
           <SocialIcon src='img/icon/kakao_icon.png' />
         </a>
       </StSNSLogin>

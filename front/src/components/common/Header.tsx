@@ -42,8 +42,10 @@ const Header = ({ children }: Props) => {
     };
 
   const handleLogout = async() => {
-    await logout();
-    setIsLoggedIn(!isLoggedIn);
+    if(isLoggedIn) {
+      await logout();
+      setIsLoggedIn(!isLoggedIn);
+    }
     navigation('/login');
   };
 
