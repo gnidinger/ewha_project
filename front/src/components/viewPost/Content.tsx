@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,7 +9,7 @@ import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import { pink } from '@mui/material/colors';
 import { INTERESTS, interestsObject } from '../common/interestsList';
 import { Post } from '../../pages/View';
-import { like, dislike } from '../../api/post';
+import { like, dislike, deletePost } from '../../api/post';
 
 interface Props {
   postData: Post,
@@ -21,6 +21,8 @@ export const heartIconStyle = {
 }
 
 const Content = ({ postData, rerender }: Props) => {
+  const navigation = useNavigate();
+
   const clickLike = async() => {
     await like(postData.feedId);
     rerender();
@@ -35,6 +37,7 @@ const Content = ({ postData, rerender }: Props) => {
     <Box sx={{ padding: 3 }}>
       <Typography sx={{ fontSize: 18 }} gutterBottom>{postData.title}</Typography>
       {postData.isMyFeed && <Link to='/write' state={{ feedData: postData }}><Button sx={{ float: 'right' }}>수정하기</Button></Link>}
+      {postData.isMyFeed && <Button onClick={async() => {await deletePost(postData.feedId); navigation(-1);}} sx={{ float: 'right' }}>삭제하기</Button>}
       <Avatar sx={{ float: 'left', width: 36, height: 36 }} />
       <Typography sx={{ lineHeight: '36px', verticalAlign: 'middle', ml: 6 }} gutterBottom>{postData.userInfo.nickname}</Typography>
       <Typography sx={{ fontSize: 11 }} gutterBottom>{postData.createdAt.substring(0, 10)}</Typography>
