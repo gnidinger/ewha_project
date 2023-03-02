@@ -81,6 +81,7 @@ public interface UserMapper {
 				.map(userCategory -> userCategory.getCategory().getCategoryType().toString())
 				.collect(Collectors.toList())
 		);
+		userInfoResponse.isFirstLogin(user.getIsFirstLogin());
 
 		return userInfoResponse.build();
 	}

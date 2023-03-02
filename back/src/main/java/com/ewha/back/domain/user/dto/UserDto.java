@@ -133,6 +133,7 @@ public class UserDto {
 		private Double ariFactor;
 		private String profileImage;
 		private List<String> categories;
+		private Boolean isFirstLogin;
 	}
 
 	@Getter
