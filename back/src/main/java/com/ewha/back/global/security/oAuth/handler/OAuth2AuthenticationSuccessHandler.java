@@ -86,21 +86,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		//        kakaoController.oAuthCallBack(request, response, authentication);
 
-		String uri = createURI(accessToken).toString();
+		String uri = createURI(accessToken, refreshToken).toString();
 
 		getRedirectStrategy().sendRedirect(request, response, uri);
 	}
 
-	private URI createURI(String accessToken) {
+	private URI createURI(String accessToken, String refreshToken) {
 
 		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
 		queryParams.add("access_token", accessToken);
+		queryParams.add("refresh_token", refreshToken);
 
 		return UriComponentsBuilder
 			.newInstance()
 			.scheme("http")
 			.host("localhost")
 			.port(3000)
+			// .path("/redirect")
 			.queryParams(queryParams)
 			.build()
 			.toUri();
