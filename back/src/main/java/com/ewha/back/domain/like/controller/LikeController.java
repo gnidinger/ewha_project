@@ -32,7 +32,7 @@ public class LikeController {
 
 		Feed likedFeed = likeService.createFeedLike(feedId);
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
-		// notificationService.notifyUpdateLikeFeedEvent(likedFeed);
+		notificationService.notifyUpdateLikeFeedEvent(likedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 
