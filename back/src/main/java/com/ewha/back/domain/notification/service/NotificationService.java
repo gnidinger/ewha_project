@@ -78,20 +78,14 @@ public class NotificationService {
 
 		User findUser = userService.getLoginUser();
 
-		Long findUserId = findUser.getId();
-
 		Long userId = feed.getUser().getId();
 
-		System.out.println("########################################");
-		System.out.println(findUserId);
-		System.out.println("########################################");
-		System.out.println(userId);
-
-		if (findUserId.equals(userId)) {
+		if (findUser.getId().equals(userId)) {
 			return;
 		}
 
 		if (SseController.sseEmitters.containsKey(userId)) {
+
 			SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
 			try {
 				log.info("작성하신 피드 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.");
@@ -103,7 +97,7 @@ public class NotificationService {
 				//                        .data("작성하신 페어링 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.\n"
 				//                                + "http://localhost:8080/feeds/" + feed.getId()), MediaType.APPLICATION_JSON);
 			} catch (Exception e) {
-				SseController.sseEmitters.remove(findUserId);
+				SseController.sseEmitters.remove(userId);
 			}
 
 			Notification notification = Notification.builder()
@@ -117,44 +111,6 @@ public class NotificationService {
 
 			notificationRepository.save(notification);
 		}
-
-		// @Transactional
-		// public void notifyUpdateLikeFeedEvent(Feed feed) { // 피드 좋아요 알림
-		//
-		// 	User findUser = userService.getLoginUser();
-		//
-		// 	Long userId = feed.getUser().getId();
-		//
-		// 	if (findUser.getId().equals(userId)) {
-		// 		return;
-		// 	}
-		//
-		// 	if (SseController.sseEmitters.containsKey(userId)) {
-		// 		SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
-		// 		try {
-		// 			log.info("작성하신 피드 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.");
-		// 			log.info("http://localhost:8080/feeds/" + feed.getId());
-		// 			sseEmitter.send(SseEmitter.event().name("updateLikeFeed")
-		// 				.data("작성하신 피드 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.\n"
-		// 					+ "http://localhost:8080/feeds/" + feed.getId()));
-		// 			//                sseEmitter.send(SseEmitter.event().name("updateLikePairing")
-		// 			//                        .data("작성하신 페어링 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.\n"
-		// 			//                                + "http://localhost:8080/feeds/" + feed.getId()), MediaType.APPLICATION_JSON);
-		// 		} catch (Exception e) {
-		// 			SseController.sseEmitters.remove(userId);
-		// 		}
-		// 	}
-
-		// Notification notification = Notification.builder()
-		// 	.user(findUser)
-		// 	.type(NotificationType.LIKE)
-		// 	.url("http://localhost:8080/feeds/" + feed.getId())
-		// 	.body("작성하신 피드 <" + feed.getTitle() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.")
-		// 	.receiverFeedTitle(feed.getTitle())
-		// 	.isRead(false)
-		// 	.build();
-		//
-		// notificationRepository.save(notification);
 	}
 
 	// @Async("threadPoolTaskExecutor")
@@ -170,6 +126,7 @@ public class NotificationService {
 		}
 
 		if (SseController.sseEmitters.containsKey(userId)) {
+
 			SseEmitter sseEmitter = SseController.sseEmitters.get(userId);
 			try {
 				log.info("작성하신 코멘트 <" + comment.getBody() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.");
@@ -196,7 +153,7 @@ public class NotificationService {
 
 	// @Async("threadPoolTaskExecutor")
 	@Transactional
-	public void notifyPostPairingCommentEvent(Comment comment) { // 페어링 댓글 알림
+	public void notifyPostPairingCommentEvent(Comment comment) { // 피드 댓글 알림
 
 		User findUser = userService.getLoginUser();
 
@@ -226,7 +183,7 @@ public class NotificationService {
 		}
 
 		Notification notification = Notification.builder()
-			.user(comment.getUser())
+			.user(feed.getUser())
 			.type(NotificationType.COMMENT)
 			.url("http://localhost:8080/comments/" + comment.getId())
 			.body("작성하신 피드 <" + comment.getFeed().getTitle() + ">에 " + findUser.getNickname() + "님이 새로운 댓글을 달았습니다.")
