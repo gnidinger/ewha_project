@@ -36,7 +36,7 @@ spring:
             client_name: Kakao
           naver:
             client-id: wcto8DPTmhNWmRN4xmsa
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-secret:
             redirect-uri: "{baseUrl}/{action}/oauth2/{registrationId}"
             authorization-grant-type: authorization_code
             scope:
