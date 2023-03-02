@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Header } from '../components/common';
 import { Section } from '../components/Home';
-import { getCookie } from '../api/cookie';
+import { getCookie, setCookie } from '../api/cookie';
 import { MAIN_COLOR } from '../style/palette';
 import { mypage } from '../api/user';
 import { Chart, ArcElement } from 'chart.js';
@@ -12,9 +12,12 @@ import { ChartData } from 'chart.js/dist/types/index';
 Chart.register(ArcElement);
 
 const Home = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [ariFactor, setAriFactor] = useState<number>(0);
   const [todaysQuestion, setTodaysQuestion] = useState<string>('');
+
+  const location = useLocation();
 
   const chartData: ChartData<'doughnut'> = {
     datasets: [{
@@ -26,9 +29,17 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if(location.search) {
+      setCookie('ari_login', searchParams.get('access_token'));
+      setCookie('refreshToken', searchParams.get('refresh_token'));
+      window.location.replace('/');
+    }
     if(getCookie('ari_login')) {
       setIsLoggedIn(true);
-      mypage().then(data => setAriFactor(data.ariFactor));
+      mypage().then(data => {
+        if(data.isFirstLogin) window.location.replace('/first-setting');
+        setAriFactor(data.ariFactor);
+      });
     }  
   }, []);
 

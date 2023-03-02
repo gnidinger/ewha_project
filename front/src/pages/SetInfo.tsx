@@ -127,9 +127,9 @@ const SetInfo = () => {
 
   const navigation = useNavigate();
 
-  const clickNextStep = () => {
+  const clickNextStep = async() => {
     if(step === 3) {
-      firstLogin(info);
+      await firstLogin(info);
       navigation('/');
     }
     setBtnState(false);
