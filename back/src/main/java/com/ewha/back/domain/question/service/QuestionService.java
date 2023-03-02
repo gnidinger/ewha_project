@@ -31,7 +31,7 @@ public class QuestionService {
 
 		User findUser = userService.getLoginUser();
 
-		if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+		if (findUser.getRole().contains("ADMIN")) {
 
 			Question savedQuestion = Question.builder()
 				.title(question.getTitle())
@@ -52,7 +52,7 @@ public class QuestionService {
 
 		Question findQuestion = findVerifiedQuestion(questionId);
 
-		if (findUser.getRole().contains(Role.ROLE_ADMIN)) {
+		if (findUser.getRole().contains("ADMIN")) {
 
 			findQuestion.updateQuestion(question);
 
@@ -92,5 +92,18 @@ public class QuestionService {
 
 	public void saveQuestion(Question question) {
 		questionRepository.save(question);
+	}
+
+	public void deleteQuestion(Long questionId) {
+
+		User findUser = userService.getLoginUser();
+
+		if (findUser.getRole().contains("ADMIN")) {
+
+			Question findQuestion = findVerifiedQuestion(questionId);
+
+			questionRepository.delete(findQuestion);
+		}
+
 	}
 }

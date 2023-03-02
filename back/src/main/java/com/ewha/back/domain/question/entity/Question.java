@@ -52,7 +52,7 @@ public class Question extends BaseTimeEntity {
 	private Image image;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "question", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Answer> answers;
 

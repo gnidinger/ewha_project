@@ -75,7 +75,7 @@ public class SecurityConfig {
 			//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
 			.and()
 			.redirectionEndpoint()
-			.baseUri("http://localhost:3000/login")
+			.baseUri("/*/oauth2/code/*")
 			.and()
 			.userInfoEndpoint() // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때 설정 담당
 			.userService(oAuth2PrincipalUserService)

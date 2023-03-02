@@ -25,6 +25,7 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.entity.UserCategory;
 import com.ewha.back.domain.user.entity.enums.AgeType;
 import com.ewha.back.domain.user.entity.enums.GenderType;
+import com.ewha.back.domain.user.entity.enums.Role;
 import com.ewha.back.domain.user.repository.UserRepository;
 import com.ewha.back.domain.user.service.UserService;
 
@@ -50,6 +51,19 @@ public class Stub {
 		//         ------------------------------------------------------------------------------------------
 		//         USER STUB
 		//         ------------------------------------------------------------------------------------------
+
+		User admin = User.builder()
+			.userId("admin")
+			.ariFactor(36.5)
+			.password(encoder.encode("admin"))
+			.nickname("admin")
+			.role(List.of("ADMIN", "USER"))
+			.isFirstLogin(false)
+			.build();
+
+		userRepository.save(admin);
+
+
 		List<User> userList = new ArrayList<>();
 
 		for (int i = 1; i <= 20; i++) {

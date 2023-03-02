@@ -49,6 +49,7 @@ public class QuestionDto {
 		private String title;
 		private String body;
 		private String imagePath;
+		private String thumbnailPath;
 		private String answerBody;
 	}
 

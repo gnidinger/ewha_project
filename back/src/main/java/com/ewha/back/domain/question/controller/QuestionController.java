@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,7 +43,8 @@ public class QuestionController {
 	private final AwsS3Service awsS3Service;
 
 	@PostMapping("/add")
-	public ResponseEntity<String> postQuestion(@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
+	public ResponseEntity<QuestionDto.Response> postQuestion(
+		@Nullable @RequestParam(value = "image", required = false) MultipartFile multipartFile,
 		@Valid @RequestPart QuestionDto.Post postQuestion) throws Exception {
 
 		List<String> imagePath = null;
@@ -50,17 +52,19 @@ public class QuestionController {
 		Question question = questionMapper.questionPostToQuestion(postQuestion);
 		Question createdQuestion = questionService.createQuestion(question);
 
-		if (multipartFile != null)
+		if (multipartFile != null) {
 			imagePath = awsS3Service.uploadQuestionImageToS3(multipartFile, createdQuestion.getId());
-		createdQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
+			createdQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
+		}
+
 		QuestionDto.Response response = questionMapper.questionToQuestionResponse(createdQuestion);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PatchMapping("/{question_id}/edit")
 	public ResponseEntity<String> patchQuestion(@PathVariable("question_id") Long questionId,
-		@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
+		@Nullable @RequestParam(value = "image", required = false) MultipartFile multipartFile,
 		@Valid @RequestPart QuestionDto.Patch patchQuestion) throws Exception {
 
 		List<String> imagePath = null;
@@ -115,5 +119,13 @@ public class QuestionController {
 			return new ResponseEntity<>(
 				new SingleResponseDto<>(response), HttpStatus.OK);
 		}
+	}
+
+	@DeleteMapping("/{question_id}/delete")
+	public ResponseEntity deleteQuestion(@PathVariable("question_id") Long questionId) {
+
+		questionService.deleteQuestion(questionId);
+
+		return ResponseEntity.noContent().build();
 	}
 }

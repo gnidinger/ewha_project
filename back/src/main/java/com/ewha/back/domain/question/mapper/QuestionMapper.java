@@ -17,7 +17,21 @@ public interface QuestionMapper {
 
 	Question questionPatchToQuestion(QuestionDto.Patch patchQuestion);
 
-	QuestionDto.Response questionToQuestionResponse(Question question);
+	default QuestionDto.Response questionToQuestionResponse(Question question) {
+
+		if (question == null) {
+			return null;
+		}
+
+		return QuestionDto.Response.builder()
+			.questionId(question.getId())
+			.title(question.getTitle())
+			.body(question.getBody())
+			.imagePath(question.getImagePath())
+			.thumbnailPath(question.getThumbnailPath())
+			.answerBody(question.getAnswerBody())
+			.build();
+	}
 
 	default QuestionDto.AnsweredResponse questionToAnsweredQuestionResponse(Question question) {
 

@@ -82,4 +82,4 @@ jwt:
 app:
   oauth2:
     authorizedRedirectUris:
-      - http://localhost:3000/login
+      - http://localhost:3000/oauth/redirect

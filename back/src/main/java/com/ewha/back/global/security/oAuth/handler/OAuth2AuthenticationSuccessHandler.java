@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -85,15 +86,21 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		//        kakaoController.oAuthCallBack(request, response, authentication);
 
-		//        getRedirectStrategy().sendRedirect(request, response, uri);
+		String uri = createURI(accessToken).toString();
+
+		getRedirectStrategy().sendRedirect(request, response, uri);
 	}
 
-	private URI createURI(MultiValueMap<String, String> queryParams) {
+	private URI createURI(String accessToken) {
+
+		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+		queryParams.add("access_token", accessToken);
+
 		return UriComponentsBuilder
 			.newInstance()
 			.scheme("http")
 			.host("localhost")
-			.path("/receive-token.html")
+			.port(3000)
 			.queryParams(queryParams)
 			.build()
 			.toUri();

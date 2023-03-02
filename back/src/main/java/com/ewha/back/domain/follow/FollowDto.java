@@ -14,7 +14,7 @@ public class FollowDto {
 	public static class Response {
 
 		//        private long userId;
-		private String nickName;
+		private String nickname;
 		private String email;
 		//        private BigInteger followState; // boolean 값을 받기 위해 BigInteger 사용!
 		//        private BigInteger equalState;

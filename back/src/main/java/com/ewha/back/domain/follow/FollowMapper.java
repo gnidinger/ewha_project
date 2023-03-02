@@ -20,7 +20,7 @@ public interface FollowMapper {
 		return new SliceImpl<>(
 			followersList.stream()
 				.map(user -> FollowDto.Response.builder()
-					.nickName(user.getNickname())
+					.nickname(user.getNickname())
 					.email(user.getEmail())
 					.build())
 				.collect(Collectors.toList())
@@ -36,7 +36,7 @@ public interface FollowMapper {
 		return new SliceImpl<>(
 			followingsList.stream()
 				.map(user -> FollowDto.Response.builder()
-					.nickName(user.getNickname())
+					.nickname(user.getNickname())
 					.email(user.getEmail())
 					.build())
 				.collect(Collectors.toList())
