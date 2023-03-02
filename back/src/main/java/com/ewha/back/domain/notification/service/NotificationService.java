@@ -183,7 +183,7 @@ public class NotificationService {
 		}
 
 		Notification notification = Notification.builder()
-			.user(findUser)
+			.user(comment.getUser())
 			.type(NotificationType.LIKE)
 			.url("http://localhost:8080/comments/" + comment.getId())
 			.body("작성하신 코멘트 <" + comment.getBody() + ">에 " + findUser.getNickname() + "님이 좋아요를 눌렀습니다.")
@@ -226,7 +226,7 @@ public class NotificationService {
 		}
 
 		Notification notification = Notification.builder()
-			.user(findUser)
+			.user(comment.getUser())
 			.type(NotificationType.COMMENT)
 			.url("http://localhost:8080/comments/" + comment.getId())
 			.body("작성하신 피드 <" + comment.getFeed().getTitle() + ">에 " + findUser.getNickname() + "님이 새로운 댓글을 달았습니다.")
