@@ -112,6 +112,7 @@ public class UserController {
 
 		User firstLoginUser = userService.onFirstLogin(firstPatchDto);
 		UserDto.Response response = userMapper.userToUserResponse(firstLoginUser);
+		firstLoginUser.setIsFirstLogin(false);
 
 		return new ResponseEntity<>(
 			new SingleResponseDto<>(response), HttpStatus.OK);
