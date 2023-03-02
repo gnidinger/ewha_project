@@ -49,6 +49,16 @@ export const writePost = async( post: PostData, image?: File, postId?: string ) 
   }
 };
 
+export const deletePost = async( postId: string ) => {
+  try {
+    const { data } = await axiosApi.delete(`/feeds/${postId}/delete`);
+    return data;
+  }
+  catch(e) {
+    console.log(e);
+  }
+};
+
 export const like = async( postId: string ) => {
   try {
     const { data } = await axiosApi.patch(`/feeds/${postId}/like`);
