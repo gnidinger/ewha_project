@@ -48,8 +48,6 @@ public class LikeServiceImpl implements LikeService {
 
 			likeRepository.save(findFeedLike);
 
-			// notificationService.notifyUpdateLikeFeedEvent(findFeed);
-
 			findFeed.addLike();
 
 			return findFeed;

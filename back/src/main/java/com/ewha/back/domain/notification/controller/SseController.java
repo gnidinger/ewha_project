@@ -63,6 +63,7 @@ public class SseController {
 		sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
 		sseEmitter.onError((e) -> sseEmitters.remove(userId));
 
+
 		return ResponseEntity.ok(sseEmitter);
 	}
 }
