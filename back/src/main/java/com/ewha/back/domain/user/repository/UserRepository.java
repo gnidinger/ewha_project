@@ -11,10 +11,8 @@ import com.ewha.back.domain.user.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByUserId(String userId);
-
 	User findByNickname(String nickname);
-
+	User findByProviderId(String providerId);
 	Boolean existsByUserId(String userId);
-
 	Boolean existsByNickname(String nickname);
 }

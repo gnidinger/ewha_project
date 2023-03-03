@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.entity.enums.Role;
+import com.ewha.back.domain.user.repository.UserQueryRepository;
 import com.ewha.back.domain.user.repository.UserRepository;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.security.oAuth.userInfo.KakaoUserInfo;
@@ -31,6 +32,7 @@ public class OAuth2PrincipalUserService extends DefaultOAuth2UserService {
 
 	private final UserService userService;
 	private final UserRepository userRepository;
+	private final UserQueryRepository userQueryRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
@@ -58,19 +60,16 @@ public class OAuth2PrincipalUserService extends DefaultOAuth2UserService {
 		String email = oAuth2UserInfo.getEmail(); //수정
 		Role role = ROLE_USER;
 
-		User findUser = userRepository.findByNickname(nickname);
+		User findUser = userQueryRepository.findByProviderAndProviderId(provider, providerId);
+
+		User nicknameUser = userRepository.findByNickname(nickname);
+
+		if (nicknameUser != null) {
+			nickname = nickname + "_" + provider + "_" + UUID.randomUUID().toString().substring(0, 6);
+		}
 
 		//DB에 없는 사용자라면 회원가입처리
 		if (findUser == null) {
-			//            findUser = User.oauth2Register()
-			//                    .nickname(nickname)
-			//                    .password(password)
-			//                    .email(email)
-			//                    .ariFactor(36.5)
-			//                    .role(List.of("ROLE_USER"))
-			//                    .provider(provider)
-			//                    .providerId(providerId)
-			//                    .build();
 			findUser = User.builder()
 				.userId(userId)
 				.nickname(nickname)
@@ -79,11 +78,13 @@ public class OAuth2PrincipalUserService extends DefaultOAuth2UserService {
 				.ariFactor(36.5)
 				.role(List.of("ROLE_USER"))
 				.isFirstLogin(true)
-				.provider(provider)
+				.provider(provider.toUpperCase())
 				.providerId(providerId)
 				.build();
 
 			userRepository.save(findUser);
+		} else {
+			findUser.oauthUpdate(nickname, email);
 		}
 		return new PrincipalDetails(findUser, oAuth2UserInfo);
 	}

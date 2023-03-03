@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
 			.centerCode(user.getCenterCode())
 			.birthday(user.getBirthday())
 			.phoneNumber(user.getPhoneNumber())
+			.provider("NONE")
 			.isFirstLogin(true)
 			.build();
 

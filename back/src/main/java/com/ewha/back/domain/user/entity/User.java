@@ -121,9 +121,13 @@ public class User extends BaseTimeEntity {
 		this.providerId = providerId;
 	}
 
-	public User oauthUpdate(String name, String email) {
-		this.nickname = name;
-		this.userId = email;
+	public User oauthUpdate(String nickname, String email) {
+		if (!this.nickname.equals(nickname)) {
+			this.nickname = nickname;
+		}
+		if (!this.email.equals(email)) {
+			this.email = email;
+		}
 		return this;
 	}
 
