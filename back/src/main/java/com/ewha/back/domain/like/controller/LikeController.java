@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ewha.back.domain.comment.entity.Comment;
-import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.feed.entity.Feed;
-import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.like.service.LikeService;
 import com.ewha.back.domain.notification.service.NotificationService;
 
@@ -23,15 +21,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LikeController {
 	private final LikeService likeService;
-	private final FeedMapper feedMapper;
-	private final CommentMapper commentMapper;
 	private final NotificationService notificationService;
 
 	@PatchMapping("/feeds/{feed_id}/like")
 	public ResponseEntity<HttpStatus> postFeedLike(@PathVariable("feed_id") Long feedId) {
 
 		Feed likedFeed = likeService.createFeedLike(feedId);
+
+		Comment comment = likedFeed.getComments().get(0);
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
+		notificationService.notifyUpdateLikeCommentEvent(comment);
 		notificationService.notifyUpdateLikeFeedEvent(likedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
