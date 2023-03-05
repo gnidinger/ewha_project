@@ -131,6 +131,13 @@ public class User extends BaseTimeEntity {
 		return this;
 	}
 
+	public User oauthUpdate(String nickname) {
+		if (!this.nickname.equals(nickname)) {
+			this.nickname = nickname;
+		}
+		return this;
+	}
+
 	public void updateUserInfo(UserDto.UserInfo userInfo) {
 		this.nickname = userInfo.getNickname();
 		this.profileImage = userInfo.getProfileImage();
