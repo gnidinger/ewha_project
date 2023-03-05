@@ -68,20 +68,8 @@ public class SecurityConfig {
 			.deleteCookies("visit_cookie")
 			.and()
 			.authorizeHttpRequests(authorize -> authorize
-				.anyRequest().permitAll())
-			.oauth2Login() // OAuth2 로그인 설정 시작점
-			.authorizationEndpoint()
-			.baseUri("/oauth2/authorization")
-			//                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
-			.and()
-			.redirectionEndpoint()
-			.baseUri("/*/oauth2/*")
-			.and()
-			.userInfoEndpoint() // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때 설정 담당
-			.userService(oAuth2PrincipalUserService)
-			.and()
-			.successHandler(oAuth2AuthenticationSuccessHandler)
-			.failureHandler(oAuth2AuthenticationFailureHandler);
+				.anyRequest().permitAll());
+
 		return http.build();
 	}
 

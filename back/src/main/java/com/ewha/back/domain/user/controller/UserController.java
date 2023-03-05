@@ -123,17 +123,23 @@ public class UserController {
 
 		List<String> imagePath = null;
 
+		User loginUser = userService.getLoginUser();
+
 		User updatedUser = userService.updateUser(userInfo);
 
-		if (updatedUser.getProfileImage() != null && userInfo.getProfileImage() != null
-			&& multipartFile == null && userInfo.getProfileImage().equals(updatedUser.getProfileImage())) {
+		if (loginUser.getProfileImage() != null && userInfo.getProfileImage() != null
+			&& multipartFile == null && userInfo.getProfileImage().equals(loginUser.getProfileImage())) {
 			updatedUser.setProfileImage(updatedUser.getProfileImage());
 			updatedUser.setThumbnailPath(updatedUser.getThumbnailPath());
 		} else if (userInfo.getProfileImage() == null && multipartFile != null) {
+			if (loginUser.getProfileImage() != null) {
+				awsS3Service.deleteImageFromS3(loginUser.getProfileImage());
+				awsS3Service.deleteImageFromS3(loginUser.getThumbnailPath());
+			}
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedUser.getId());
 			updatedUser.setProfileImage(imagePath.get(0));
 			updatedUser.setThumbnailPath(imagePath.get(1));
-		} else if (updatedUser.getProfileImage() != null && multipartFile == null
+		} else if (loginUser.getProfileImage() != null && multipartFile == null
 			&& userInfo.getProfileImage() == null) {
 			awsS3Service.updateORDeleteUserImageFromS3(updatedUser.getId(), multipartFile);
 			updatedUser.setProfileImage(null);

@@ -28,9 +28,7 @@ public class LikeController {
 
 		Feed likedFeed = likeService.createFeedLike(feedId);
 
-		Comment comment = likedFeed.getComments().get(0);
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
-		notificationService.notifyUpdateLikeCommentEvent(comment);
 		notificationService.notifyUpdateLikeFeedEvent(likedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
