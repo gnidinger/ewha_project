@@ -81,8 +81,6 @@ public class OAuth2PrincipalUserService extends DefaultOAuth2UserService {
 				.provider(provider.toUpperCase())
 				.providerId(providerId)
 				.build();
-
-			userRepository.save(findUser);
 		} else {
 			if (userRepository.findByEmail(email) == null) {
 				findUser.oauthUpdate(nickname, email);
@@ -90,6 +88,8 @@ public class OAuth2PrincipalUserService extends DefaultOAuth2UserService {
 				findUser.oauthUpdate(nickname);
 			}
 		}
+
+		userRepository.save(findUser);
 		return new PrincipalDetails(findUser, oAuth2UserInfo);
 	}
 }
