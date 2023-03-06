@@ -70,6 +70,7 @@ const Write = () => {
   };
 
   const reader = new FileReader();
+
   const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if(event.target.files && event.target.files[0]) {
       reader.onload = () => {
@@ -78,6 +79,11 @@ const Write = () => {
       }
       reader.readAsDataURL(event.target.files[0]);
     }
+  };
+
+  const deleteImage = () => {
+    setImageFile(null);
+    (document.getElementById('photo') as HTMLInputElement).value = '';
   };
 
   return(
@@ -126,8 +132,9 @@ const Write = () => {
         <Box sx={{ mt: 2 }}>
           <input id='photo' name='image' type='file' accept='image/*' onChange={addImage} hidden />
           <label htmlFor='photo'>
-            <Button component='span' variant='contained'>{imageFile ? '사진 변경' : '사진 첨부' }</Button>
+            <Button component='span' variant='contained' sx={{ marginRight: '0.4rem' }}>{imageFile ? '사진 변경' : '사진 첨부' }</Button>
           </label>
+          {imageFile && <Button onClick={deleteImage} component='span' variant='contained'>사진 삭제</Button>}
           <Button style={{ float: 'right' }} type='submit' variant='contained'>등록</Button>
         </Box>
       </Box>
