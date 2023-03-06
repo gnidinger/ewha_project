@@ -33,7 +33,9 @@ import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.feed.service.FeedService;
+import com.ewha.back.domain.image.repository.ImageQueryRepository;
 import com.ewha.back.domain.image.service.AwsS3Service;
+import com.ewha.back.domain.image.service.ImageService;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.like.service.LikeService;
 import com.ewha.back.global.config.CustomPage;
@@ -52,6 +54,7 @@ public class FeedController {
 	private final LikeService likeService;
 	private final CommentService commentService;
 	private final AwsS3Service awsS3Service;
+	private final ImageQueryRepository imageQueryRepository;
 
 	@PostMapping("/add")
 	public ResponseEntity<HttpStatus> postFeed(
@@ -85,14 +88,20 @@ public class FeedController {
 		Feed feed = feedMapper.feedPatchToFeed(patchFeed);
 		Feed updatedFeed = feedService.updateFeed(feed, feedId);
 
-		if (updatedFeed.getImagePath() != null && patchFeed.getImagePath() != null
-			&& multipartFile == null && patchFeed.getImagePath().equals(updatedFeed.getImagePath())) {
+		// MultipartFile이 없으면서, 기존 피드에 이미지가 있고, 요청 JSON에도 이미지가 있고, 두 경로가 같은 경우
+		if (multipartFile == null && findFeed.getImagePath() != null && patchFeed.getImagePath() != null
+			&& patchFeed.getImagePath().equals(updatedFeed.getImagePath())) {
 			updatedFeed.addImagePaths(updatedFeed.getImagePath(), updatedFeed.getThumbnailPath());
-		} else if (patchFeed.getImagePath() == null && multipartFile != null) {
+			// 기존 피드에 이미지가 있고 요청 JSON에 이미지가 없고 MultipartFile이 있는 경우
+		} else if (findFeed.getImagePath() != null && patchFeed.getImagePath() == null && multipartFile != null) {
+			imagePath = awsS3Service.updateORDeleteFeedImageFromS3(updatedFeed.getId(), multipartFile);
+			updatedFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
+			// 기존 피드에 이미지가 없고 요청 JSON에 이미지가 없고 MultipartFile이 있는 경우
+		} else if (findFeed.getImagePath() == null && patchFeed.getImagePath() == null && multipartFile != null) {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedFeed.getId());
 			updatedFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
-		} else if (updatedFeed.getImagePath() != null && multipartFile == null
-			&& patchFeed.getImagePath() == null) {
+			// 기존 피드에 이미지가 있으면서 요청 JSON에 이미지가 없고, multipartFile도 없는 경우
+		} else if (findFeed.getImagePath() != null && patchFeed.getImagePath() == null && multipartFile == null) {
 			awsS3Service.updateORDeleteFeedImageFromS3(updatedFeed.getId(), multipartFile);
 			updatedFeed.addImagePaths(null, null);
 		}
@@ -100,6 +109,7 @@ public class FeedController {
 		feedService.saveFeed(updatedFeed);
 
 		updatedFeed.addFeedCategories(feed.getFeedCategories());
+
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(updatedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();

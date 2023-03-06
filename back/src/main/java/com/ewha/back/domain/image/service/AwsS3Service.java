@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
+import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,7 @@ import com.ewha.back.domain.feed.repository.FeedRepository;
 import com.ewha.back.domain.feed.service.FeedService;
 import com.ewha.back.domain.image.entity.Image;
 import com.ewha.back.domain.image.entity.ImageType;
+import com.ewha.back.domain.image.repository.ImageQueryRepository;
 import com.ewha.back.domain.image.repository.ImageRepository;
 import com.ewha.back.domain.question.entity.Question;
 import com.ewha.back.domain.question.repository.QuestionRepository;
@@ -56,6 +58,8 @@ public class AwsS3Service {
 	private final UserRepository userRepository;
 	private final QuestionService questionService;
 	private final QuestionRepository questionRepository;
+	private final ImageQueryRepository imageQueryRepository;
+	private final EntityManager em;
 	private ImageType imageType;
 
 	@Value("${cloud.aws.s3.bucket}")
@@ -70,8 +74,8 @@ public class AwsS3Service {
 
 		String storedPath = null;
 
-		Feed feed;
-		User user;
+		Feed feed = Feed.builder().build();
+		User user = User.builder().build();
 
 		if (requestURI.contains("/feeds")) {
 			storedPath = "feedImages/";
@@ -309,7 +313,7 @@ public class AwsS3Service {
 			newImagePath = uploadImageToS3(multipartFile, feedId);
 		} else if (multipartFile == null) {
 			deleteImageFromS3(imageName);
-			deleteImageFromS3(thumbnailName);
+			// deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;
@@ -332,7 +336,7 @@ public class AwsS3Service {
 			newImagePath = uploadImageToS3(multipartFile, userId);
 		} else if (multipartFile == null) {
 			deleteImageFromS3(imageName);
-			deleteImageFromS3(thumbnailName);
+			// deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;
@@ -355,7 +359,7 @@ public class AwsS3Service {
 			newImagePath = uploadQuestionImageToS3(multipartFile, questionId);
 		} else if (multipartFile == null) {
 			deleteImageFromS3(imageName);
-			deleteImageFromS3(thumbnailName);
+			// deleteImageFromS3(thumbnailName);
 		}
 
 		return newImagePath;
@@ -392,6 +396,16 @@ public class AwsS3Service {
 	}
 
 	public void deleteImageFromS3(String imageName) {
-		amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, imageName));
+
+		Image findImage = imageService.findImageByStoredImageName(imageName.substring(1));
+
+		// imageRepository.deleteById(findImage.getId());
+		imageQueryRepository.deleteById(findImage.getId());
+
+
+		amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, findImage.getStoredPath()));
+		amazonS3Client.deleteObject(new DeleteObjectRequest(bucketName, findImage.getThumbnailPath()));
+
+		em.flush();
 	}
 }

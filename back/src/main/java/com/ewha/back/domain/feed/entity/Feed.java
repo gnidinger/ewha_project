@@ -84,9 +84,8 @@ public class Feed extends BaseTimeEntity implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@Nullable
 	@JsonManagedReference
-	@OneToOne(mappedBy = "feed", cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "feed", cascade = CascadeType.ALL)
 	private Image image;
 
 	@JsonManagedReference

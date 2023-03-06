@@ -124,6 +124,10 @@ public class ImageService {
 		}
 	}
 
+	public Image findImageByStoredImageName(String imageName) {
+		return imageQueryRepository.findByStoredImageName(imageName);
+	}
+
 	public Image findVerifiedImage(Long imageId) {
 
 		return imageRepository.findById(imageId)

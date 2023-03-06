@@ -30,6 +30,13 @@ public class ImageQueryRepository {
 			.fetchFirst();
 	}
 
+	public void deleteById(Long imageId) {
+
+		jpaQueryFactory
+			.delete(image)
+			.where(image.id.eq(imageId))
+			.execute();
+	}
 	public void deleteByFeedId(Long feedId) {
 
 		jpaQueryFactory
@@ -44,5 +51,13 @@ public class ImageQueryRepository {
 			.delete(image)
 			.where(image.storedPath.eq(imagePath))
 			.execute();
+	}
+
+	public Image findByStoredImageName(String imageName) {
+
+		return jpaQueryFactory
+			.selectFrom(image)
+			.where(image.storedImageName.eq(imageName))
+			.fetchOne();
 	}
 }

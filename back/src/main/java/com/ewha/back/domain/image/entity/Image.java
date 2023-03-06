@@ -1,5 +1,6 @@
 package com.ewha.back.domain.image.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -51,12 +52,12 @@ public class Image {
 	private String thumbnailPath;
 
 	@JsonBackReference
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "feed_id")
 	private Feed feed;
 
 	@JsonBackReference
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "user_id")
 	private User user;
 
