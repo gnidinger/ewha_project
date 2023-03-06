@@ -40,12 +40,17 @@ const Write = () => {
       else if(pair[0] === 'body') postData.body = String(pair[1]);
     }
     postData.categories = tags.map((tag) => { return { categoryType: tag } });
-    if(imageFile && !formData.get('image')) {
-      postData.imagePath = imageFile;
-      await writePost(postData, undefined, feedData.feedId);
+    if(feedData) {
+      if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File), feedData.feedId);
+      else {
+        if(imageFile && !formData.get('image')) postData.imagePath = imageFile;
+        await writePost(postData, undefined, feedData.feedId);
+      }
     }
-    if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File));
-    else await writePost(postData);
+    else {
+      if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File));
+      else await writePost(postData);
+    }
     navigation('/ari');
   };
 
@@ -135,7 +140,7 @@ const Write = () => {
             <Button component='span' variant='contained' sx={{ marginRight: '0.4rem' }}>{imageFile ? '사진 변경' : '사진 첨부' }</Button>
           </label>
           {imageFile && <Button onClick={deleteImage} component='span' variant='contained'>사진 삭제</Button>}
-          <Button style={{ float: 'right' }} type='submit' variant='contained'>등록</Button>
+          <Button style={{ float: 'right' }} type='submit' variant='contained'>{feedData ? '수정' : '등록'}</Button>
         </Box>
       </Box>
     </>

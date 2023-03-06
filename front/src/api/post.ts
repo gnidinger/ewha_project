@@ -37,11 +37,16 @@ export const writePost = async( post: PostData, image?: File, postId?: string ) 
     const blob = new Blob([JSON.stringify(post)], {
       type: 'application/json'
     })
-    body.append('post', blob);
     if(image instanceof File) body.append('image', image);
     let data;
-    if(postId) data = await axiosApi.patch(`/feeds/${postId}/edit`);
-    else data = await axiosApi.post('/feeds/add', body);
+    if(postId) {
+      body.append('patch', blob);
+      data = await axiosApi.patch(`/feeds/${postId}/edit`, body);
+    }
+    else {
+      body.append('post', blob);
+      data = await axiosApi.post('/feeds/add', body);
+    }
     return data;
   }
   catch(e) {
