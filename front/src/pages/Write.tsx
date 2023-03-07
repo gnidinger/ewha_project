@@ -43,7 +43,7 @@ const Write = () => {
     if(feedData) {
       if((formData.get('image') as File).name) await writePost(postData, (formData.get('image') as File), feedData.feedId);
       else {
-        if(imageFile && !formData.get('image')) postData.imagePath = imageFile;
+        if(imageFile && !(formData.get('image') as File).name) postData.imagePath = imageFile;
         await writePost(postData, undefined, feedData.feedId);
       }
     }

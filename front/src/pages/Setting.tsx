@@ -81,6 +81,11 @@ const Setting = () => {
     }
   };
 
+  const deleteImage = () => {
+    setImageSrc('');
+    (document.getElementById('avatar') as HTMLInputElement).value = '';
+  };
+
   const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const settingData: SettingData = { nickname: '', introduction: '', genderType: '', ageType: 'TWENTIES', categories: [] };
@@ -117,12 +122,15 @@ const Setting = () => {
         {profileData &&
         <Box component='form' encType='multipart/form-data' onSubmit={handleSubmit} sx={{ width: '24rem', margin: '3rem auto' }}>
           <StPhotoWrapper>
-            <input id='avatar' name='image' type='file' accept='image/*' onChange={avatarChange} hidden />
-            <label htmlFor='avatar'>
-              <IconButton component='span'>
-                <Avatar sx={{ width: 164, height: 164 }} src={imageSrc} />
-              </IconButton>
-            </label>
+            <div>
+              <input id='avatar' name='image' type='file' accept='image/*' onChange={avatarChange} hidden />
+              <label htmlFor='avatar'>
+                <IconButton component='span'>
+                  <Avatar sx={{ width: 164, height: 164 }} src={imageSrc} />
+                </IconButton>
+              </label>
+            </div>
+            {imageSrc && <Button onClick={deleteImage}>사진 삭제</Button>}
           </StPhotoWrapper>
           <Box sx={{ mb: 2 }}>
             <Typography sx={{ fontSize: 18, fontWeight: 600 }} gutterBottom>기본정보</Typography>
