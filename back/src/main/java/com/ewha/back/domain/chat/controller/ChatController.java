@@ -44,8 +44,7 @@ public class ChatController {
 	 * 사용자가 메시지 보내는 엔드포인트
 	 */
 	@MessageMapping("/messages/{room_id}")
-	public void message(ChatMessageDto.Request requestDto,
-		@DestinationVariable Long roomId) {
+	public void message(ChatMessageDto.Request requestDto, @DestinationVariable Long roomId) {
 
 		User findUser = userService.getLoginUser();
 		Long userId = findUser.getId();
