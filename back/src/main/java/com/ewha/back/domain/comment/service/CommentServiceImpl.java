@@ -14,6 +14,8 @@ import com.ewha.back.domain.comment.repository.CommentQueryRepository;
 import com.ewha.back.domain.comment.repository.CommentRepository;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.service.FeedService;
+import com.ewha.back.domain.notification.entity.NotificationType;
+import com.ewha.back.domain.notification.service.NotificationServiceImpl;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
@@ -30,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
 	private final FeedService feedService;
 	private final CommentRepository commentRepository;
 	private final CommentQueryRepository commentQueryRepository;
+	private final NotificationServiceImpl notificationService;
 
 	@Override
 	public Comment createComment(Comment comment, Long feedId) {
@@ -45,6 +48,14 @@ public class CommentServiceImpl implements CommentService {
 				.body(comment.getBody())
 				.likeCount(0L)
 				.build();
+
+		if (!findUser.getId().equals(findFeed.getUser().getId())) {
+			String body = "작성하신 피드 <" + findFeed.getTitle() + ">에 "
+				+ findUser.getNickname() + "님이 댓글을 남겼습니다.";
+			String content = findFeed.getTitle();
+			String url = "http://localhost:8080/feeds/" + findFeed.getId();
+			notificationService.send(findFeed.getUser(), url, body, content, NotificationType.COMMENT);
+		}
 
 		return commentRepository.save(savedComment);
 	}

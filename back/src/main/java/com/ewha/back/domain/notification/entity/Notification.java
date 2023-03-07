@@ -46,10 +46,7 @@ public class Notification extends BaseTimeEntity {
 	private String body; // 알림 내용
 
 	@Column
-	private String receiverFeedTitle; // receiver 피드 타이틀
-
-	@Column
-	private String receiverCommentBody; // receiver 코멘트 내용
+	private String receiverBody; // receiver 피드 제목 혹은 댓글 내용
 
 	@Column(nullable = false)
 	private Boolean isRead;

@@ -20,8 +20,9 @@ public class NotificationDto {
 	public static class Response {
 		private Long notificationId;
 		private NotificationType type;
-		private String receiverFeedTitle;
-		private String receiverCommentBody;
+		// private String receiverFeedTitle;
+		// private String receiverCommentBody;
+		private String receiverBody;
 		private Boolean isRead;
 		private LocalDateTime createdAt;
 	}

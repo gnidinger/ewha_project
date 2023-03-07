@@ -17,14 +17,15 @@ public interface NotificationMapper {
 			return null;
 		}
 
-		return  NotificationDto.Response.builder()
-					.notificationId(notification.getId())
-					.type(notification.getType())
-					.receiverFeedTitle(notification.getReceiverFeedTitle())
-					.receiverCommentBody(notification.getReceiverCommentBody())
-					.isRead(true)
-					.createdAt(notification.getCreatedAt())
-					.build();
+		return NotificationDto.Response.builder()
+			.notificationId(notification.getId())
+			.type(notification.getType())
+			.receiverBody(notification.getReceiverBody())
+			// .receiverFeedTitle(notification.getReceiverFeedTitle())
+			// .receiverCommentBody(notification.getReceiverCommentBody())
+			.isRead(true)
+			.createdAt(notification.getCreatedAt())
+			.build();
 
 	}
 
@@ -39,8 +40,9 @@ public interface NotificationMapper {
 				return NotificationDto.Response.builder()
 					.notificationId(notification.getId())
 					.type(notification.getType())
-					.receiverFeedTitle(notification.getReceiverFeedTitle())
-					.receiverCommentBody(notification.getReceiverCommentBody())
+					.receiverBody(notification.getReceiverBody())
+					// .receiverFeedTitle(notification.getReceiverFeedTitle())
+					// .receiverCommentBody(notification.getReceiverCommentBody())
 					.isRead(notification.getIsRead())
 					.createdAt(notification.getCreatedAt())
 					.build();

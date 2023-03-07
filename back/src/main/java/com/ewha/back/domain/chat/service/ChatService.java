@@ -10,7 +10,7 @@ import com.ewha.back.domain.chat.dto.ChatMessageDto;
 import com.ewha.back.domain.chat.entity.ChatMessage;
 import com.ewha.back.domain.chat.entity.ChatRoom;
 import com.ewha.back.domain.chat.repository.ChatQueryRepository;
-import com.ewha.back.domain.notification.service.NotificationService;
+import com.ewha.back.domain.notification.service.NotificationServiceImpl;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 
@@ -25,7 +25,7 @@ public class ChatService {
 	private final UserService userService;
 	private final RoomService roomService;
 	private final ChatQueryRepository chatQueryRepository;
-	private final NotificationService notificationService;
+	private final NotificationServiceImpl notificationService;
 
 	@Transactional(readOnly = true)
 	public List<ChatMessage> findAllChatsInRoom(Long roomId) {

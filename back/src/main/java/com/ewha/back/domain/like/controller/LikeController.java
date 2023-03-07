@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.like.service.LikeService;
-import com.ewha.back.domain.notification.service.NotificationService;
+import com.ewha.back.domain.notification.service.NotificationServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LikeController {
 	private final LikeService likeService;
-	private final NotificationService notificationService;
+	private final NotificationServiceImpl notificationService;
 
 	@PatchMapping("/feeds/{feed_id}/like")
 	public ResponseEntity<HttpStatus> postFeedLike(@PathVariable("feed_id") Long feedId) {
@@ -29,7 +29,7 @@ public class LikeController {
 		Feed likedFeed = likeService.createFeedLike(feedId);
 
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
-		notificationService.notifyUpdateLikeFeedEvent(likedFeed);
+		// notificationService.notifyUpdateLikeFeedEvent(likedFeed);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
 
@@ -55,7 +55,7 @@ public class LikeController {
 
 		Comment likedComment = likeService.createCommentLike(commentId);
 
-		notificationService.notifyUpdateLikeCommentEvent(likedComment);
+		// notificationService.notifyUpdateLikeCommentEvent(likedComment);
 		// CommentDto.Response response = commentMapper.commentToCommentResponse(likedComment);
 		//
 		// return new ResponseEntity<>(
