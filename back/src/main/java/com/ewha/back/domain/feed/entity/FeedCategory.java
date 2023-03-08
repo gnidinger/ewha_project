@@ -1,30 +1,66 @@
 package com.ewha.back.domain.feed.entity;
 
-import com.ewha.back.domain.category.entity.Category;
-import lombok.*;
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.*;
+import com.ewha.back.domain.category.entity.Category;
+import com.ewha.back.global.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FeedCategory {
+@NoArgsConstructor
+public class FeedCategory extends BaseTimeEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feed_category_id")
-    private Long id;
+	private static final long serialVersionUID = 6494678977089006639L;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "category_id")
-    private Category category;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "feed_category_id")
+	private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "feed_id")
-    @NotFound(action = NotFoundAction.IGNORE)
-    private Feed feed;
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "category_id")
+	private Category category;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JsonBackReference
+	@JoinColumn(name = "feed_id")
+	@NotFound(action = NotFoundAction.IGNORE)
+	private Feed feed;
+
+	public void addFeed(Feed feed) {
+		this.feed = feed;
+		if (!this.feed.getFeedCategories().contains(this)) {
+			this.feed.getFeedCategories().add(this);
+		}
+	}
+
+	public void addCategory(Category category) {
+		this.category = category;
+		if (!this.category.getFeedCategories().contains(this)) {
+			this.category.addFeedCategory(this);
+		}
+	}
+
 }

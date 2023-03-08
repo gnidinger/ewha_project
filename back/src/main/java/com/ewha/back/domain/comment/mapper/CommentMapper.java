@@ -1,65 +1,70 @@
 package com.ewha.back.domain.comment.mapper;
 
-import com.ewha.back.domain.comment.dto.CommentDto;
-import com.ewha.back.domain.comment.entity.Comment;
-import com.ewha.back.domain.feed.dto.FeedDto;
-import com.ewha.back.domain.feed.entity.Feed;
-import com.ewha.back.domain.user.dto.UserDto;
-import com.ewha.back.domain.user.entity.User;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ewha.back.domain.comment.dto.CommentDto;
+import com.ewha.back.domain.comment.entity.Comment;
+import com.ewha.back.domain.user.dto.UserDto;
+import com.ewha.back.domain.user.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    Comment commentPostToComment(CommentDto.Post postComment);
-    Comment commentPatchToComment(CommentDto.Patch patchComment);
+	Comment commentPostToComment(CommentDto.Post postComment);
 
-    default CommentDto.Response commentToCommentResponse(Comment comment) {
+	Comment commentPatchToComment(CommentDto.Patch patchComment);
 
-        User user = comment.getUser();
+	default CommentDto.Response commentToCommentResponse(Comment comment) {
 
-        return CommentDto.Response.builder()
-                .commentId(comment.getId())
-                .feedId(comment.getFeed().getId())
-                .userInfo(UserDto.PostResponse.builder()
-                        .userId(user.getUserId())
-                        .nickname(user.getNickname())
-                        .role(user.getRole())
-                        .profileImage(user.getProfileImage())
-                        .build())
-                .body(comment.getBody())
-                .likeCount(comment.getLikeCount())
-                .createdAt(comment.getCreatedAt())
-                .modifiedAt(comment.getModifiedAt())
-                .build();
-    }
+		User user = comment.getUser();
 
-    default PageImpl<CommentDto.ListResponse> myCommentsToPageResponse(Page<Comment> commentList) {
+		return CommentDto.Response.builder()
+			.commentId(comment.getId())
+			.feedId(comment.getFeed().getId())
+			.userInfo(UserDto.PostResponse.builder()
+				.userId(user.getUserId())
+				.nickname(user.getNickname())
+				.ariFactor(user.getAriFactor())
+				.role(user.getRole())
+				.profileImage(user.getProfileImage())
+				.build())
+			.body(comment.getBody())
+			.likeCount(comment.getLikeCount())
+			.createdAt(comment.getCreatedAt())
+			.modifiedAt(comment.getModifiedAt())
+			.build();
+	}
 
-        if (commentList == null) return null;
+	default PageImpl<CommentDto.ListResponse> myCommentsToPageResponse(Page<Comment> commentList) {
 
-        return new PageImpl<>(commentList.stream()
-                .map(comment -> {
-                    return CommentDto.ListResponse.builder()
-                            .commentId(comment.getId())
-                            .body(comment.getBody())
-                            .likeCount(comment.getLikeCount())
-                            .createdAt(comment.getCreatedAt())
-                            .build();
-                }).collect(Collectors.toList()));
-    }
+		if (commentList == null) {
+			return null;
+		}
 
-    default PageImpl<CommentDto.Response> feedCommentsToPageResponse(Page<Comment> commentList) {
+		return new PageImpl<>(commentList.stream()
+			.map(comment -> {
+				return CommentDto.ListResponse.builder()
+					.feedId(comment.getFeed().getId())
+					.commentId(comment.getId())
+					.body(comment.getBody())
+					.likeCount(comment.getLikeCount())
+					.createdAt(comment.getCreatedAt())
+					.build();
+			}).collect(Collectors.toList()));
+	}
 
-        if (commentList == null) return null;
+	default PageImpl<CommentDto.Response> feedCommentsToPageResponse(Page<Comment> commentList) {
 
-        return new PageImpl<>(commentList.stream()
-                .map(this::commentToCommentResponse)
-                .collect(Collectors.toList()));
-    }
+		if (commentList == null) {
+			return null;
+		}
+
+		return new PageImpl<>(commentList.stream()
+			.map(this::commentToCommentResponse)
+			.collect(Collectors.toList()));
+	}
 }

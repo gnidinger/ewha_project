@@ -1,53 +1,71 @@
 package com.ewha.back.domain.question.entity;
 
-import com.ewha.back.global.BaseTimeEntity;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.*;
-import java.util.List;
+import com.ewha.back.domain.image.entity.Image;
+import com.ewha.back.global.BaseTimeEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Question extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "question_id")
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "question_id")
+	private Long id;
+	@Column(nullable = false)
+	private String title;
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
+	private String body;
+	@Column
+	private String imagePath;
+	@Column
+	private String thumbnailPath;
+	@Column
+	private String answerBody;
 
-    @Column(nullable = false)
-    private String title;
+	@Nullable
+	@JsonManagedReference
+	@OneToOne(mappedBy = "question", cascade = CascadeType.ALL)
+	private Image image;
 
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
-    private String body;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Answer> answers;
 
-    @Column
-    private String imagePath;
+	public void updateQuestion(Question question) {
+		this.title = question.getTitle();
+		this.body = question.getBody();
+		// this.imagePath = question.getImagePath();
+		// this.thumbnailPath = question.getThumbnailPath();
+		this.answerBody = question.getAnswerBody();
+	}
 
-    @Column
-    private String answerBody;
-
-    @Column
-    private String dummy1;
-
-    @Column
-    private String dummy2;
-
-    @Column
-    private String dummy3;
-
-    @Column
-    private String dummy4;
-
-    @JsonManagedReference
-    @OneToMany(mappedBy = "question", cascade = CascadeType.PERSIST)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Answer> answers;
-
+	public void addImagePaths(String fullPath, String thumbnailPath) {
+		this.imagePath = fullPath;
+		this.thumbnailPath = thumbnailPath;
+	}
 }

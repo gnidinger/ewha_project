@@ -1,5 +1,30 @@
 package com.ewha.back.domain.feed.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.lang.Nullable;
+
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.image.entity.Image;
 import com.ewha.back.domain.like.entity.Like;
@@ -7,102 +32,112 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.global.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.springframework.lang.Nullable;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Feed extends BaseTimeEntity {
+@NoArgsConstructor
+public class Feed extends BaseTimeEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feed_id")
-    private Long id;
+	private static final long serialVersionUID = 6494678977089006639L;
 
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST)
-    private List<FeedCategory> feedCategories = new ArrayList<>();
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "feed_id")
+	private Long id;
 
-    @Column
-    private String imagePath;
+	@JsonManagedReference
+	@OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<FeedCategory> feedCategories = new ArrayList<>();
 
-    @Column(nullable = false)
-    private String title;
+	@Column
+	private String imagePath;
 
-    @Column(columnDefinition = "LONGTEXT")
-    private String body;
+	@Column
+	private String thumbnailPath;
 
-    @Column
-    private Boolean isLiked;
+	@Column(nullable = false)
+	private String title;
 
-    @Column
-    private Long likeCount;
+	@Column(columnDefinition = "LONGTEXT")
+	private String body;
 
-    @Column
-    private Long viewCount;
+	@Column
+	private Long likeCount;
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+	@Column
+	private Long viewCount;
 
-    @Nullable
-    @JsonManagedReference
-    @OneToOne(mappedBy = "feed", cascade = CascadeType.REMOVE)
-    private Image image;
+	@JsonBackReference
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Comment> comments;
+	@JsonManagedReference
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "feed", cascade = CascadeType.ALL)
+	private Image image;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private List<Like> likes = new ArrayList<>();
+	@JsonManagedReference
+	@OneToMany(mappedBy = "feed", cascade = CascadeType.PERSIST)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Comment> comments;
 
-    public void addFeedCategories(List<FeedCategory> feedCategoriesList) {
-        this.feedCategories = feedCategoriesList;
-    }
+	@JsonManagedReference
+	@OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private List<Like> likes = new ArrayList<>();
 
-    public void updateFeed(Feed feed) {
-        this.title = feed.getTitle();
-        this.body = feed.getBody();
-        this.imagePath = feed.getImagePath();
-    }
+	public void addFeedCategories(List<FeedCategory> feedCategoriesList) {
+		this.feedCategories = feedCategoriesList;
+	}
 
-    public void addView() {
-        if (viewCount == null) this.viewCount = 1L;
-        else this.viewCount = viewCount + 1;
-    }
+	public void updateFeed(Feed feed) {
+		this.title = feed.getTitle();
+		this.body = feed.getBody();
+		// this.imagePath = feed.getImagePath();
+		// this.thumbnailPath = feed.getThumbnailPath();
+	}
 
-    public void addLike() {
-        if (likeCount == null) this.likeCount = 1L;
-        else this.likeCount = likeCount + 1;
-        this.isLiked = true;
-    }
+	public void addImagePaths(String fullPath, String thumbnailPath) {
+		this.imagePath = fullPath;
+		this.thumbnailPath = thumbnailPath;
+	}
 
-    public void removeLike() {
-        if (likeCount > 0) this.likeCount = likeCount - 1;
-        this.isLiked = false;
-    }
+	public void addView() {
+		if (viewCount == null) {
+			this.viewCount = 1L;
+		} else {
+			this.viewCount = viewCount + 1;
+		}
+	}
 
-    public void setIsLiked(Boolean isLiked) {
-        this.isLiked = isLiked;
-    }
+	public void addLike() {
+		if (likeCount == null) {
+			this.likeCount = 1L;
+		} else {
+			this.likeCount = likeCount + 1;
+		}
+	}
 
-    public void setComments(List<Comment> isLikedComments) {
-        this.comments = isLikedComments;
-    }
+	public void removeLike() {
+		if (likeCount > 0) {
+			this.likeCount = likeCount - 1;
+		}
+	}
+
+	public void setComments(List<Comment> isLikedComments) {
+		this.comments = isLikedComments;
+	}
 }

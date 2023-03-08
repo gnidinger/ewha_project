@@ -1,48 +1,72 @@
 package com.ewha.back.domain.question.mapper;
 
-import com.ewha.back.domain.question.dto.QuestionDto;
-import com.ewha.back.domain.question.entity.Answer;
-import com.ewha.back.domain.question.entity.Question;
+import java.util.stream.Collectors;
+
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.ewha.back.domain.question.dto.QuestionDto;
+import com.ewha.back.domain.question.entity.Answer;
+import com.ewha.back.domain.question.entity.Question;
 
 @Mapper(componentModel = "spring")
 public interface QuestionMapper {
 
-    QuestionDto.Response questionToQuestionResponse(Question question);
-    default QuestionDto.AnsweredResponse questionToAnsweredQuestionResponse(Question question) {
+	Question questionPostToQuestion(QuestionDto.Post postQuestion);
 
-        if (question == null) return null;
+	Question questionPatchToQuestion(QuestionDto.Patch patchQuestion);
 
-        return QuestionDto.AnsweredResponse.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .body(question.getBody())
-                .imagePath(question.getImagePath())
-                .answerBody(question.getAnswerBody())
-                .userAnswer(question.getAnswers().stream()
-                        .map(Answer::getBody).toString())
-                .build();
-    }
+	default QuestionDto.Response questionToQuestionResponse(Question question) {
 
-    default PageImpl<QuestionDto.AnsweredResponse> myQuestionsToPageResponse(Page<Question> questionList) {
+		if (question == null) {
+			return null;
+		}
 
-        if (questionList == null) return null;
+		return QuestionDto.Response.builder()
+			.questionId(question.getId())
+			.title(question.getTitle())
+			.body(question.getBody())
+			.imagePath(question.getImagePath())
+			.thumbnailPath(question.getThumbnailPath())
+			.answerBody(question.getAnswerBody())
+			.build();
+	}
 
-        return new PageImpl<>(questionList.stream()
-                .map(question -> {
-                    return QuestionDto.AnsweredResponse.builder()
-                            .questionId(question.getId())
-                            .title(question.getTitle())
-                            .body(question.getBody())
-                            .answerBody(question.getAnswerBody())
-                            .userAnswer(question.getAnswers().stream()
-                                    .map(Answer::getBody).toString())
-                            .build();
-                }).collect(Collectors.toList()));
-    }
+	default QuestionDto.AnsweredResponse questionToAnsweredQuestionResponse(Question question) {
+
+		if (question == null) {
+			return null;
+		}
+
+		return QuestionDto.AnsweredResponse.builder()
+			.questionId(question.getId())
+			.title(question.getTitle())
+			.body(question.getBody())
+			.imagePath(question.getImagePath())
+			.thumbnailPath(question.getThumbnailPath())
+			.answerBody(question.getAnswerBody())
+			.userAnswer(question.getAnswers().stream()
+				.map(Answer::getBody).toString())
+			.build();
+	}
+
+	default PageImpl<QuestionDto.AnsweredResponse> myQuestionsToPageResponse(Page<Question> questionList) {
+
+		if (questionList == null) {
+			return null;
+		}
+
+		return new PageImpl<>(questionList.stream()
+			.map(question -> {
+				return QuestionDto.AnsweredResponse.builder()
+					.questionId(question.getId())
+					.title(question.getTitle())
+					.body(question.getBody())
+					.answerBody(question.getAnswerBody())
+					.userAnswer(question.getAnswers().stream()
+						.map(Answer::getBody).toString())
+					.build();
+			}).collect(Collectors.toList()));
+	}
 }

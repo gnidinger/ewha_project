@@ -3,13 +3,13 @@ package com.ewha.back.global.security.oAuth.userInfo;
 import java.util.Map;
 
 public interface OAuth2UserInfo {
-    Map<String, Object> getAttributes();
+	Map<String, Object> getAttributes();
 
-    String getProviderId();
+	String getProviderId();
 
-    String getProvider();
+	String getProvider();
 
-    String getEmail();
+	String getEmail();
 
-    String getName();
+	String getName();
 }

@@ -1,8 +1,15 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.8-SNAPSHOT'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'org.asciidoctor.jvm.convert' version "3.3.2" // Spring Rest Docs
+    id 'java'
+    id 'org.springframework.boot' version '2.7.8'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+//    id "org.asciidoctor.jvm.convert" version "3.3.2" // Asciidoctor
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" //Query DSL
 }
 
 group = 'com.example'
@@ -10,108 +17,134 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+//    asciidoctorExtensions
 }
 
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
+    mavenCentral()
 }
 
-ext {
-	set('snippetsDir', file("build/generated-snippets")) // Spring Rest Docs
-}
-
-configurations {
-	asciidoctorExtensions // Spring Rest Docs
-}
+//ext {
+//    set('snippetsDir', file("build/generated-snippets"))
+//}
+//
+//configurations {
+//    asciidoctorExtensions // Spring Rest Docs
+//}
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	//    --------------------------------------------------------------------------------------------
-	implementation 'org.springframework.boot:spring-boot-starter-websocket' // WebSocket
-	implementation 'org.webjars:sockjs-client:1.5.1' // SockJS
-	implementation 'org.webjars:stomp-websocket:2.3.4' // STOMP
-	implementation 'org.springframework.boot:spring-boot-devtools:' // DevTools
-	implementation 'org.springframework.boot:spring-boot-starter-mail' // Email 전송
-	implementation 'org.springframework.boot:spring-boot-starter-aop' // 스프링 AOP
-	//    --------------------------------------------------------------------------------------------
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5' // JWT
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	implementation 'com.google.code.gson:gson'
-	//    --------------------------------------------------------------------------------------------
-	implementation 'com.querydsl:querydsl-jpa' // Query DSL
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-	//    --------------------------------------------------------------------------------------------
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // 사진 저장을 위해 추가
-//	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2' // AWS S3 이미지 업로드를 위해 추가
-	implementation 'com.github.downgoon:marvin:1.5.5' // 이미지 리사이징을 위한 라이브러리
-	implementation 'com.github.downgoon:MarvinPlugins:1.5.5'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas' // 하이퍼링크를 위해 추가
-	implementation 'commons-io:commons-io:2.11.0' // 사진 업로드
-	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4' // 사진 업로드
-	implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2'
-	//    --------------------------------------------------------------------------------------------
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'org.projectlombok:lombok:1.18.24'
-	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final' // Mapstruct
-	implementation "com.h2database:h2" // h2
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
-	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2' // 내장 Redis
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+    implementation 'org.springframework.boot:spring-boot-starter-aop' // 스프링 AOP
+    //    --------------------------------------------------------------------------------------------
+    implementation 'org.springframework.boot:spring-boot-starter-websocket' // WebSocket
+    implementation 'org.webjars:sockjs-client:1.5.1' // SockJS
+    implementation 'org.webjars:stomp-websocket:2.3.4' // STOMP
+    implementation 'org.springframework.boot:spring-boot-devtools:' // DevTools
+    implementation 'org.springframework.boot:spring-boot-starter-mail' // Email 전송
+    implementation group: 'net.nurigo', name: 'javaSDK', version: '2.2' // 문자 인증
+    implementation 'com.google.code.gson:gson'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    //    --------------------------------------------JWT---------------------------------------------
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    //    -----------------------------------------Query DSL------------------------------------------
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-core:${queryDslVersion}"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    //    --------------------------------------------------------------------------------------------
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // 사진 저장
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2' // AWS S3 이미지 업로드
+    implementation 'com.github.downgoon:marvin:1.5.5' // 이미지 리사이징
+    implementation 'com.github.downgoon:MarvinPlugins:1.5.5' // 이미지 리사이징
+    implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2' // 썸네일 생성
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.11' // 썸네일 생성
+    implementation 'commons-io:commons-io:2.11.0' // 사진 업로드
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4' // 사진 업로드
+    //    --------------------------------------------------------------------------------------------
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final' // Mapstruct
+    implementation "com.h2database:h2" // h2
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
+    implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2' // 내장 Redis
 //    runtimeOnly 'mysql:mysql-connector-java'
-	//    --------------------------------------------------------------------------------------------
-	implementation 'org.springframework.boot:spring-boot-starter-test' // JUnit4 Test
-	testImplementation 'org.springframework.security:spring-security-test' // Spring Security Test
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // Spring Rest Docs
-	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor' // Spring Rest Docs
+    //    ---------------------------------------QUERY DSL--------------------------------------------
+    implementation 'org.springframework.boot:spring-boot-starter-test' // JUnit4 Test
+    testImplementation 'org.springframework.security:spring-security-test' // Spring Security Test
+//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // Spring Rest Docs
+//    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor' // Spring Rest Docs
 }
 
 tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
+//    outputs.dir snippetsDir
+    useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') { // Spring Rest Docs
-	configurations "asciidoctorExtensions"
-	inputs.dir snippetsDir
-	dependsOn test
-}
+//tasks.named('asciidoctor') {
+//    configurations "asciidoctorExtensions"
+//    inputs.dir snippetsDir
+//    dependsOn test
+//}
 
-task copyDocument(type: Copy) { // Spring Rest Docs
-	dependsOn asciidoctor
-	from file("${asciidoctor.outputDir}")
-	into file("src/main/resources/static/docs")
-}
+//task copyDocument(type: Copy) {
+//    dependsOn asciidoctor
+//    from file("${asciidoctor.outputDir}")
+//    into file("src/main/resources/static/docs")
+//}
+//
+//build {
+//    dependsOn copyDocument
+//}
+//
+//bootJar {
+//    dependsOn copyDocument
+//    from("${asciidoctor.outputDir}") {
+//        into 'static/docs'
+//    }
+//}
 
-build { // Spring Rest Docs
-	dependsOn copyDocument
-}
-
-bootJar { // Spring Rest Docs
-	dependsOn copyDocument
-	from("${asciidoctor.outputDir}") {
-		into 'static/docs'
-	}
-}
-
-test {
+test { // 빌드시 테스트 제외
 	exclude '**/*'
 }
 
-asciidoctor { // 빌드시 asciidoctor 제외
-	sources {
-		exclude 'extensions/**'
-	}
+//    ---------------------------------------Query DSL--------------------------------------------
+// 경로 지정
+def querydslDir = "$buildDir/generated/'querydsl'"
+
+// JPA 사용여부 및 사용 경로 설정
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+// Build시 사용할 sourceSet 추가 설정
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+// Query DSL 컴파일 시 사용할 옵션 설정
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+// Query DSL이 compileClassPath를 상속하도록 설정
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }

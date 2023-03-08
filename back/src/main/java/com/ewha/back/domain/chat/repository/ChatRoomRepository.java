@@ -1,9 +1,10 @@
 package com.ewha.back.domain.chat.repository;
 
-import com.ewha.back.domain.chat.entity.ChatRoom;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import com.ewha.back.domain.chat.entity.ChatRoom;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
