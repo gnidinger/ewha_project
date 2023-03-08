@@ -6,6 +6,7 @@ import { Post, Subjects } from '../components/ariBoard';
 import Fab from '@mui/material/Fab';
 import Pagination from '@mui/material/Pagination';
 import { getLatest, getPostsBySubject } from '../api/post';
+import { getCookie } from '../api/cookie';
 
 export interface PostType {
   feedId: number,
@@ -73,6 +74,7 @@ const AriBoard = () => {
         onChange={handlePage}
         page={currentPage}
       />
+      {getCookie('ari_login') &&
       <Fab
         size='medium'
         variant='extended'
@@ -81,7 +83,7 @@ const AriBoard = () => {
         onClick={() => navigation('/write')}
       >
         글쓰기
-      </Fab>
+      </Fab>}
     </StPageWrapper>
   );
 };
