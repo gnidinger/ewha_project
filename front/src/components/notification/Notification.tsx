@@ -3,8 +3,7 @@ import { MAIN_COLOR } from '../../style/palette';
 
 interface Props {
   type: string,
-  feed: string,
-  comment: string
+  body: string
 }
 
 const MainBoxStyle = {
@@ -15,19 +14,16 @@ const MainBoxStyle = {
   margin: '0.4rem auto'
 }
 
-const Notification = ({ type, feed, comment }: Props) => {
-  const shortComment = comment ? comment.length > 10 ? comment.substring(0, 9) + '...' : comment : null;
+const Notification = ({ type, body }: Props) => {
+  const shortBody = body ? body.length > 10 ? body.substring(0, 9) + '...' : body : null;
 
   return(
     <Box sx={MainBoxStyle}>
       {type === 'COMMENT' &&
-        `회원님의 게시글 ${feed}에 새 댓글이 달렸습니다.`
+        `회원님의 게시글 '${shortBody}'에 새 댓글이 달렸습니다.`
       }
-      {type === 'LIKE' && feed &&
-        `회원님의 게시글 ${feed}에 공감합니다.`
-      }
-      {type === 'LIKE' && comment &&
-        `회원님의 댓글 ${shortComment}에 공감합니다.`
+      {type === 'LIKE' &&
+        `회원님의 '${shortBody}'에 공감합니다.`
       }
     </Box>
   );
