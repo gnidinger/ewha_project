@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +17,6 @@ import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.mapper.FeedMapper;
 import com.ewha.back.domain.search.service.SearchService;
 import com.ewha.back.global.dto.MultiResponseDto;
-import com.ewha.back.global.dto.SingleResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +30,7 @@ public class SearchController {
 	private final FeedMapper feedMapper;
 
 	@GetMapping
-	public ResponseEntity getSearchResult(
+	public ResponseEntity<MultiResponseDto<ListResponse>> getSearchResult(
 		@Nullable @RequestParam("category") String category,
 		@RequestParam("query") String queryParam,
 		@RequestParam(name = "page", defaultValue = "1") Integer page) {

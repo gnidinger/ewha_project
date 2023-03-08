@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
+import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SseController {
 
-	private final NotificationServiceImpl notificationService;
+	private final NotificationService notificationService;
 	public static Map<Long, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
 	private final UserService userService;
 

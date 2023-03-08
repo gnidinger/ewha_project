@@ -15,7 +15,7 @@ import com.ewha.back.domain.comment.repository.CommentRepository;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.service.FeedService;
 import com.ewha.back.domain.notification.entity.NotificationType;
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
+import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
 	private final FeedService feedService;
 	private final CommentRepository commentRepository;
 	private final CommentQueryRepository commentQueryRepository;
-	private final NotificationServiceImpl notificationService;
+	private final NotificationService notificationService;
 
 	@Override
 	public Comment createComment(Comment comment, Long feedId) {

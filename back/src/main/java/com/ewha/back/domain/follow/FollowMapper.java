@@ -4,42 +4,50 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import com.ewha.back.domain.user.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface FollowMapper {
 
-	default SliceImpl<FollowDto.Response> followersToFollowResponses(List<User> followersList) {
+	default PageImpl<FollowDto.FollowerResponse> followersToFollowerResponses(
+		Page<User> findFollowers, List<User> findFollowingsList) {
 
-		if (followersList == null) {
-			return null;
-		}
+		return new PageImpl<>(findFollowers.stream()
+			.map(user -> {
 
-		return new SliceImpl<>(
-			followersList.stream()
-				.map(user -> FollowDto.Response.builder()
-					.nickname(user.getNickname())
-					.email(user.getEmail())
-					.build())
-				.collect(Collectors.toList())
-		);
+				FollowDto.FollowerResponse.FollowerResponseBuilder followerResponseBuilder = FollowDto.FollowerResponse.builder();
+
+				followerResponseBuilder.userId(user.getId());
+				followerResponseBuilder.nickname(user.getNickname());
+				followerResponseBuilder.imageUrl(user.getImageUrl());
+
+				if (findFollowingsList.contains(user)) {
+					followerResponseBuilder.isFollowing(true);
+				} else {
+					followerResponseBuilder.isFollowing(false);
+				}
+
+				return followerResponseBuilder.build();
+
+			}).collect(Collectors.toList()));
 	}
 
-	default SliceImpl<FollowDto.Response> followingsToFollowResponses(List<User> followingsList) {
+	default PageImpl<FollowDto.FollowingResponse> followingsToFollowingResponses(Page<User> findFollowers) {
 
-		if (followingsList == null) {
-			return null;
-		}
+		return new PageImpl<>(findFollowers.stream()
+			.map(user -> {
 
-		return new SliceImpl<>(
-			followingsList.stream()
-				.map(user -> FollowDto.Response.builder()
-					.nickname(user.getNickname())
-					.email(user.getEmail())
-					.build())
-				.collect(Collectors.toList())
-		);
+				FollowDto.FollowingResponse.FollowingResponseBuilder followingResponseBuilder = FollowDto.FollowingResponse.builder();
+
+				followingResponseBuilder.userId(user.getId());
+				followingResponseBuilder.nickname(user.getNickname());
+				followingResponseBuilder.imageUrl(user.getImageUrl());
+
+				return followingResponseBuilder.build();
+
+			}).collect(Collectors.toList()));
 	}
 }

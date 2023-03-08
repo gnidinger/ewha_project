@@ -9,8 +9,6 @@ import org.mapstruct.Mapper;
 import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
-import com.ewha.back.domain.user.entity.enums.AgeType;
-import com.ewha.back.domain.user.entity.enums.GenderType;
 import com.ewha.back.global.security.dto.LoginDto;
 
 @Mapper(componentModel = "spring")

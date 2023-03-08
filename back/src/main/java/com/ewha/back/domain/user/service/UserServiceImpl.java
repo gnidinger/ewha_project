@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ewha.back.domain.category.entity.Category;
-import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.category.service.CategoryService;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.repository.CommentQueryRepository;

@@ -12,7 +12,7 @@ import com.ewha.back.domain.like.entity.LikeType;
 import com.ewha.back.domain.like.repository.LikeQueryRepository;
 import com.ewha.back.domain.like.repository.LikeRepository;
 import com.ewha.back.domain.notification.entity.NotificationType;
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
+import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
@@ -29,7 +29,7 @@ public class LikeServiceImpl implements LikeService {
 	private final CommentService commentService;
 	private final LikeRepository likeRepository;
 	private final LikeQueryRepository likeQueryRepository;
-	private final NotificationServiceImpl notificationService;
+	private final NotificationService notificationService;
 
 	@Override
 	public Feed createFeedLike(Long feedId) {

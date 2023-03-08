@@ -54,7 +54,6 @@ public class FeedController {
 	private final LikeService likeService;
 	private final CommentService commentService;
 	private final AwsS3Service awsS3Service;
-	private final ImageQueryRepository imageQueryRepository;
 
 	@PostMapping("/add")
 	public ResponseEntity<HttpStatus> postFeed(

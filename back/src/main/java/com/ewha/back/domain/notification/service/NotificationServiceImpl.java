@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.ewha.back.domain.notification.controller.SseController;
-import com.ewha.back.domain.notification.dto.NotificationDto;
 import com.ewha.back.domain.notification.entity.Notification;
 import com.ewha.back.domain.notification.entity.NotificationType;
 import com.ewha.back.domain.notification.repository.EmitterRepository;
@@ -24,13 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NotificationServiceImpl {
+public class NotificationServiceImpl implements NotificationService {
 	private final EmitterRepository emitterRepository;
 	private final NotificationRepository notificationRepository;
 	private final NotificationQueryRepository notificationQueryRepository;
 	private final UserService userService;
 	private static final Long DEFAULT_TIMEOUT = Long.MAX_VALUE;
 
+	@Override
 	public SseEmitter connect(String lastEventId) {
 
 		User findUser = userService.getLoginUser();
@@ -69,6 +69,7 @@ public class NotificationServiceImpl {
 		}
 	}
 
+	@Override
 	@Transactional
 	public void send(User user, String url, String body, String content, NotificationType notificationType) {
 
@@ -100,6 +101,7 @@ public class NotificationServiceImpl {
 		return notificationRepository.save(notification);
 	}
 
+	@Override
 	@Transactional
 	public void notifyMessagingEvent(User user) { // 메세지 알림
 
@@ -127,6 +129,7 @@ public class NotificationServiceImpl {
 		notificationRepository.save(notification);
 	}
 
+	@Override
 	@Transactional
 	public Notification getMyNotification(Long notificationId) {
 
@@ -136,6 +139,7 @@ public class NotificationServiceImpl {
 		return notificationQueryRepository.getMyNotification(userId, notificationId);
 	}
 
+	@Override
 	@Transactional
 	public List<Notification> getMyNotifications() {
 
@@ -149,6 +153,7 @@ public class NotificationServiceImpl {
 		return response;
 	}
 
+	@Override
 	@Transactional
 	public Boolean findIfNotReadNotifications() {
 
@@ -158,6 +163,7 @@ public class NotificationServiceImpl {
 		return notificationQueryRepository.findIfNotReadNotifications(userId);
 	}
 
+	@Override
 	@Transactional
 	public void deleteNotification(Long notificationId) {
 
@@ -167,6 +173,7 @@ public class NotificationServiceImpl {
 
 	}
 
+	@Override
 	@Transactional
 	public void deleteAllMyNotifications() {
 

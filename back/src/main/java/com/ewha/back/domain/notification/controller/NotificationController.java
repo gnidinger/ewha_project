@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ewha.back.domain.notification.dto.NotificationDto;
 import com.ewha.back.domain.notification.entity.Notification;
 import com.ewha.back.domain.notification.mapper.NotificationMapper;
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
+import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.global.dto.ListResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
-	private final NotificationServiceImpl notificationService;
+	private final NotificationService notificationService;
 	private final NotificationMapper notificationMapper;
 
 	@GetMapping

@@ -1,30 +1,33 @@
 package com.ewha.back.domain.follow;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class FollowDto {
 
-	@Data
+	@Getter
 	@Builder
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class Response {
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@AllArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class FollowerResponse {
 
-		//        private long userId;
+		private Long userId;
 		private String nickname;
-		private String email;
-		//        private BigInteger followState; // boolean 값을 받기 위해 BigInteger 사용!
-		//        private BigInteger equalState;
+		private String imageUrl;
+		private Boolean isFollowing;
 	}
 
-	@Data
-	@AllArgsConstructor
-	@NoArgsConstructor
-	public static class CMResponse<T> {
-		private int statusCode;
-		private T data;
+	@Getter
+	@Builder
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@AllArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class FollowingResponse {
+
+		private Long userId;
+		private String nickname;
+		private String imageUrl;
 	}
 }

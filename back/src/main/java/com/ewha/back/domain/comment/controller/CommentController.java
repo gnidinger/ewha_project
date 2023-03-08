@@ -22,7 +22,6 @@ import com.ewha.back.domain.comment.dto.CommentDto;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.comment.mapper.CommentMapper;
 import com.ewha.back.domain.comment.service.CommentService;
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
 import com.ewha.back.global.dto.MultiResponseDto;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 public class CommentController {
 	private final CommentMapper commentMapper;
 	private final CommentService commentService;
-	private final NotificationServiceImpl notificationService;
 
 	@PostMapping("/feeds/{feed_id}/comments/add")
 	public ResponseEntity<CommentDto.Response> postComment(@PathVariable("feed_id") Long feedId,
@@ -43,11 +41,7 @@ public class CommentController {
 		Comment comment = commentMapper.commentPostToComment(postComment);
 		Comment createdComment = commentService.createComment(comment, feedId);
 		CommentDto.Response response = commentMapper.commentToCommentResponse(createdComment);
-		// notificationService.notifyPostPairingCommentEvent(createdComment);
-		//
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.CREATED
-		// );
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
@@ -57,11 +51,7 @@ public class CommentController {
 
 		Comment comment = commentMapper.commentPatchToComment(patchComment);
 		Comment updatedComment = commentService.updateComment(comment, commentId);
-		// CommentDto.Response response = commentMapper.commentToCommentResponse(updatedComment);
-		//
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.OK
-		// );
+
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 

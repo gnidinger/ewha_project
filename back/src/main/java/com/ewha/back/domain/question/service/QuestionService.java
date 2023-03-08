@@ -7,10 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ewha.back.domain.question.entity.Question;
 import com.ewha.back.domain.question.repository.AnswerQueryRepository;
-import com.ewha.back.domain.question.repository.AnswerRepository;
 import com.ewha.back.domain.question.repository.QuestionRepository;
 import com.ewha.back.domain.user.entity.User;
-import com.ewha.back.domain.user.entity.enums.Role;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.exception.BusinessLogicException;
 import com.ewha.back.global.exception.ExceptionCode;
@@ -23,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class QuestionService {
 	private final UserService userService;
 	private final QuestionRepository questionRepository;
-	private final AnswerRepository answerRepository;
 	private final AnswerQueryRepository answerQueryRepository;
 
 	@Transactional

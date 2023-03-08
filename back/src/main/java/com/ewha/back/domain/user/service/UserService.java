@@ -3,7 +3,6 @@ package com.ewha.back.domain.user.service;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
@@ -40,6 +39,7 @@ public interface UserService {
 	User onFirstLogin(LoginDto.PatchDto patchDto);
 
 	Boolean verifyNicknameAndPhoneNumber(String nickname, String phoneNumber);
+
 	Boolean verifyUserIdAndPhoneNumber(String userId, String phoneNumber);
 
 	User findByNickname(String nickname);

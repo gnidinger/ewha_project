@@ -105,10 +105,6 @@ public class AwsS3Service {
 			throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
 		}
 
-		// if (!Arrays.asList(extensions).contains(extension)) {
-		// 	throw new IllegalArgumentException("지원하지 않는 포맷입니다.");
-		// }
-
 		String storedImageName = uuid + '.' + extension; // 파일 이름 + 확장자
 
 		MultipartFile resizedFile = imageService.resizeImage(multipartFile, extension, storedImageName, requestURI);

@@ -69,25 +69,25 @@ public class QuestionController {
 
 		List<String> imagePath = null;
 
+		Question findQuestion = questionService.findVerifiedQuestion(questionId);
 		Question question = questionMapper.questionPatchToQuestion(patchQuestion);
 		Question updatedQuestion = questionService.updateQuestion(question, questionId);
 
-		if (patchQuestion.getImagePath() != null) {
+		// MultipartFile이 없으면서, 기존 피드에 이미지가 있고, 요청 JSON에도 이미지가 있고, 두 경로가 같은 경우
+		if (multipartFile == null && findQuestion.getImagePath() != null && patchQuestion.getImagePath() != null
+			&& patchQuestion.getImagePath().equals(updatedQuestion.getImagePath())) {
 			updatedQuestion.addImagePaths(updatedQuestion.getImagePath(), updatedQuestion.getThumbnailPath());
-		} else {
-			imagePath = awsS3Service.updateORDeleteQuestionImageFromS3(questionId, multipartFile);
+			// 기존 피드에 이미지가 있고 요청 JSON에 이미지가 없고 MultipartFile이 있는 경우
+		} else if (findQuestion.getImagePath() != null && patchQuestion.getImagePath() == null && multipartFile != null) {
+			imagePath = awsS3Service.updateORDeleteFeedImageFromS3(updatedQuestion.getId(), multipartFile);
 			updatedQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
-		}
-
-		if (updatedQuestion.getImagePath() != null && patchQuestion.getImagePath() != null
-			&& multipartFile == null && patchQuestion.getImagePath().equals(updatedQuestion.getImagePath())) {
-			updatedQuestion.addImagePaths(updatedQuestion.getImagePath(), updatedQuestion.getThumbnailPath());
-		} else if (patchQuestion.getImagePath() == null && multipartFile != null) {
+			// 기존 피드에 이미지가 없고 요청 JSON에 이미지가 없고 MultipartFile이 있는 경우
+		} else if (findQuestion.getImagePath() == null && patchQuestion.getImagePath() == null && multipartFile != null) {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, updatedQuestion.getId());
 			updatedQuestion.addImagePaths(imagePath.get(0), imagePath.get(1));
-		} else if (updatedQuestion.getImagePath() != null && multipartFile == null
-			&& patchQuestion.getImagePath() == null) {
-			awsS3Service.updateORDeleteQuestionImageFromS3(updatedQuestion.getId(), multipartFile);
+			// 기존 피드에 이미지가 있으면서 요청 JSON에 이미지가 없고, multipartFile도 없는 경우
+		} else if (findQuestion.getImagePath() != null && patchQuestion.getImagePath() == null && multipartFile == null) {
+			awsS3Service.updateORDeleteFeedImageFromS3(updatedQuestion.getId(), multipartFile);
 			updatedQuestion.addImagePaths(null, null);
 		}
 
@@ -99,7 +99,7 @@ public class QuestionController {
 	}
 
 	@GetMapping("/{question_id}")
-	public ResponseEntity getQuestion(@PathVariable("question_id") Long questionId) {
+	public ResponseEntity<?> getQuestion(@PathVariable("question_id") Long questionId) {
 
 		User findUser = userService.getLoginUser();
 		Long userId = findUser.getId();
@@ -109,20 +109,18 @@ public class QuestionController {
 			Question question = questionService.getQuestion(questionId);
 			QuestionDto.Response response = questionMapper.questionToQuestionResponse(question);
 
-			return new ResponseEntity<>(
-				new SingleResponseDto<>(response), HttpStatus.OK);
+			return ResponseEntity.ok().body(response);
 		} else {
 
 			Question question = questionService.getAnsweredQuestion(questionId, userId);
 			QuestionDto.AnsweredResponse response = questionMapper.questionToAnsweredQuestionResponse(question);
 
-			return new ResponseEntity<>(
-				new SingleResponseDto<>(response), HttpStatus.OK);
+			return ResponseEntity.ok().body(response);
 		}
 	}
 
 	@DeleteMapping("/{question_id}/delete")
-	public ResponseEntity deleteQuestion(@PathVariable("question_id") Long questionId) {
+	public ResponseEntity<String> deleteQuestion(@PathVariable("question_id") Long questionId) {
 
 		questionService.deleteQuestion(questionId);
 

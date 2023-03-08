@@ -3,15 +3,15 @@ package com.ewha.back.domain.follow;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ewha.back.domain.notification.entity.NotificationType;
+import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,60 +20,68 @@ import lombok.RequiredArgsConstructor;
 public class FollowService {
 
 	private final FollowRepository followRepository;
-	private final EntityManager em;
+	private final FollowQueryRepository followQueryRepository;
 	private final UserService userService;
+	private final NotificationService notificationService;
 
-	public String createFollow(long followingUserId, long followedUserId) {
+	public String createOrDeleteFollow(Long followedUserId) {
 
-		long result = followRepository.makeFollow(followingUserId, followedUserId);
+		User followingUser = userService.getLoginUser();
+		Long followingUserId = followingUser.getId();
 
-		if (result == 1) {
-			return "팔로우 성공";
+		User followedUser = userService.findVerifiedUser(followedUserId);
+
+		if (followQueryRepository.findFollowByUserIds(followingUserId, followedUserId) == null) {
+
+			Follow createdFollow = Follow.builder()
+				.followingUser(followingUser)
+				.followedUser(followedUser)
+				.build();
+
+			followRepository.save(createdFollow);
+
+			followingUser.addFollowing();
+			followedUser.addFollower();
+
+			String body = followingUser.getNickname() + "님이 회원님을 팔로우 했습니다.";
+			notificationService.send(followedUser, null, body, null, NotificationType.FOLLOW);
+
+			return "Create Follow";
+
+		} else {
+
+			Follow findFollow = followQueryRepository.findFollowByUserIds(followingUserId, followedUserId);
+
+			followRepository.delete(findFollow);
+
+			followingUser.removeFollowing();
+			followedUser.removeFollower();
+
+			return "Delete Follow";
 		}
-		return "이미 팔로우 한 사용자 입니다.";
 	}
 
-	public String deleteFollow(long followingUserId, long followedUserId) {
+	public Page<User> findFollowers(Long userId, Integer page) {
 
-		Integer result = followRepository.makeUnFollow(followingUserId, followedUserId);
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 
-		if (result == 1) {
-			return "언팔로우 성공";
-		}
-		return "이미 언팔로우한 사용자 입니다.";
+		return followQueryRepository.findFollowersByUserId(userId, pageRequest);
 	}
 
-	public List<User> findFollowers(long userId) {
-
-		// PageRequest pageRequest = PageRequest.of(page - 1, 10);
-
-		List<Long> followerIdList = followRepository.findFollowersByUserId(userId);
-
-		return followerIdList.stream()
-			.map(userService::findVerifiedUser)
+	public List<User> findFollowingsList(Long followedUserId, Page<User> userPage) {
+		return userPage.stream()
+			.filter(user -> followQueryRepository.findFollowByUserIds(user.getId(), followedUserId) != null)
 			.collect(Collectors.toList());
 	}
 
-	public List<User> findFollowings(long userId) {
+	public Page<User> findFollowings(Long userId, Integer page) {
 
-		List<Long> followingIdList = followRepository.findFollowingsByUserId(userId);
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 
-		return followingIdList.stream()
-			.map(userService::findVerifiedUser)
-			.collect(Collectors.toList());
+		return followQueryRepository.findFollowingsByUserId(userId, pageRequest);
 	}
 
-	public long countFollowers(long userId) {
-
-		List<Long> followerIdList = followRepository.findFollowersByUserId(userId);
-
-		return followerIdList.stream().count();
-	}
-
-	public long countFollowings(long userId) {
-
-		List<Long> followingIdList = followRepository.findFollowingsByUserId(userId);
-
-		return followingIdList.stream().count();
+	public Boolean isFollowing(Long followingUserId, Long followedUserId) {
+		return followQueryRepository.findFollowByUserIds(followingUserId, followedUserId) != null;
 	}
 }

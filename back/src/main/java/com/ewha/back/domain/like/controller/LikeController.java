@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.like.service.LikeService;
-import com.ewha.back.domain.notification.service.NotificationServiceImpl;
+import com.ewha.back.domain.notification.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,32 +21,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LikeController {
 	private final LikeService likeService;
-	private final NotificationServiceImpl notificationService;
+	private final NotificationService notificationService;
 
 	@PatchMapping("/feeds/{feed_id}/like")
 	public ResponseEntity<HttpStatus> postFeedLike(@PathVariable("feed_id") Long feedId) {
 
 		Feed likedFeed = likeService.createFeedLike(feedId);
 
-		// FeedDto.Response response = feedMapper.feedToFeedResponse(likedFeed);
-		// notificationService.notifyUpdateLikeFeedEvent(likedFeed);
-
 		return ResponseEntity.status(HttpStatus.OK).build();
-
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.OK
-		// );
 	}
 
 	@PatchMapping("/feeds/{feed_id}/dislike")
 	public ResponseEntity<HttpStatus> deleteFeedLike(@PathVariable("feed_id") Long feedId) {
 
 		Feed dislikedFeed = likeService.deleteFeedLike(feedId);
-		// FeedDto.Response response = feedMapper.feedToFeedResponse(dislikedFeed);
-		//
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.OK
-		// );
+
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
@@ -55,12 +44,6 @@ public class LikeController {
 
 		Comment likedComment = likeService.createCommentLike(commentId);
 
-		// notificationService.notifyUpdateLikeCommentEvent(likedComment);
-		// CommentDto.Response response = commentMapper.commentToCommentResponse(likedComment);
-		//
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.OK
-		// );
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
@@ -68,11 +51,7 @@ public class LikeController {
 	public ResponseEntity<HttpStatus> deleteCommentLike(@PathVariable("comment_id") Long commentId) {
 
 		Comment dislikedComment = likeService.deleteCommentLike(commentId);
-		// CommentDto.Response response = commentMapper.commentToCommentResponse(dislikedComment);
-		//
-		// return new ResponseEntity<>(
-		// 	new SingleResponseDto<>(response), HttpStatus.OK
-		// );
+
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }

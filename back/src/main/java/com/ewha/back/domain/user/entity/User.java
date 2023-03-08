@@ -1,5 +1,28 @@
 package com.ewha.back.domain.user.entity;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.lang.Nullable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.image.entity.Image;
@@ -12,23 +35,17 @@ import com.ewha.back.domain.user.entity.enums.GenderType;
 import com.ewha.back.global.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.*;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.lang.Nullable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.persistence.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @Builder
+@DynamicInsert
 @AllArgsConstructor
 @Table(name = "users")
 @NoArgsConstructor
@@ -68,6 +85,12 @@ public class User extends BaseTimeEntity {
 	private Long centerCode;
 	@Column
 	private LocalDate birthday;
+
+	@ColumnDefault("0")
+	private Long followerCount;
+
+	@ColumnDefault("0")
+	private Long followingCount;
 
 	@ElementCollection
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -119,6 +142,26 @@ public class User extends BaseTimeEntity {
 		this.role = role;
 		this.provider = provider;
 		this.providerId = providerId;
+	}
+
+	public void addFollower() {
+		this.followerCount++;
+	}
+
+	public void removeFollower() {
+		if (this.followerCount > 0) {
+			this.followerCount--;
+		}
+	}
+
+	public void addFollowing() {
+		this.followingCount++;
+	}
+
+	public void removeFollowing() {
+		if (this.followingCount > 0) {
+			this.followingCount--;
+		}
 	}
 
 	public User oauthUpdate(String nickname, String email) {

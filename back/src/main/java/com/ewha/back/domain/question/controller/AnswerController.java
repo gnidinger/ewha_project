@@ -29,7 +29,7 @@ public class AnswerController {
 	private final AnswerService answerService;
 
 	@PostMapping("/question/{question_id}/answer")
-	public ResponseEntity postAnswer(@PathVariable("question_id") Long questionId,
+	public ResponseEntity<AnswerDto.Response> postAnswer(@PathVariable("question_id") Long questionId,
 		AnswerDto.Post postAnswer) {
 
 		Answer answer = answerMapper.answerPostToAnswer(postAnswer);
