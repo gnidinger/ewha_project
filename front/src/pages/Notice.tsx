@@ -7,22 +7,23 @@ import { Header } from '../components/common';
 interface NotificationData {
   notificationId: number,
   type: string,
-  receiverFeedTitle: string,
-  receiverCommentBody: string
+  receiverBody: string,
 }
 
 const Notice = () => {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
 
   useEffect(() => {
-    getNotice().then(data => setNotifications(data));
+    getNotice().then(data => {
+      console.log(data);
+      setNotifications(data);});
   }, []);
 
   return(
     <Box sx={{ width: '100%' }}>
       <Header />
       {notifications.map((noti) => (
-        <Notification key={noti.notificationId} type={noti.type} feed={noti.receiverFeedTitle} comment={noti.receiverCommentBody} />
+        <Notification key={noti.notificationId} type={noti.type} body={noti.receiverBody} />
       ))}
     </Box>
   );
