@@ -21,7 +21,7 @@ const Notice = () => {
 
   return(
     <Box sx={{ width: '100%' }}>
-      <Header />
+      <Header>알림</Header>
       {notifications.map((noti) => (
         <Notification key={noti.notificationId} type={noti.type} body={noti.receiverBody} />
       ))}

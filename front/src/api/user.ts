@@ -1,4 +1,4 @@
-import axiosApi from "./axiosApi";
+import axiosApi from './axiosApi';
 import { SignupData } from "../components/signup/SignupForm";
 import axios from "axios";
 import { setCookie } from "./cookie";

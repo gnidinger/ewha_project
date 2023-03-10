@@ -54,6 +54,10 @@ const Header = ({ children }: Props) => {
     navigation('/notice');
   };
 
+  const clickMessage = () => {
+    navigation('/message');
+  };
+
   useEffect(() => {
     if(getCookie('ari_login')) {
       setIsLoggedIn(true);
@@ -121,7 +125,7 @@ const Header = ({ children }: Props) => {
           <Badge variant='dot' invisible={invisibleNI} onClick={clickNotice} color="primary" sx={{ mr: 1 }}>
             <NotificationsIcon sx={{ fontSize: 25 }} color='action' />
           </Badge>
-          <Badge variant='dot' invisible={invisibleSI} color="primary">
+          <Badge variant='dot' invisible={invisibleSI} onClick={clickMessage} color="primary">
             <SendIcon sx={{ fontSize: 25 }} color='action' />
           </Badge>
         </Toolbar>

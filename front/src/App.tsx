@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home, Login, Forgot, AriBoard, Mypage, Signup, SetInfo, Write, View, Setting, Notice} from './pages';
+import { Home, Login, Forgot, AriBoard, Mypage, Signup, SetInfo, Write, View, Setting, Notice, Message } from './pages';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MAIN_COLOR } from './style/palette';
 
@@ -31,6 +31,7 @@ function App() {
             <Route path='/setting' element={<Setting />} /> 
             <Route path='/post/:post' element={<View />} />
             <Route path='/notice' element={<Notice />} />
+            <Route path='/message' element={<Message />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
