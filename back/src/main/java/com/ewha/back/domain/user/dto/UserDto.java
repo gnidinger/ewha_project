@@ -1,6 +1,7 @@
 package com.ewha.back.domain.user.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -12,9 +13,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.ewha.back.domain.category.entity.CategoryType;
 import com.ewha.back.domain.user.entity.enums.AgeType;
 import com.ewha.back.domain.user.entity.enums.GenderType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,7 +72,7 @@ public class UserDto {
 		@NotBlank(message = "패스워드를 입력해주세요.")
 		@Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", message = "8~16자 영문, 숫자, 특수문자(@$!%*?&)만 사용 가능합니다.")
 		private String password;
-		private LocalDate birthday;
+		private String birthday;
 		@Min(100000)
 		@Max(999999)
 		private Long centerCode;
@@ -82,13 +86,30 @@ public class UserDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class PostResponse {
+		private Long id;
 		private String userId;
 		private String nickname;
 		private Double ariFactor;
 		private List<String> role;
-		private LocalDate birthday;
+		private String birthday;
+		private Long centerCode;
+		private String phoneNumber;
+		private String profileImage;
+	}
+
+	@Getter
+	@Setter
+	@Builder
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class BasicResponse {
+		private Long id;
+		private String userId;
+		private String nickname;
+		private Double ariFactor;
 		private Long centerCode;
 		private String profileImage;
+		private String thumbnailPath;
 	}
 
 	@Getter
@@ -132,11 +153,17 @@ public class UserDto {
 		private AgeType ageType;
 		private Double ariFactor;
 		private String profileImage;
+		private String thumbnailPath;
 		private List<String> categories;
+		private String birthday;
+		private Long centerCode;
+		private String phoneNumber;
 		private Boolean isFirstLogin;
 	}
 
 	@Getter
+	@Builder
+	@AllArgsConstructor
 	@NoArgsConstructor
 	public static class Password {
 
@@ -155,6 +182,7 @@ public class UserDto {
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Response {
+		private Long id;
 		private String userId;
 		private String nickname;
 		private GenderType genderType;

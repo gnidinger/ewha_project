@@ -27,6 +27,7 @@ import org.springframework.lang.Nullable;
 
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.image.entity.Image;
+import com.ewha.back.domain.like.entity.FeedLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.global.BaseTimeEntity;
@@ -98,6 +99,12 @@ public class Feed extends BaseTimeEntity implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private List<Like> likes = new ArrayList<>();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "feed", cascade = CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private List<FeedLike> feedLikes = new ArrayList<>();
 
 	public void addFeedCategories(List<FeedCategory> feedCategoriesList) {
 		this.feedCategories = feedCategoriesList;

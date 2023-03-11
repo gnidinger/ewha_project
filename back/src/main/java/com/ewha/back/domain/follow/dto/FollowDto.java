@@ -1,4 +1,4 @@
-package com.ewha.back.domain.follow;
+package com.ewha.back.domain.follow.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,7 @@ public class FollowDto {
 		private String nickname;
 		private String imageUrl;
 		private Boolean isFollowing;
+
 	}
 
 	@Getter
@@ -29,5 +30,7 @@ public class FollowDto {
 		private Long userId;
 		private String nickname;
 		private String imageUrl;
+		private Boolean isFollowing;
+
 	}
 }

@@ -48,13 +48,15 @@ public interface UserService {
 
 	User findVerifiedUser(Long id);
 
+	User getLoginUserReturnNull();
+
 	User getLoginUser();
 
 	Page<Feed> findUserFeeds(int page);
 
 	Page<Comment> findUserComments(int page);
 
-	Page<Feed> findUserFeedLikes(int page);
+	Page<Feed> findUserLikedFeed(int page);
 
 	Page<Question> findUserQuestions(int page);
 

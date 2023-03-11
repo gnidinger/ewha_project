@@ -1,5 +1,6 @@
 package com.ewha.back.domain.user.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.image.entity.Image;
+import com.ewha.back.domain.like.entity.CommentLike;
+import com.ewha.back.domain.like.entity.FeedLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.notification.entity.Notification;
 import com.ewha.back.domain.question.entity.Answer;
@@ -35,6 +38,7 @@ import com.ewha.back.domain.user.entity.enums.GenderType;
 import com.ewha.back.global.BaseTimeEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,10 +50,10 @@ import lombok.Setter;
 @Setter
 @Builder
 @DynamicInsert
-@AllArgsConstructor
 @Table(name = "users")
-@NoArgsConstructor
-public class User extends BaseTimeEntity {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class User extends BaseTimeEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id", updatable = false)
@@ -84,7 +88,7 @@ public class User extends BaseTimeEntity {
 	@Column
 	private Long centerCode;
 	@Column
-	private LocalDate birthday;
+	private String birthday;
 
 	@ColumnDefault("0")
 	private Long followerCount;
@@ -110,26 +114,34 @@ public class User extends BaseTimeEntity {
 	@Column
 	private String email; // OAuth의 경우 이메일이 존재할 가능성 있음
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<UserCategory> userCategories = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Feed> feeds = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Comment> comments = new ArrayList<>();
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Like> likes = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<FeedLike> feedLikes = new ArrayList<>();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<CommentLike> commentLikes = new ArrayList<>();
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Notification> notifications = new ArrayList<>();
 
 	@Builder(builderClassName = "OAuth2Register", builderMethodName = "oauth2Register")

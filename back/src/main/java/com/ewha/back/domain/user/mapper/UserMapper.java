@@ -25,6 +25,7 @@ public interface UserMapper {
 
 		UserDto.Response.ResponseBuilder responseBuilder = UserDto.Response.builder();
 
+		responseBuilder.id(user.getId());
 		responseBuilder.userId(user.getUserId());
 		responseBuilder.nickname(user.getNickname());
 		responseBuilder.genderType(user.getGenderType());
@@ -74,11 +75,15 @@ public interface UserMapper {
 		userInfoResponse.ageType(user.getAgeType());
 		userInfoResponse.ariFactor(user.getAriFactor());
 		userInfoResponse.profileImage(user.getProfileImage());
+		userInfoResponse.thumbnailPath(user.getThumbnailPath());
 		userInfoResponse.categories(
 			user.getUserCategories().stream()
 				.map(userCategory -> userCategory.getCategory().getCategoryType().toString())
 				.collect(Collectors.toList())
 		);
+		userInfoResponse.birthday(user.getBirthday());
+		userInfoResponse.centerCode(user.getCenterCode());
+		userInfoResponse.phoneNumber(user.getPhoneNumber());
 		userInfoResponse.isFirstLogin(user.getIsFirstLogin());
 
 		return userInfoResponse.build();

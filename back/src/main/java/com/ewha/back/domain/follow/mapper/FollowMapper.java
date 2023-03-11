@@ -1,4 +1,4 @@
-package com.ewha.back.domain.follow;
+package com.ewha.back.domain.follow.mapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
+import com.ewha.back.domain.follow.dto.FollowDto;
 import com.ewha.back.domain.user.entity.User;
 
 @Mapper(componentModel = "spring")
@@ -22,7 +23,7 @@ public interface FollowMapper {
 
 				followerResponseBuilder.userId(user.getId());
 				followerResponseBuilder.nickname(user.getNickname());
-				followerResponseBuilder.imageUrl(user.getImageUrl());
+				followerResponseBuilder.imageUrl(user.getProfileImage());
 
 				if (findFollowingsList.contains(user)) {
 					followerResponseBuilder.isFollowing(true);
@@ -35,7 +36,8 @@ public interface FollowMapper {
 			}).collect(Collectors.toList()));
 	}
 
-	default PageImpl<FollowDto.FollowingResponse> followingsToFollowingResponses(Page<User> findFollowers) {
+	default PageImpl<FollowDto.FollowingResponse> followingsToFollowingResponses(
+		Page<User> findFollowers, List<User> findFollowingsList) {
 
 		return new PageImpl<>(findFollowers.stream()
 			.map(user -> {
@@ -44,7 +46,13 @@ public interface FollowMapper {
 
 				followingResponseBuilder.userId(user.getId());
 				followingResponseBuilder.nickname(user.getNickname());
-				followingResponseBuilder.imageUrl(user.getImageUrl());
+				followingResponseBuilder.imageUrl(user.getProfileImage());
+
+				if (findFollowingsList.contains(user)) {
+					followingResponseBuilder.isFollowing(true);
+				} else {
+					followingResponseBuilder.isFollowing(false);
+				}
 
 				return followingResponseBuilder.build();
 

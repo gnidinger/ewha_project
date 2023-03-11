@@ -4,6 +4,11 @@ import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.entity.Feed;
 
 public interface LikeService {
+
+	String feedLike(Long feedId);
+
+	String commentLike(Long commentId);
+
 	Feed createFeedLike(Long feedId);
 
 	Feed deleteFeedLike(Long feedId);

@@ -38,7 +38,7 @@ public class FeedQueryRepository {
 		return new PageImpl<>(feedList, pageable, feedList.size());
 	}
 
-	public Page<Feed> findFeedLikesListByUser(User user, Pageable pageable) {
+	public Page<Feed> findLikedFeedListByUser(User user, Pageable pageable) {
 
 		List<Feed> feedList = jpaQueryFactory
 			.selectFrom(feed)

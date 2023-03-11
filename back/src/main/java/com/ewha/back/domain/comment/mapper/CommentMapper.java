@@ -25,12 +25,14 @@ public interface CommentMapper {
 		return CommentDto.Response.builder()
 			.commentId(comment.getId())
 			.feedId(comment.getFeed().getId())
-			.userInfo(UserDto.PostResponse.builder()
+			.userInfo(UserDto.BasicResponse.builder()
+				.id(user.getId())
 				.userId(user.getUserId())
 				.nickname(user.getNickname())
 				.ariFactor(user.getAriFactor())
-				.role(user.getRole())
+				.centerCode(user.getCenterCode())
 				.profileImage(user.getProfileImage())
+				.thumbnailPath(user.getThumbnailPath())
 				.build())
 			.body(comment.getBody())
 			.likeCount(comment.getLikeCount())
@@ -53,6 +55,7 @@ public interface CommentMapper {
 					.body(comment.getBody())
 					.likeCount(comment.getLikeCount())
 					.createdAt(comment.getCreatedAt())
+					.modifiedAt(comment.getModifiedAt())
 					.build();
 			}).collect(Collectors.toList()));
 	}

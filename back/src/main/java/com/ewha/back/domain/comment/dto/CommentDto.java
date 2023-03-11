@@ -48,7 +48,7 @@ public class CommentDto {
 
 		private Long commentId;
 		private Long feedId;
-		private UserDto.PostResponse userInfo;
+		private UserDto.BasicResponse userInfo;
 		private String body;
 		private Long likeCount;
 		private LocalDateTime createdAt;
@@ -85,5 +85,6 @@ public class CommentDto {
 		private String body;
 		private Long likeCount;
 		private LocalDateTime createdAt;
+		private LocalDateTime modifiedAt;
 	}
 }

@@ -1,4 +1,4 @@
-package com.ewha.back.domain.follow;
+package com.ewha.back.domain.follow.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -41,7 +41,6 @@ import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.mapper.UserMapper;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.dto.MultiResponseDto;
-import com.ewha.back.global.dto.SingleResponseDto;
 import com.ewha.back.global.security.dto.LoginDto;
 
 import lombok.RequiredArgsConstructor;
@@ -73,7 +72,7 @@ public class UserController {
 	}
 
 	@PostMapping("/users/verification")
-	public ResponseEntity verifyDto(@Valid @RequestBody UserDto.Verify verifyDto) {
+	public ResponseEntity<?> verifyDto(@Valid @RequestBody UserDto.Verify verifyDto) {
 
 		List<List<String>> list = userService.verifyVerifyDto(verifyDto);
 
@@ -82,8 +81,7 @@ public class UserController {
 		} else {
 			List<UserDto.VerifyResponse> responses = userMapper.listToVerifyResponse(list);
 
-			return new ResponseEntity<>(
-				new SingleResponseDto<>(responses), HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responses);
 		}
 	}
 
@@ -97,28 +95,26 @@ public class UserController {
 	// }
 
 	@PostMapping("/users/signup")
-	public ResponseEntity postUser(@Valid @RequestBody UserDto.Post postDto) {
+	public ResponseEntity<UserDto.PostResponse> postUser(@Valid @RequestBody UserDto.Post postDto) {
 
 		User user = userMapper.userPostToUser(postDto);
 		User createdUser = userService.createUser(user);
 		UserDto.PostResponse response = userMapper.userToUserPostResponse(createdUser);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@PatchMapping("/user/firstlogin")
-	public ResponseEntity firstLoginUser(@Valid @RequestBody LoginDto.PatchDto firstPatchDto) {
+	public ResponseEntity<UserDto.Response> firstLoginUser(@Valid @RequestBody LoginDto.PatchDto firstPatchDto) {
 
 		User firstLoginUser = userService.onFirstLogin(firstPatchDto);
 		UserDto.Response response = userMapper.userToUserResponse(firstLoginUser);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK);
+		return ResponseEntity.ok().body(response);
 	}
 
-	@PatchMapping("/mypage/patch")
-	public ResponseEntity patchUser(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
+	@PostMapping("/mypage/patch")
+	public ResponseEntity<UserDto.Response> patchUser(@RequestParam(value = "image") @Nullable MultipartFile multipartFile,
 		@Valid @RequestPart(value = "patch") UserDto.UserInfo userInfo) throws Exception {
 
 		List<String> imagePath = null;
@@ -148,23 +144,24 @@ public class UserController {
 
 		UserDto.Response response = userMapper.userToUserResponse(updatedUser);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@PatchMapping("/mypage/patch/password")
-	public void patchPassword(@Valid @RequestBody UserDto.Password password) {
+	public ResponseEntity<HttpStatus> patchPassword(@Valid @RequestBody UserDto.Password password) {
+
 		userService.updatePassword(password);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping("/users/{user_id}")
-	public ResponseEntity getUserPage(@PathVariable("user_id") Long userId) {
+	public ResponseEntity<UserDto.Response> getUserPage(@PathVariable("user_id") Long userId) {
 
 		User findUser = userService.getUser(userId);
 		UserDto.Response response = userMapper.userToUserResponse(findUser);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@DeleteMapping("/mypage/signout")
@@ -180,17 +177,16 @@ public class UserController {
 	 */
 
 	@GetMapping("/mypage")
-	public ResponseEntity getMyPage() {
+	public ResponseEntity<UserDto.UserInfoResponse> getMyPage() {
 
 		User findUser = userService.getMyInfo();
 		UserDto.UserInfoResponse response = userMapper.userToUserInfoResponse(findUser);
 
-		return new ResponseEntity<>(
-			new SingleResponseDto<>(response), HttpStatus.OK);
+		return ResponseEntity.ok().body(response);
 	}
 
 	@GetMapping("/mypage/myfeeds")
-	public ResponseEntity getUserFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
+	public ResponseEntity<MultiResponseDto<FeedDto.ListResponse>> getUserFeeds(@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Feed> feedList = userService.findUserFeeds(page);
 		PageImpl<FeedDto.ListResponse> responses = feedMapper.myFeedsToPageResponse(feedList);
@@ -199,7 +195,7 @@ public class UserController {
 	}
 
 	@GetMapping("/mypage/mycomments")
-	public ResponseEntity getUserComments(@RequestParam(name = "page", defaultValue = "1") int page) {
+	public ResponseEntity<MultiResponseDto<CommentDto.ListResponse>> getUserComments(@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Comment> commentList = userService.findUserComments(page);
 		PageImpl<CommentDto.ListResponse> responses = commentMapper.myCommentsToPageResponse(commentList);
@@ -207,17 +203,17 @@ public class UserController {
 		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), commentList));
 	}
 
-	@GetMapping("/mypage/myfeedlikes")
-	public ResponseEntity getUserFeedLikes(@RequestParam(name = "page", defaultValue = "1") int page) {
+	@GetMapping("/mypage/mylikedfeeds")
+	public ResponseEntity<MultiResponseDto<FeedDto.ListResponse>> getUserLikedFeed(@RequestParam(name = "page", defaultValue = "1") int page) {
 
-		Page<Feed> feedList = userService.findUserFeedLikes(page);
+		Page<Feed> feedList = userService.findUserLikedFeed(page);
 		PageImpl<FeedDto.ListResponse> responses = feedMapper.myFeedsToPageResponse(feedList);
 
 		return ResponseEntity.ok(new MultiResponseDto<>(responses.getContent(), feedList));
 	}
 
 	@GetMapping("/mypage/myquestions")
-	public ResponseEntity getUserQuestions(@RequestParam(name = "page", defaultValue = "1") int page) {
+	public ResponseEntity<MultiResponseDto<QuestionDto.AnsweredResponse>> getUserQuestions(@RequestParam(name = "page", defaultValue = "1") int page) {
 
 		Page<Question> questionList = userService.findUserQuestions(page);
 		PageImpl<QuestionDto.AnsweredResponse> responses = questionMapper.myQuestionsToPageResponse(questionList);

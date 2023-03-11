@@ -1,4 +1,4 @@
-package com.ewha.back.domain.follow;
+package com.ewha.back.domain.follow.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ewha.back.domain.notification.entity.NotificationType;
+import com.ewha.back.domain.follow.entity.Follow;
+import com.ewha.back.domain.follow.repository.FollowQueryRepository;
+import com.ewha.back.domain.follow.repository.FollowRepository;
 import com.ewha.back.domain.notification.service.NotificationService;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
@@ -43,9 +45,6 @@ public class FollowService {
 			followingUser.addFollowing();
 			followedUser.addFollower();
 
-			String body = followingUser.getNickname() + "님이 회원님을 팔로우 했습니다.";
-			notificationService.send(followedUser, null, body, null, NotificationType.FOLLOW);
-
 			return "Create Follow";
 
 		} else {
@@ -68,9 +67,16 @@ public class FollowService {
 		return followQueryRepository.findFollowersByUserId(userId, pageRequest);
 	}
 
-	public List<User> findFollowingsList(Long followedUserId, Page<User> userPage) {
+	public Page<User> findFollowersWithLoginUser(Long loginUserId, Long userId, Integer page) {
+
+		PageRequest pageRequest = PageRequest.of(page - 1, 10);
+
+		return followQueryRepository.findFollowersWithLoginUserByUserId(loginUserId, userId, pageRequest);
+	}
+
+	public List<User> findFollowingsList(Long followingUserId, Page<User> userPage) {
 		return userPage.stream()
-			.filter(user -> followQueryRepository.findFollowByUserIds(user.getId(), followedUserId) != null)
+			.filter(user -> followQueryRepository.findFollowByUserIds(followingUserId, user.getId()) != null)
 			.collect(Collectors.toList());
 	}
 

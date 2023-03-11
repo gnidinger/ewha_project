@@ -58,9 +58,6 @@ public class FeedDto {
 		private String body;
 
 		private String imagePath;
-
-		private String thumbnailPath;
-
 	}
 
 	@Getter
@@ -78,7 +75,7 @@ public class FeedDto {
 
 		private Long feedId;
 		private List<CategoryType> categories;
-		private UserDto.PostResponse userInfo;
+		private UserDto.BasicResponse userInfo;
 		private String title;
 		private String body;
 		private Boolean isLiked;
@@ -100,13 +97,14 @@ public class FeedDto {
 
 		private Long feedId;
 		private List<CategoryType> categories;
-		private String body;
-		private String userId;
 		private String title;
+		// private String body;
+		private String userId;
 		private Integer commentCount;
 		private Long likeCount;
 		private Long viewCount;
 		private LocalDateTime createdAt;
+		private LocalDateTime modifiedAt;
 	}
 
 }

@@ -17,6 +17,7 @@ import com.ewha.back.domain.comment.entity.Comment;
 import com.ewha.back.domain.feed.dto.FeedDto;
 import com.ewha.back.domain.feed.entity.Feed;
 import com.ewha.back.domain.feed.entity.FeedCategory;
+import com.ewha.back.domain.like.entity.CommentLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.user.dto.UserDto;
 import com.ewha.back.domain.user.entity.User;
@@ -42,17 +43,17 @@ public interface FeedMapper {
 	}
 
 	default FeedDto.Response feedGetToFeedResponse(Feed feed, Boolean isLikedFeed,
-		List<Like> commentLikeList, Boolean isMyFeed, List<Comment> isMyComments) {
+		List<CommentLike> commentLikeList, Boolean isMyFeed, List<Comment> isMyComments) {
 
 		User findUser = feed.getUser();
 
-		UserDto.PostResponse postResponse =
-			UserDto.PostResponse.builder()
-				.userId(findUser.getUserId())
-				.nickname(findUser.getNickname())
-				.ariFactor(findUser.getAriFactor())
-				.role(findUser.getRole())
-				.profileImage(findUser.getProfileImage())
+		UserDto.BasicResponse basicResponse =
+			UserDto.BasicResponse.builder()
+				.userId("testuser")
+				.nickname("닉네임")
+				.ariFactor(36.5)
+				.profileImage("profile Image")
+				.centerCode(123456L)
 				.build();
 
 		List<CommentDto.FeedCommentResponse> commentsList = new ArrayList<>();
@@ -105,7 +106,7 @@ public interface FeedMapper {
 			.categories(feed.getFeedCategories().stream()
 				.map(a -> a.getCategory().getCategoryType())
 				.collect(Collectors.toList()))
-			.userInfo(postResponse)
+			.userInfo(basicResponse)
 			.title(feed.getTitle())
 			.body(feed.getBody())
 			.isLiked(isLikedFeed)
@@ -124,13 +125,13 @@ public interface FeedMapper {
 
 		User findUser = feed.getUser();
 
-		UserDto.PostResponse postResponse =
-			UserDto.PostResponse.builder()
-				.userId(findUser.getUserId())
-				.nickname(findUser.getNickname())
-				.ariFactor(findUser.getAriFactor())
-				.role(findUser.getRole())
-				.profileImage(findUser.getProfileImage())
+		UserDto.BasicResponse basicResponse =
+			UserDto.BasicResponse.builder()
+				.userId("testuser")
+				.nickname("닉네임")
+				.ariFactor(36.5)
+				.profileImage("profile Image")
+				.centerCode(123456L)
 				.build();
 
 		List<CommentDto.FeedCommentResponse> commentsList = new ArrayList<>();
@@ -153,6 +154,7 @@ public interface FeedMapper {
 									.build()
 							)
 							.body(comment.getBody())
+							.isLikedComment(false)
 							.likeCount(comment.getLikeCount())
 							.createdAt(comment.getCreatedAt())
 							.modifiedAt(comment.getModifiedAt())
@@ -165,10 +167,10 @@ public interface FeedMapper {
 			.categories(feed.getFeedCategories().stream()
 				.map(a -> a.getCategory().getCategoryType())
 				.collect(Collectors.toList()))
-			.userInfo(postResponse)
+			.userInfo(basicResponse)
 			.title(feed.getTitle())
 			.body(feed.getBody())
-			.isLiked(null)
+			.isLiked(false)
 			.likeCount(feed.getLikeCount())
 			.viewCount(feed.getViewCount())
 			.imagePath(feed.getImagePath())
@@ -258,14 +260,17 @@ public interface FeedMapper {
 			.map(feed -> {
 				return FeedDto.ListResponse.builder()
 					.feedId(feed.getId())
+					.userId(feed.getUser().getUserId())
 					.title(feed.getTitle())
-					.body(feed.getBody())
+					// .body(feed.getBody())
 					.categories(feed.getFeedCategories().stream()
 						.map(feedCategory -> feedCategory.getCategory().getCategoryType())
 						.collect(Collectors.toList()))
+					.commentCount(feed.getComments().size())
 					.likeCount(feed.getLikeCount())
 					.viewCount(feed.getViewCount())
 					.createdAt(feed.getCreatedAt())
+					.modifiedAt(feed.getModifiedAt())
 					.build();
 			}).collect(Collectors.toList()));
 	}
@@ -280,7 +285,7 @@ public interface FeedMapper {
 				return FeedDto.ListResponse.builder()
 					.feedId(feed.getId())
 					.title(feed.getTitle())
-					.body(feed.getBody())
+					// .body(feed.getBody())
 					.commentCount(feed.getComments().size())
 					.categories(feed.getFeedCategories().stream()
 						.map(feedCategory -> feedCategory.getCategory().getCategoryType())
@@ -302,7 +307,7 @@ public interface FeedMapper {
 				return FeedDto.ListResponse.builder()
 					.feedId(feed.getId())
 					.title(feed.getTitle())
-					.body(feed.getBody())
+					// .body(feed.getBody())
 					.commentCount(feed.getComments().size())
 					.categories(feed.getFeedCategories().stream()
 						.map(feedCategory -> feedCategory.getCategory().getCategoryType())

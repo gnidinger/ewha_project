@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.like.entity.CommentLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.global.config.CustomPage;
 
@@ -15,7 +16,7 @@ public interface FeedService {
 
 	Feed updateView(Long feedId);
 
-	List<Like> isLikedComments(Long feedId);
+	List<CommentLike> isLikedComments(Long feedId);
 
 	Boolean isMyFeed(Feed feed);
 

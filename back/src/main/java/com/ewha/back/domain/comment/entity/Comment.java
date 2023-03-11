@@ -21,6 +21,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import com.ewha.back.domain.feed.entity.Feed;
+import com.ewha.back.domain.like.entity.CommentLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.global.BaseTimeEntity;
@@ -67,6 +68,12 @@ public class Comment extends BaseTimeEntity implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@NotFound(action = NotFoundAction.IGNORE)
 	private final List<Like> likes = new ArrayList<>();
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@NotFound(action = NotFoundAction.IGNORE)
+	private final List<CommentLike> commentLikes = new ArrayList<>();
 
 	public void updateComment(Comment comment) {
 		this.body = comment.getBody();

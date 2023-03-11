@@ -79,13 +79,13 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final' // Mapstruct
     implementation "com.h2database:h2" // h2
+//    runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis
     implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2' // 내장 Redis
-//    runtimeOnly 'mysql:mysql-connector-java'
     //    ---------------------------------------QUERY DSL--------------------------------------------
     implementation 'org.springframework.boot:spring-boot-starter-test' // JUnit4 Test
     testImplementation 'org.springframework.security:spring-security-test' // Spring Security Test
-//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // Spring Rest Docs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // Spring Rest Docs
 //    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor' // Spring Rest Docs
 }
 
@@ -117,9 +117,9 @@ tasks.named('test') {
 //    }
 //}
 
-test { // 빌드시 테스트 제외
-	exclude '**/*'
-}
+//test { // 빌드시 테스트 제외
+//	exclude '**/*'
+//}
 
 //    ---------------------------------------Query DSL--------------------------------------------
 // 경로 지정

@@ -36,8 +36,11 @@ import com.ewha.back.domain.feed.service.FeedService;
 import com.ewha.back.domain.image.repository.ImageQueryRepository;
 import com.ewha.back.domain.image.service.AwsS3Service;
 import com.ewha.back.domain.image.service.ImageService;
+import com.ewha.back.domain.like.entity.CommentLike;
 import com.ewha.back.domain.like.entity.Like;
 import com.ewha.back.domain.like.service.LikeService;
+import com.ewha.back.domain.user.entity.User;
+import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.config.CustomPage;
 import com.ewha.back.global.dto.MultiResponseDto;
 import com.ewha.back.global.security.jwtTokenizer.JwtTokenizer;
@@ -53,6 +56,7 @@ public class FeedController {
 	private final FeedService feedService;
 	private final LikeService likeService;
 	private final CommentService commentService;
+	private final UserService userService;
 	private final AwsS3Service awsS3Service;
 
 	@PostMapping("/add")
@@ -67,7 +71,9 @@ public class FeedController {
 
 		if (multipartFile != null) {
 			imagePath = awsS3Service.uploadImageToS3(multipartFile, createdFeed.getId());
-			createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
+			if (imagePath.size() != 0) {
+				createdFeed.addImagePaths(imagePath.get(0), imagePath.get(1));
+			}
 		}
 
 		// FeedDto.Response response = feedMapper.feedToFeedResponse(createdFeed);
@@ -76,7 +82,7 @@ public class FeedController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	@PatchMapping("/{feed_id}/edit")
+	@PostMapping("/{feed_id}/edit")
 	public ResponseEntity<HttpStatus> patchFeed(@PathVariable("feed_id") @Positive Long feedId,
 		@Nullable @RequestParam(value = "image") MultipartFile multipartFile,
 		@Valid @RequestPart(value = "patch") FeedDto.Patch patchFeed) throws Exception {
@@ -116,18 +122,20 @@ public class FeedController {
 
 	@GetMapping("/{feed_id}")
 	public ResponseEntity<FeedDto.Response> getFeed(
-		@PathVariable("feed_id") @Positive Long feedId,
-		HttpServletRequest request,
-		@RequestHeader(value = "Authorization", required = false) @Valid @Nullable String token) {
+		@PathVariable("feed_id") @Positive Long feedId
+		// HttpServletRequest request,
+		// @RequestHeader(value = "Authorization", required = false) @Valid @Nullable String token
+	) {
 
 		FeedDto.Response response;
 
-		// if (jwtTokenizer.checkUserWithToken(request, token)) { // 로그인 사용자
-		if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-			// 로그인 사용자이면서 Auth가 있는 경우
+		User findUser = userService.getLoginUserReturnNull();
+
+		if (findUser != null) {
+
 			Feed feed = feedService.updateView(feedId);
 			Boolean isLikedFeed = likeService.isLikedFeed(feed);
-			List<Like> isLikedComments = feedService.isLikedComments(feedId);
+			List<CommentLike> isLikedComments = feedService.isLikedComments(feedId);
 			Boolean isMyFeed = feedService.isMyFeed(feed);
 			List<Comment> isMyComments = commentService.isMyComments(feedId);
 

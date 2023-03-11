@@ -341,6 +341,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(readOnly = true)
+	public User getLoginUserReturnNull() {
+		Authentication authentication = verifiedAuthentication();
+
+		return userRepository.findByEmail(authentication.getName())
+			.orElse(null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public User getLoginUser() { // 로그인된 유저 가져오기
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -380,13 +389,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<Feed> findUserFeedLikes(int page) {
+	public Page<Feed> findUserLikedFeed(int page) {
 
 		User findUser = getLoginUser();
 
 		PageRequest pageRequest = PageRequest.of(page - 1, 10);
 
-		return feedQueryRepository.findFeedLikesListByUser(findUser, pageRequest);
+		return feedQueryRepository.findLikedFeedListByUser(findUser, pageRequest);
 	}
 
 	@Override
@@ -402,5 +411,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void saveUser(User user) {
 		userRepository.save(user);
+	}
+
+	private Authentication verifiedAuthentication() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication == null) {
+			throw new BusinessLogicException(ExceptionCode.UNAUTHORIZED);
+		}
+		return authentication;
 	}
 }

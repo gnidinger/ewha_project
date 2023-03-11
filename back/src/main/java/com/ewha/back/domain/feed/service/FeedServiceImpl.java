@@ -18,8 +18,11 @@ import com.ewha.back.domain.feed.entity.FeedCategory;
 import com.ewha.back.domain.feed.repository.FeedCategoryRepository;
 import com.ewha.back.domain.feed.repository.FeedQueryRepository;
 import com.ewha.back.domain.feed.repository.FeedRepository;
+import com.ewha.back.domain.like.entity.CommentLike;
 import com.ewha.back.domain.like.entity.Like;
-import com.ewha.back.domain.like.repository.LikeQueryRepository;
+// import com.ewha.back.domain.like.repository.LikeQueryRepository;
+import com.ewha.back.domain.like.repository.CommentLikeQueryRepository;
+import com.ewha.back.domain.like.repository.FeedLikeQueryRepository;
 import com.ewha.back.domain.user.entity.User;
 import com.ewha.back.domain.user.service.UserService;
 import com.ewha.back.global.config.CustomPage;
@@ -39,7 +42,9 @@ public class FeedServiceImpl implements FeedService {
 	private final FeedRepository feedRepository;
 	private final FeedQueryRepository feedQueryRepository;
 	private final CommentRepository commentRepository;
-	private final LikeQueryRepository likeQueryRepository;
+	private final FeedLikeQueryRepository feedLikeQueryRepository;
+	private final CommentLikeQueryRepository commentLikeQueryRepository;
+	// private final LikeQueryRepository likeQueryRepository;
 
 	@Override
 	public Feed createFeed(Feed feed) {
@@ -103,14 +108,14 @@ public class FeedServiceImpl implements FeedService {
 	}
 
 	@Override
-	public List<Like> isLikedComments(Long feedId) {
+	public List<CommentLike> isLikedComments(Long feedId) {
 
 		User findUser = userService.getLoginUser();
 
 		Feed findFeed = findVerifiedFeed(feedId);
 
 		return findFeed.getComments().stream()
-			.map(comment -> likeQueryRepository.findCommentLikeByFeedAndUser(comment, findUser))
+			.map(comment -> commentLikeQueryRepository.findCommentLikeByFeedAndUser(comment, findUser))
 			// .sorted(Comparator.comparing(a -> a.getFeed().getId()))
 			.collect(Collectors.toList());
 	}

@@ -51,8 +51,9 @@ public class CommentController {
 
 		Comment comment = commentMapper.commentPatchToComment(patchComment);
 		Comment updatedComment = commentService.updateComment(comment, commentId);
+		CommentDto.Response response = commentMapper.commentToCommentResponse(updatedComment);
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping("/comments/{comment_id}")
