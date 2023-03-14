@@ -1,5 +1,5 @@
-import { PostData } from "../pages/Write";
-import axiosApi from "./axiosApi";
+import { PostData } from '../pages/Write';
+import axiosApi from './axiosApi';
 
 export const getLatest = async( page: number ) => {
   try {

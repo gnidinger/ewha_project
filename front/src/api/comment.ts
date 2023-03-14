@@ -1,4 +1,4 @@
-import axiosApi from "./axiosApi";
+import axiosApi from './axiosApi';
 
 export const writeComment = async( feedId: string, body: string ) => {
   try {
